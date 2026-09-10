@@ -198,3 +198,157 @@ Entonces [el sistema debe impedir la selección y mostrar un aviso de indisponib
 **Observaciones**
 Add any other context or screenshots about the feature request here.
 
+---
+
+## Historia de usuario 07
+
+**Como** [Administrador]
+
+**Quiero** [filtrar la vista de la agenda por un profesional específico o por estado de cita (Pendiente, Confirmada, Completada)]
+
+**Para** [ revisar de forma segmentada los compromisos operativos]
+
+## Criterios de aceptación
+
+- [ ] **Escenario 1: [Nombre del escenario]**
+
+```gherkin
+Dado [el administrador se encuentra en la agenda]
+Cuando [aplica un filtro por un profesional]
+Entonces [el sistema debe mostrar exclusivamente las citas asignadas a dicho trabajador]
+```
+
+ - [ ] **Escenario 2: [Nombre del escenario]**
+
+```gherkin
+Dado [el usuario intenta agendar una cita en un horario bloqueado por la administración]
+Cuando [selecciona dicho espacio]
+Entonces [el sistema debe impedir la selección y mostrar un aviso de indisponibilidad]
+```
+
+**Observaciones**
+Add any other context or screenshots about the feature request here.
+
+---
+
+## Historia de usuario 08
+
+**Como** [Cliente]
+
+**Quiero** [consultar un historial con todas mis reservas pasadas y actuales]
+
+**Para** [recordar los servicios que me he realizado y sus estados]
+
+## Criterios de aceptación
+
+- [ ] **Escenario 1: [Nombre del escenario]**
+
+```gherkin
+Dado [el cliente ingresa a su perfil en "Mis Reservas"]
+Cuando [revisa el listado]
+Entonces [el sistema debe mostrar el desglose de citas anteriores con su respectivo estado, servicio y profesional]
+```
+
+ - [ ] **Escenario 2: [Nombre del escenario]**
+
+```gherkin
+Dado [el usuario intenta agendar una cita en un horario bloqueado por la administración]
+Cuando [selecciona dicho espacio]
+Entonces [el sistema debe impedir la selección y mostrar un aviso de indisponibilidad]
+```
+
+**Observaciones**
+Add any other context or screenshots about the feature request here.
+
+---
+
+## Historia de usuario 09
+
+**Como** [Administrador]
+
+**Quiero** [bloquear franjas horarias específicas en la agenda (mantenimiento, festivos o reuniones)]
+
+**Para** [impedir que los clientes agenden citas en momentos donde el salón no operará]
+
+## Criterios de aceptación
+
+- [ ] **Escenario 1: [Nombre del escenario]**
+
+```gherkin
+Dado [el administrador selecciona una fecha y rango de horas y aplica "Bloquear Horario"]
+Cuando [confirma]
+Entonces [el sistema debe marcar dicho intervalo como no disponible para los clientes]
+```
+
+ - [ ] **Escenario 2: [Nombre del escenario]**
+
+```gherkin
+Dado [el usuario intenta agendar una cita en un horario bloqueado por la administración]
+Cuando [selecciona dicho espacio]
+Entonces [el sistema debe impedir la selección y mostrar un aviso de indisponibilidad]
+```
+
+**Observaciones**
+Add any other context or screenshots about the feature request here.
+
+---
+
+## Historia de usuario 10
+
+**Como** [Sistema]
+
+**Quiero** [enviar correos automáticos de confirmación al reservar y recordatorios 24 horas antes]
+
+**Para** [garantizar que el cliente tenga el respaldo y reducir las inasistencias]
+
+## Criterios de aceptación
+
+- [ ] **Escenario 1: [Nombre del escenario]**
+
+```gherkin
+Dado [el cliente llega al salón para su cita]
+Cuando [el administrador hace clic en "Marcar Asistencia" en la cita correspondiente]
+Entonces [el estado de la cita debe cambiar a "En proceso"]
+```
+
+ - [ ] **Escenario 2: [Nombre del escenario]**
+
+```gherkin
+Dado [el usuario intenta agendar una cita en un horario bloqueado por la administración]
+Cuando [selecciona dicho espacio]
+Entonces [el sistema debe impedir la selección y mostrar un aviso de indisponibilidad]
+```
+
+**Observaciones**
+Add any other context or screenshots about the feature request here.
+
+---
+
+## Historia de usuario 11
+
+**Como** [Administrador]
+
+**Quiero** [marcar el estado de asistencia del cliente cuando se presenta al salón]
+
+**Para** [llevar el control de puntualidad y dar inicio formal a la atención]
+
+## Criterios de aceptación
+
+- [ ] **Escenario 1: [Nombre del escenario]**
+
+```gherkin
+Dado [el cliente llega al salón para su cita]
+Cuando [el administrador hace clic en "Marcar Asistencia" en la cita correspondiente]
+Entonces [el estado de la cita debe cambiar a "En proceso"]
+```
+
+ - [ ] **Escenario 2: [Nombre del escenario]**
+
+```gherkin
+Dado [el usuario intenta agendar una cita en un horario bloqueado por la administración]
+Cuando [selecciona dicho espacio]
+Entonces [el sistema debe impedir la selección y mostrar un aviso de indisponibilidad]
+```
+
+**Observaciones**
+Add any other context or screenshots about the feature request here.
