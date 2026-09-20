@@ -2,13 +2,20 @@
 <html lang="es">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
 		<title>Lifting y Cejas</title>
+
 		<!-- Link de Bootstrap -->
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+			rel="stylesheet" />
 
 		<!-- Link de estilos propios -->
-		<link rel="stylesheet" href="../css/main.css" />
+		<link
+			rel="stylesheet"
+			href="../css/main.css" />
 
 		<!-- Bootstrap 5 script -->
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
@@ -18,59 +25,122 @@
 		<nav class="navbar navbar-expand-xxl bg-dark navbar-dark">
 			<div class="container-fluid">
 				<!-- Logo -->
-				<a class="navbar-brand" href="#">
-					<img src="../assets/Logo_sm.png" class="rounded-circle" style="width: 50px" alt="Logo" />
+				<a
+					class="navbar-brand"
+					href="#">
+					<img
+						src="../assets/Logo_sm.png"
+						class="rounded-circle"
+						style="width: 50px"
+						alt="Logo" />
 				</a>
 				<!-- 3 Rayitas -->
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#collapsibleNavbar">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<!-- Menú desplegable -->
-				<div class="collapse navbar-collapse" id="collapsibleNavbar">
+				<div
+					class="collapse navbar-collapse"
+					id="collapsibleNavbar">
 					<ul class="navbar-nav">
 						<li class="nav-item">
-							<a class="nav-link" href="../index.html">Inicio</a>
+							<a
+								class="nav-link"
+								href="../index.html"
+								>Inicio
+							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="hair.html">Cabello</a>
+							<a
+								class="nav-link"
+								href="hair.html"
+								>Cabello
+							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="nails.html">Manicure</a>
+							<a
+								class="nav-link"
+								href="nails.html"
+								>Manicure
+							</a>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</nav>
 
-		<!-- Carousel -->
-		<div id="demo" class="carousel slide" data-bs-ride="carousel">
-			<!-- Indicators/dots -->
-			<div class="carousel-indicators">
-				<button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
-				<button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
-				<button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
-			</div>
+		<!-- Contenido principal -->
+		<main>
+			<!-- Carousel -->
+			<div
+				id="demo"
+				class="carousel slide container"
+				data-bs-ride="carousel">
+				<!-- Indicators/dots -->
+				<div class="carousel-indicators">
+					<button
+						type="button"
+						data-bs-target="#demo"
+						data-bs-slide-to="0"
+						class="active"></button>
+					<button
+						type="button"
+						data-bs-target="#demo"
+						data-bs-slide-to="1"></button>
+					<button
+						type="button"
+						data-bs-target="#demo"
+						data-bs-slide-to="2"></button>
+				</div>
 
-			<!-- El slideshow/carrusel -->
-			<div class="carousel-inner">
-				<div class="carousel-item active ratio ratio-1x1">
-					<img src="../assets/carrusel-eyes/lifting1_L.png" alt="La cabeza de una mujer recostada mientras le realizan un lifting de pestañas" class="d-block w-100" />
+				<!-- El slideshow/carrusel -->
+				<div class="carousel-inner">
+					<div class="carousel-item active ratio ratio-1x1">
+						<img
+							src="../assets/carrusel-eyes/lifting1_L.png"
+							alt="Primer plano detallado del proceso de lifting de pestañas. Una especialista con guantes rosados 
+                                 utiliza un microcepillo rosa para aplicar una loción en las pestañas de una clienta, que están
+                                 fijadas sobre un molde de silicona. Se aprecia un parche protector blanco debajo del ojo."
+							class="d-block w-100" />
+					</div>
+					<div class="carousel-item ratio ratio-1x1">
+						<img
+							src="../assets/carrusel-eyes/lifting2.png"
+							alt="Un collage de imágenes que muestran una moderna sala de estética en tonos rosados y primer plano
+                                 de los materiales necesarios para un lifting de pestañas: botellas numeradas de lociones, moldes
+                                 de silicona en tonos rosa, pinzas quirúrgicas y algunos suministros desechables."
+							class="d-block w-100" />
+					</div>
+					<div class="carousel-item ratio ratio-1x1">
+						<img
+							src="../assets/carrusel-eyes/lifting3_R.png"
+							alt="Primer plano detallado del proceso de lifting de pestañas. Una especialista con guantes rosados 
+                                 utiliza un microcepillo rosa para aplicar una loción en las pestañas de una clienta, que están
+                                 fijadas sobre un molde de silicona. Se aprecia un parche protector blanco debajo del ojo."
+							class="d-block w-100" />
+					</div>
 				</div>
-				<div class="carousel-item ratio ratio-1x1">
-					<img src="../assets/carrusel-eyes/lifting2.png" alt="Salón de ojos y pestañas" class="d-block w-100" />
-				</div>
-				<div class="carousel-item ratio ratio-1x1">
-					<img src="../assets/carrusel-eyes/lifting3_R.png" alt="La cabeza de una mujer recostada mientras le realizan un lifting de pestañas" class="d-block w-100" />
-				</div>
-			</div>
 
-			<!-- Left and right controls/icons -->
-			<button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
-				<span class="carousel-control-prev-icon"></span>
-			</button>
-			<button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
-				<span class="carousel-control-next-icon"></span>
-			</button>
-		</div>
+				<!-- Left and right controls/icons -->
+				<button
+					class="carousel-control-prev"
+					type="button"
+					data-bs-target="#demo"
+					data-bs-slide="prev">
+					<span class="carousel-control-prev-icon"></span>
+				</button>
+				<button
+					class="carousel-control-next"
+					type="button"
+					data-bs-target="#demo"
+					data-bs-slide="next">
+					<span class="carousel-control-next-icon"></span>
+				</button>
+			</div>
+		</main>
 	</body>
 </html>

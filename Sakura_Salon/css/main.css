@@ -1,10 +1,31 @@
-/* Cuando la pantalla es muy pequeña
+/* NAVBAR
+Cuando la pantalla es muy pequeña
 los links del menú desplegable del
 navbar se alinean al centro */
 @media screen and (max-width: 376px) {
     .navbar-nav {
         align-items: center;
     }
+}
+
+/* CARRUSEL
+Cuando la pantalla es mas de 760 px de
+ancho, el carrusel deja de crecer y 
+cambia a modo .container */
+@media screen and (max-width: 760px) {
+    .container {
+        width: 100%;
+        padding-right: 0px;
+        padding-left: 0px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+/* CARRUSEL
+El ancho máximo del carrusel */
+.carousel {
+    max-width: 760px;
 }
 
 /* Hacer que el menú desplegable se muestre al frente */

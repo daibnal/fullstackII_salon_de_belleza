@@ -2,44 +2,153 @@
 <html lang="es">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
 		<title>Manicure</title>
+
 		<!-- Link de Bootstrap -->
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+			rel="stylesheet" />
 
 		<!-- Link de estilos propios -->
-		<link rel="stylesheet" href="../css/main.css" />
+		<link
+			rel="stylesheet"
+			href="../css/main.css" />
 
 		<!-- Bootstrap 5 script -->
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 	</head>
-	<body>
+	<body class="container-fluid p-0">
 		<!-- Nav Bar -->
 		<nav class="navbar navbar-expand-xxl bg-dark navbar-dark">
 			<div class="container-fluid">
 				<!-- Logo -->
-				<a class="navbar-brand" href="#">
-					<img src="../assets/Logo_sm.png" class="rounded-circle" style="width: 50px" alt="Logo" />
+				<a
+					class="navbar-brand"
+					href="#">
+					<img
+						src="../assets/Logo_sm.png"
+						class="rounded-circle"
+						style="width: 50px"
+						alt="Logo" />
 				</a>
 				<!-- 3 Rayitas -->
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#collapsibleNavbar">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<!-- Menú desplegable -->
-				<div class="collapse navbar-collapse" id="collapsibleNavbar">
+				<div
+					class="collapse navbar-collapse"
+					id="collapsibleNavbar">
 					<ul class="navbar-nav">
 						<li class="nav-item">
-							<a class="nav-link" href="../index.html">Inicio</a>
+							<a
+								class="nav-link"
+								href="../index.html"
+								>Inicio
+							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="eyes.html">Lifting y Cejas</a>
+							<a
+								class="nav-link"
+								href="eyes.html"
+								>Lifting y Cejas
+							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="hair.html">Cabello</a>
+							<a
+								class="nav-link"
+								href="hair.html"
+								>Cabello
+							</a>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</nav>
+
+		<!-- Contenido principal -->
+		<main>
+			<!-- Carrusel -->
+			<div
+				id="demo"
+				class="carousel slide container"
+				data-bs-ride="carousel">
+				<!-- Indicadores a los pies de las imagenes -->
+				<div class="carousel-indicators">
+					<button
+						type="button"
+						data-bs-target="#demo"
+						data-bs-slide-to="0"
+						class="active"></button>
+					<button
+						type="button"
+						data-bs-target="#demo"
+						data-bs-slide-to="1"></button>
+					<button
+						type="button"
+						data-bs-target="#demo"
+						data-bs-slide-to="2"></button>
+					<button
+						type="button"
+						data-bs-target="#demo"
+						data-bs-slide-to="3"></button>
+				</div>
+
+				<!-- El slideshow/carrusel -->
+				<div class="carousel-inner">
+					<div class="carousel-item active ratio ratio-1x1">
+						<img
+							src="../assets/carrusel-nails/mani-rusa.png"
+							alt="Mano mostrando uñas cortas con esmaltado semipermanente color rojo vino brillante,
+                                 con recuadros que detallan la manicura rusa y el acabado."
+							class="d-block w-100" />
+					</div>
+					<div class="carousel-item ratio ratio-1x1">
+						<img
+							src="../assets/carrusel-nails/polygel.png"
+							alt="Mano con uñas esculpidas en polygel con diseño de manicura francesa y acabado natural,
+                                 con tubos de polygel y pinceles de fondo."
+							class="d-block w-100" />
+					</div>
+					<div class="carousel-item ratio ratio-1x1">
+						<img
+							src="../assets/carrusel-nails/retiro.png"
+							alt="Especialista con guantes negros retirando esmalte de uñas con un torno eléctrico,
+                                 junto a productos de acetona y algodón."
+							class="d-block w-100" />
+					</div>
+					<div class="carousel-item ratio ratio-1x1">
+						<img
+							src="../assets/carrusel-nails/semipermanente.png"
+							alt="Manos apoyadas sobre un cojín de manicura exhibiendo uñas cortas con esmaltado
+                                 semipermanente color rosa con efecto ojo de gato."
+							class="d-block w-100" />
+					</div>
+				</div>
+
+				<!-- Controles izq y der (iconos) -->
+				<button
+					class="carousel-control-prev"
+					type="button"
+					data-bs-target="#demo"
+					data-bs-slide="prev">
+					<span class="carousel-control-prev-icon"></span>
+				</button>
+				<button
+					class="carousel-control-next"
+					type="button"
+					data-bs-target="#demo"
+					data-bs-slide="next">
+					<span class="carousel-control-next-icon"></span>
+				</button>
+			</div>
+		</main>
 	</body>
 </html>
