@@ -1,0 +1,16 @@
+/* Cuando la pantalla es muy pequeña
+los links del menú desplegable del
+navbar se alinean al centro */
+@media screen and (max-width: 376px) {
+    .navbar-nav {
+        align-items: center;
+    }
+}
+
+/* Hacer que el menú desplegable se muestre al frente */
+/*.navbar {
+    position: fixed;
+    top: 0;
+    z-index: 1;
+    width: fit-content;
+}
