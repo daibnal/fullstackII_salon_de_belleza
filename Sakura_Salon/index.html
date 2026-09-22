@@ -12,7 +12,15 @@
 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
 			rel="stylesheet" />
 
+		<!-- Link de Iconos de Bootstrap -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
 		<!-- Link de estilos propios -->
+		<link
+			rel="stylesheet"
+			href="css/secondary.css" />
 		<link
 			rel="stylesheet"
 			href="css/main.css" />
@@ -72,6 +80,234 @@
 				</div>
 			</div>
 		</nav>
+
 		<main id="main"></main>
+
+		<main class="mobile-container my-4">
+			<!-- ACERCA DE NOSOTROS -->
+			<section
+				id="about"
+				class="mb-5">
+				<h1 class="section-title">Acerca de Nosotros</h1>
+				<p class="text-center text-muted small mb-3 px-1">
+					Corta descripción de la pyme, los servicios que ofrece y quizá sus metas y/o políticas.
+					Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit
+					quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id.
+				</p>
+
+				<!-- 2 Imagenes del interior del salon lado a lado -->
+				<div class="row g-2">
+					<div class="col-6">
+						<div class="sketch-card p-1">
+							<img
+								src="https://placehold.co/300x220/F0A6A8/590D1F?text=%3Cimg%2F%3E"
+								alt="About image 1"
+								class="img-fluid rounded w-100"
+								style="height: 110px; object-fit: cover"
+								onerror="
+									this.onerror = null;
+									this.src = 'https://placehold.co/300x220/F0A6A8/590D1F?text=%3Cimg%2F%3E';
+								" />
+						</div>
+					</div>
+					<div class="col-6">
+						<div class="sketch-card p-1">
+							<img
+								src="https://placehold.co/300x220/F0A6A8/590D1F?text=%3Cimg%2F%3E"
+								alt="About image 2"
+								class="img-fluid rounded w-100"
+								style="height: 110px; object-fit: cover"
+								onerror="
+									this.onerror = null;
+									this.src = 'https://placehold.co/300x220/F0A6A8/590D1F?text=%3Cimg%2F%3E';
+								" />
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- SERVICIOS -->
+			<section
+				id="services"
+				class="mb-5">
+				<h1 class="section-title">Nuestros servicios</h1>
+
+				<div class="d-flex flex-column gap-5">
+					<!-- Lifting & Cejas: Texto |> arriba/izquierda; Imagen |> abajo/derecha -->
+					<div class="sketch-card">
+						<div class="row g-3 align-items-center">
+							<div class="col-12 col-sm-6">
+								<h2
+									class="h5 fw-bold mb-1"
+									style="color: var(--color-primary)">
+									Lifting y Cejas
+								</h2>
+								<p class="text-muted small mb-2">
+									Descripción del servicio. Lorem ipsum dolor sit amet consectetur adipiscing elit.
+									Sit amet consectetur adipiscing elit quisque faucibus ex. Adipiscing elit quisque
+									faucibus ex sapien vitae pellentesque.
+								</p>
+								<!-- <button class="btn btn-custom-primary mb-2 mb-sm-0" >Ir al servicio</button> -->
+								<a
+									class="btn btn-custom-primary"
+									href="servicios/eyes.html"
+									>Ir al servicio</a
+								>
+							</div>
+							<div class="col-12 col-sm-6 text-center">
+								<img
+									src="https://placehold.co/300x180/F4F2F0/590D1F?text=.img-thumbnail"
+									alt="Service thumbnail 1"
+									class="img-thumbnail service-img-thumb"
+									onerror="
+										this.onerror = null;
+										this.src = 'https://placehold.co/300x180/F4F2F0/590D1F?text=.img-thumbnail';
+									" />
+							</div>
+						</div>
+					</div>
+
+					<!-- Cabello: Imagen |> arriba/izquierda; Texto |> bottom/right -->
+					<div class="sketch-card">
+						<div class="row g-2 align-items-center flex-column-reverse flex-sm-row">
+							<div class="col-12 col-sm-6 text-center">
+								<img
+									src="https://placehold.co/300x180/F4F2F0/590D1F?text=.img-thumbnail"
+									alt="Service thumbnail 2"
+									class="img-thumbnail service-img-thumb"
+									onerror="
+										this.onerror = null;
+										this.src = 'https://placehold.co/300x180/F4F2F0/590D1F?text=.img-thumbnail';
+									" />
+							</div>
+							<div class="col-12 col-sm-6">
+								<h2
+									class="h5 fw-bold mb-1"
+									style="color: var(--color-primary)">
+									Cabello
+								</h2>
+								<p class="text-muted small mb-2">
+									Descripción del servicio. Lorem ipsum dolor sit amet consectetur adipiscing elit.
+								</p>
+								<a
+									class="btn btn-custom-primary"
+									href="servicios/hair.html"
+									>Ir al servicio</a
+								>
+							</div>
+						</div>
+					</div>
+
+					<!-- Manicure: Texto |> arriba/izquierda; Imagen |> abajo/derecha -->
+					<div class="sketch-card">
+						<div class="row g-2 align-items-center">
+							<div class="col-12 col-sm-6">
+								<h2
+									class="h5 fw-bold mb-1"
+									style="color: var(--color-primary)">
+									Manicure
+								</h2>
+								<p class="text-muted small mb-2">
+									Descripción del servicio. Lorem ipsum dolor sit amet consectetur adipiscing elit.
+								</p>
+								<a
+									class="btn btn-custom-primary"
+									href="servicios/nails.html"
+									>Ir al servicio</a
+								>
+							</div>
+							<div class="col-12 col-sm-6 text-center">
+								<img
+									src="https://placehold.co/300x180/F4F2F0/590D1F?text=.img-thumbnail"
+									alt="Service thumbnail 3"
+									class="img-thumbnail service-img-thumb"
+									onerror="
+										this.onerror = null;
+										this.src = 'https://placehold.co/300x300/F4F2F0/590D1F?text=.img-thumbnail';
+									" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- UBICACIÓN -->
+			<section
+				id="location"
+				class="mb-4">
+				<h1 class="section-title">Dónde encontrarnos</h1>
+
+				<!-- Vertical layout optimized for phone screens -->
+				<div class="d-flex flex-column gap-3">
+					<!-- Top: Map Picture Overview -->
+					<div class="map-container">
+						<img
+							src="https://placehold.co/400x250/A52647/ffffff?text=map+picture+overview"
+							alt="map picture overview"
+							class="w-100 h-100"
+							style="object-fit: cover"
+							onerror="
+								this.onerror = null;
+								this.src = 'https://placehold.co/400x250/A52647/ffffff?text=map+picture+overview';
+							" />
+					</div>
+
+					<!-- 1. Schedule and aperture times -->
+					<div class="sketch-card p-2">
+						<div class="d-flex align-items-start gap-2">
+							<i
+								class="bi bi-clock fs-4"
+								style="color: var(--color-secondary)"></i>
+							<div>
+								<p
+									class="fw-bold mb-0 small"
+									style="color: var(--color-primary)">
+									Schedule and aperture times
+								</p>
+								<p class="mb-0 text-muted small">Mon - Fri: 8:00 AM - 6:00 PM</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- 2. Address -->
+					<div class="sketch-card p-2">
+						<div class="d-flex align-items-start gap-2">
+							<i
+								class="bi bi-geo-alt fs-4"
+								style="color: var(--color-secondary)"></i>
+							<div>
+								<p
+									class="fw-bold mb-0 small"
+									style="color: var(--color-primary)">
+									Address
+								</p>
+								<p class="mb-0 text-muted small">123 Innovation Street, Suite 400</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- 3. Google Maps Code -->
+					<div class="sketch-card p-2">
+						<div class="d-flex align-items-start gap-2">
+							<i
+								class="bi bi-code-slash fs-4"
+								style="color: var(--color-secondary)"></i>
+							<div class="w-100">
+								<p
+									class="fw-bold mb-0 small"
+									style="color: var(--color-primary)">
+									Google maps code
+								</p>
+								<div
+									class="bg-light p-1 mt-1 rounded border text-break"
+									style="font-size: 0.75rem">
+									<code>&lt;iframe src="https://maps.google.com/..."&gt;&lt;/iframe&gt;</code>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
 	</body>
 </html>

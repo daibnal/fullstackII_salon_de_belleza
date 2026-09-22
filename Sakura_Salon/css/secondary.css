@@ -1,0 +1,174 @@
+:root {
+      --color-primary: #590D1F;   /* Primario: Dark Burgundy [Adobe color] */
+      --color-secondary: #A52647; /* Secundario: Rose Red [Adobe color] */
+      --color-accent: #F0A6A8;    /* Acento: Soft Pink [Adobe color] */
+      --color-bg: #F4F2F0;        /* Background: Off-White [Adobe color] */
+      --color-text-dark: #2A181C;  /* Texto ocuro: tone [Gemini] */
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-dark);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+      min-width: 320px;
+    }
+
+    /* Mobile Viewport Container Constraint for Phone-First View */
+    .mobile-container {
+      width: 100%;
+      max-width: 1440px; /* Constrains max width to resemble phone screens, fits nicely on 320px+ */
+      margin: 0 auto;
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+
+    .custom-navbar {
+      background-color: #ffffff;
+      border-bottom: 2px solid var(--color-accent);
+      padding: 0.5rem 0;
+    }
+
+    .brand-logo-container {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--color-primary);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-bg);
+    }
+
+    .brand-logo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .header-icon-btn {
+      color: var(--color-primary);
+      font-size: 1.4rem;
+      transition: color 0.2s ease, background-color 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+    }
+
+    .header-icon-btn:hover, .header-icon-btn:focus {
+      color: var(--color-secondary);
+      background-color: rgba(165, 38, 71, 0.1);
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-align: center;
+      position: relative;
+      display: block;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 48px;
+      height: 3.5px;
+      background-color: var(--color-secondary);
+      margin: 6px auto 0 auto;
+      border-radius: 2px;
+    }
+
+    /* Sketch Card Wrapper */
+    .sketch-card {
+      background-color: #ffffff;
+      border: 2px solid var(--color-accent);
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 3px 8px rgba(89, 13, 31, 0.05);
+    }
+
+    .service-img-thumb {
+      border: 2px solid var(--color-accent) !important;
+      border-radius: 10px !important;
+      padding: 0.2rem;
+      background-color: #ffffff;
+      width: 100%;
+      max-width: 460px;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .btn-custom-primary {
+      background-color: var(--color-primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.4rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+      width: 100%; /* Full width button on 320px screens */
+    }
+
+    .btn-custom-primary:hover, .btn-custom-primary:focus {
+      background-color: var(--color-secondary);
+      color: #ffffff;
+    }
+
+    /* Map Box Styling */
+    .map-container {
+      border: 2px solid var(--color-accent);
+      border-radius: 12px;
+      overflow: hidden;
+      height: 200px;
+      background-color: #e5e3e0;
+    }
+
+    footer {
+      background-color: var(--color-primary);
+      color: #ffffff;
+      margin-top: auto;
+    }
+
+    .footer-label {
+      background-color: rgba(0, 0, 0, 0.18);
+      text-align: center;
+      padding: 0.4rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      color: var(--color-accent);
+    }
+
+    footer h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--color-accent);
+      border-bottom: 1px solid rgba(240, 166, 168, 0.3);
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.75rem;
+    }
+
+    footer a {
+      color: var(--color-bg);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s ease;
+    }
+
+    footer a:hover {
+      color: var(--color-accent);
+    }
