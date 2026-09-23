@@ -30,7 +30,7 @@
 	</head>
 	<body class="container-fluid p-0">
 		<!-- Nav Bar -->
-		<nav class="navbar fixed-top bg-dark navbar-dark">
+		<nav class="navbar fixed-top color-primary">
 			<div class="container-fluid">
 				<!-- Logo -->
 				<a
@@ -44,7 +44,7 @@
 				</a>
 				<!-- 3 Rayitas -->
 				<button
-					class="navbar-toggler"
+					class="navbar-toggler color-bg"
 					type="button"
 					data-bs-toggle="collapse"
 					data-bs-target="#collapsibleNavbar">
@@ -84,52 +84,81 @@
 		<main id="main"></main>
 
 		<main class="mobile-container my-4">
-			<!-- ACERCA DE NOSOTROS -->
-			<section
-				id="about"
-				class="mb-5">
-				<h1 class="section-title">Acerca de Nosotros</h1>
-				<p class="text-center text-muted small mb-3 px-1">
-					Corta descripción de la pyme, los servicios que ofrece y quizá sus metas y/o políticas.
-					Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit
-					quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id.
-				</p>
+			<!-- Carousel -->
+			<div
+				id="demo"
+				class="carousel slide container"
+				data-bs-ride="carousel">
+				<!-- Indicators/dots -->
+				<div class="carousel-indicators">
+					<button
+						type="button"
+						data-bs-target="#demo"
+						data-bs-slide-to="0"
+						class="active"></button>
+					<button
+						type="button"
+						data-bs-target="#demo"
+						data-bs-slide-to="1"></button>
+					<button
+						type="button"
+						data-bs-target="#demo"
+						data-bs-slide-to="2"></button>
+					<button
+						type="button"
+						data-bs-target="#demo"
+						data-bs-slide-to="3"></button>
+				</div>
 
-				<!-- 2 Imagenes del interior del salon lado a lado -->
-				<div class="row g-2">
-					<div class="col-6">
-						<div class="sketch-card p-1">
-							<img
-								src="https://placehold.co/300x220/F0A6A8/590D1F?text=%3Cimg%2F%3E"
-								alt="About image 1"
-								class="img-fluid rounded w-100"
-								style="height: 110px; object-fit: cover"
-								onerror="
-									this.onerror = null;
-									this.src = 'https://placehold.co/300x220/F0A6A8/590D1F?text=%3Cimg%2F%3E';
-								" />
-						</div>
+				<!-- El slideshow/carrusel -->
+				<div class="carousel-inner">
+					<div class="carousel-item active ratio ratio-1x1">
+						<img
+							src="assets/carrusel-inicio/c1_1.png"
+							alt=""
+							class="d-block w-100" />
 					</div>
-					<div class="col-6">
-						<div class="sketch-card p-1">
-							<img
-								src="https://placehold.co/300x220/F0A6A8/590D1F?text=%3Cimg%2F%3E"
-								alt="About image 2"
-								class="img-fluid rounded w-100"
-								style="height: 110px; object-fit: cover"
-								onerror="
-									this.onerror = null;
-									this.src = 'https://placehold.co/300x220/F0A6A8/590D1F?text=%3Cimg%2F%3E';
-								" />
-						</div>
+					<div class="carousel-item ratio ratio-1x1">
+						<img
+							src="assets/carrusel-inicio/c1_2.png"
+							alt=""
+							class="d-block w-100" />
+					</div>
+					<div class="carousel-item ratio ratio-1x1">
+						<img
+							src="assets/carrusel-inicio/c1_3.png"
+							alt=""
+							class="d-block w-100" />
+					</div>
+					<div class="carousel-item ratio ratio-1x1">
+						<img
+							src="assets/carrusel-inicio/c1_4.png"
+							alt=""
+							class="d-block w-100" />
 					</div>
 				</div>
-			</section>
+
+				<!-- Left and right controls/icons -->
+				<button
+					class="carousel-control-prev"
+					type="button"
+					data-bs-target="#demo"
+					data-bs-slide="prev">
+					<span class="carousel-control-prev-icon"></span>
+				</button>
+				<button
+					class="carousel-control-next"
+					type="button"
+					data-bs-target="#demo"
+					data-bs-slide="next">
+					<span class="carousel-control-next-icon"></span>
+				</button>
+			</div>
 
 			<!-- SERVICIOS -->
 			<section
 				id="services"
-				class="mb-5">
+				class="mb-5 pt-5">
 				<h1 class="section-title">Nuestros servicios</h1>
 
 				<div class="d-flex flex-column gap-5">
@@ -143,21 +172,20 @@
 									Lifting y Cejas
 								</h2>
 								<p class="text-muted small mb-2">
-									Descripción del servicio. Lorem ipsum dolor sit amet consectetur adipiscing elit.
-									Sit amet consectetur adipiscing elit quisque faucibus ex. Adipiscing elit quisque
-									faucibus ex sapien vitae pellentesque.
+									Realza tu mirada con un lifting de pestañas y diseño de cejas,
+									logrando una apariencia natural, definida y armoniosa.
 								</p>
 								<!-- <button class="btn btn-custom-primary mb-2 mb-sm-0" >Ir al servicio</button> -->
 								<a
 									class="btn btn-custom-primary"
 									href="servicios/eyes.html"
-									>Ir al servicio</a
+									>Ver opciones</a
 								>
 							</div>
 							<div class="col-12 col-sm-6 text-center">
 								<img
-									src="https://placehold.co/300x180/F4F2F0/590D1F?text=.img-thumbnail"
-									alt="Service thumbnail 1"
+									src="assets/inicio-servicios/lifting_inicio.png"
+									alt=""
 									class="img-thumbnail service-img-thumb"
 									onerror="
 										this.onerror = null;
@@ -172,8 +200,8 @@
 						<div class="row g-2 align-items-center flex-column-reverse flex-sm-row">
 							<div class="col-12 col-sm-6 text-center">
 								<img
-									src="https://placehold.co/300x180/F4F2F0/590D1F?text=.img-thumbnail"
-									alt="Service thumbnail 2"
+									src="assets/inicio-servicios/cabello_inicio.png"
+									alt=""
 									class="img-thumbnail service-img-thumb"
 									onerror="
 										this.onerror = null;
@@ -187,12 +215,13 @@
 									Cabello
 								</h2>
 								<p class="text-muted small mb-2">
-									Descripción del servicio. Lorem ipsum dolor sit amet consectetur adipiscing elit.
+									Transforma tu cabello con cortes, color y tratamientos personalizados,
+									diseñados para resaltar tu estilo y mantenerlo saludable y radiante.
 								</p>
 								<a
 									class="btn btn-custom-primary"
 									href="servicios/hair.html"
-									>Ir al servicio</a
+									>Ver opciones</a
 								>
 							</div>
 						</div>
@@ -208,24 +237,66 @@
 									Manicure
 								</h2>
 								<p class="text-muted small mb-2">
-									Descripción del servicio. Lorem ipsum dolor sit amet consectetur adipiscing elit.
+									Cuida y embellece tus manos con manicures personalizados, desde esmaltados
+									y diseños hasta extensiones, siempre con un acabado prolijo y elegante.
 								</p>
 								<a
 									class="btn btn-custom-primary"
 									href="servicios/nails.html"
-									>Ir al servicio</a
+									>Ver opciones</a
 								>
 							</div>
 							<div class="col-12 col-sm-6 text-center">
 								<img
-									src="https://placehold.co/300x180/F4F2F0/590D1F?text=.img-thumbnail"
-									alt="Service thumbnail 3"
+									src="assets/inicio-servicios/unas_inicio.png"
+									alt=""
 									class="img-thumbnail service-img-thumb"
 									onerror="
 										this.onerror = null;
 										this.src = 'https://placehold.co/300x300/F4F2F0/590D1F?text=.img-thumbnail';
 									" />
 							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ACERCA DE NOSOTROS -->
+			<section
+				id="about"
+				class="mb-5 pt-5">
+				<h1 class="section-title">Acerca de Nosotros</h1>
+				<p class="text-center text-muted small mb-3 px-1">
+					Un espacio dedicado a realzar tu belleza. Creamos experiencias personalizadas en cabello, 
+					manicure y lifting, cuidando cada detalle para que te sientas y luzcas increíble.
+				</p>
+
+				<!-- 2 Imagenes del interior del salon lado a lado -->
+				<div class="row g-2">
+					<div class="col-6">
+						<div class="sketch-card p-1">
+							<img
+								src="assets/inicio-acerca-de/fachada_salon.png"
+								alt=""
+								class="img-fluid rounded w-100"
+								style="height: 110px; object-fit: cover"
+								onerror="
+									this.onerror = null;
+									this.src = 'https://placehold.co/300x220/F0A6A8/590D1F?text=%3Cimg%2F%3E';
+								" />
+						</div>
+					</div>
+					<div class="col-6">
+						<div class="sketch-card p-1">
+							<img
+								src="assets/inicio-acerca-de/interior_salon.png"
+								alt=""
+								class="img-fluid rounded w-100"
+								style="height: 110px; object-fit: cover"
+								onerror="
+									this.onerror = null;
+									this.src = 'https://placehold.co/300x220/F0A6A8/590D1F?text=%3Cimg%2F%3E';
+								" />
 						</div>
 					</div>
 				</div>
@@ -242,7 +313,7 @@
 					<!-- Top: Map Picture Overview -->
 					<div class="map-container">
 						<img
-							src="https://placehold.co/400x250/A52647/ffffff?text=map+picture+overview"
+							src="assets/inicio-acerca-de/mapa_salon.png"
 							alt="map picture overview"
 							class="w-100 h-100"
 							style="object-fit: cover"
@@ -262,9 +333,11 @@
 								<p
 									class="fw-bold mb-0 small"
 									style="color: var(--color-primary)">
-									Schedule and aperture times
+									Horario de Atención
 								</p>
-								<p class="mb-0 text-muted small">Mon - Fri: 8:00 AM - 6:00 PM</p>
+								<p class="mb-0 text-muted small">Lunes - Viernes: 9:00 AM - 19:00 PM</p>
+								<p class="mb-0 text-muted small">Sabado: 10:00 AM - 19:00 PM</p>
+								<p class="mb-0 text-muted small">Domingo: Cerrado</p>
 							</div>
 						</div>
 					</div>
@@ -279,30 +352,26 @@
 								<p
 									class="fw-bold mb-0 small"
 									style="color: var(--color-primary)">
-									Address
+									Dirección
 								</p>
-								<p class="mb-0 text-muted small">123 Innovation Street, Suite 400</p>
+								<p class="mb-0 text-muted small">Av. Chacabuco 1234, Concepción, Chile. </p>
 							</div>
 						</div>
 					</div>
 
-					<!-- 3. Google Maps Code -->
+					<!-- 2. Address -->
 					<div class="sketch-card p-2">
 						<div class="d-flex align-items-start gap-2">
 							<i
-								class="bi bi-code-slash fs-4"
+								class="bi bi-geo-alt fs-4"
 								style="color: var(--color-secondary)"></i>
-							<div class="w-100">
+							<div>
 								<p
 									class="fw-bold mb-0 small"
 									style="color: var(--color-primary)">
-									Google maps code
+									Coordenadas
 								</p>
-								<div
-									class="bg-light p-1 mt-1 rounded border text-break"
-									style="font-size: 0.75rem">
-									<code>&lt;iframe src="https://maps.google.com/..."&gt;&lt;/iframe&gt;</code>
-								</div>
+								<p class="mb-0 text-muted small">-36.8269, -73.0498 </p>
 							</div>
 						</div>
 					</div>

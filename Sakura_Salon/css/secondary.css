@@ -6,6 +6,14 @@
       --color-text-dark: #2A181C;  /* Texto ocuro: tone [Gemini] */
     }
 
+    .color-primary {
+      background-color: var(--color-primary);
+    }
+
+    .color-bg {
+      background-color: var(--color-bg);
+    }
+
     body {
       font-family: 'Inter', sans-serif;
       background-color: var(--color-bg);
