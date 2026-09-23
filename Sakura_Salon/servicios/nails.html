@@ -12,10 +12,18 @@
 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
 			rel="stylesheet" />
 
+		<!-- Link de Iconos de Bootstrap -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
 		<!-- Link de estilos propios -->
 		<link
 			rel="stylesheet"
-			href="../css/main.css" />
+			href="css/secondary.css" />
+		<link
+			rel="stylesheet"
+			href="css/main.css" />
 
 		<!-- Bootstrap 5 script -->
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
@@ -108,28 +116,28 @@
 							src="../assets/carrusel-nails/mani-rusa.png"
 							alt="Mano mostrando uñas cortas con esmaltado semipermanente color rojo vino brillante,
                                  con recuadros que detallan la manicura rusa y el acabado."
-							class="d-block w-100" />
+							class="d-block w-100 carrusel-max-h" />
 					</div>
 					<div class="carousel-item ratio ratio-1x1">
 						<img
 							src="../assets/carrusel-nails/polygel.png"
 							alt="Mano con uñas esculpidas en polygel con diseño de manicura francesa y acabado natural,
                                  con tubos de polygel y pinceles de fondo."
-							class="d-block w-100" />
+							class="d-block w-100 carrusel-max-h" />
 					</div>
 					<div class="carousel-item ratio ratio-1x1">
 						<img
 							src="../assets/carrusel-nails/retiro.png"
 							alt="Especialista con guantes negros retirando esmalte de uñas con un torno eléctrico,
                                  junto a productos de acetona y algodón."
-							class="d-block w-100" />
+							class="d-block w-100 carrusel-max-h" />
 					</div>
 					<div class="carousel-item ratio ratio-1x1">
 						<img
 							src="../assets/carrusel-nails/semipermanente.png"
 							alt="Manos apoyadas sobre un cojín de manicura exhibiendo uñas cortas con esmaltado
                                  semipermanente color rosa con efecto ojo de gato."
-							class="d-block w-100" />
+							class="d-block w-100 carrusel-max-h" />
 					</div>
 				</div>
 
@@ -149,6 +157,80 @@
 					<span class="carousel-control-next-icon"></span>
 				</button>
 			</div>
+
+			<!-- Sub-services Grid Container -->
+    <section>
+      <div class="d-flex flex-wrap justify-content-center gap-5 pt-5">
+
+        <!-- Card 1 -->
+        <div class="card service-card">
+          <svg class="card-img-top" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid slice">
+            <rect width="100%" height="100%" fill="#F0A6A8"/>
+            <text x="50%" y="50%" fill="#590D1F" dy=".3em" text-anchor="middle">Thumbnail Sub-servicio 1</text>
+          </svg>
+          <div class="card-body d-flex flex-column text-center">
+            <h3 class="card-title-underlined h5 mb-2">Título</h3>
+            <p class="card-text small text-muted mb-2">Descripción breve sobre este tratamiento y sus beneficios principales.</p>
+            <p class="small fw-semibold text-secondary mb-3"><i class="bi bi-clock me-1"></i>Duración: 45 min</p>
+            <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
+              <a href="#" class="btn btn-custom-primary btn-sm w-auto px-3">Ir</a>
+              <span class="fw-bold text-dark">$precio</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card service-card">
+          <svg class="card-img-top" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid slice">
+            <rect width="100%" height="100%" fill="#F0A6A8"/>
+            <text x="50%" y="50%" fill="#590D1F" dy=".3em" text-anchor="middle">Thumbnail Sub-servicio 2</text>
+          </svg>
+          <div class="card-body d-flex flex-column text-center">
+            <h3 class="card-title-underlined h5 mb-2">Título</h3>
+            <p class="card-text small text-muted mb-2">Descripción breve sobre este tratamiento y sus beneficios principales.</p>
+            <p class="small fw-semibold text-secondary mb-3"><i class="bi bi-clock me-1"></i>Duración: 60 min</p>
+            <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
+              <a href="#" class="btn btn-custom-primary btn-sm w-auto px-3">Ir</a>
+              <span class="fw-bold text-dark">$precio</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card service-card">
+          <svg class="card-img-top" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid slice">
+            <rect width="100%" height="100%" fill="#F0A6A8"/>
+            <text x="50%" y="50%" fill="#590D1F" dy=".3em" text-anchor="middle">Thumbnail Sub-servicio 3</text>
+          </svg>
+          <div class="card-body d-flex flex-column text-center">
+            <h3 class="card-title-underlined h5 mb-2">Título</h3>
+            <p class="card-text small text-muted mb-2">Descripción breve sobre este tratamiento y sus beneficios principales.</p>
+            <p class="small fw-semibold text-secondary mb-3"><i class="bi bi-clock me-1"></i>Duración: 30 min</p>
+            <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
+              <a href="#" class="btn btn-custom-primary btn-sm w-auto px-3">Ir</a>
+              <span class="fw-bold text-dark">$precio</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card service-card">
+          <svg class="card-img-top" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid slice">
+            <rect width="100%" height="100%" fill="#F0A6A8"/>
+            <text x="50%" y="50%" fill="#590D1F" dy=".3em" text-anchor="middle">Thumbnail Sub-servicio 4</text>
+          </svg>
+          <div class="card-body d-flex flex-column text-center">
+            <h3 class="card-title-underlined h5 mb-2">Título</h3>
+            <p class="card-text small text-muted mb-2">Descripción breve sobre este tratamiento y sus beneficios principales.</p>
+            <p class="small fw-semibold text-secondary mb-3"><i class="bi bi-clock me-1"></i>Duración: 50 min</p>
+            <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
+              <a href="#" class="btn btn-custom-primary btn-sm w-auto px-3">Ir</a>
+              <span class="fw-bold text-dark">$precio</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 		</main>
 	</body>
 </html>
