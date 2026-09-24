@@ -30,12 +30,14 @@
     /* Mobile Viewport Container Constraint for Phone-First View */
     .mobile-container {
       width: 100%;
-      max-width: 1440px; /* Constrains max width to resemble phone screens, fits nicely on 320px+ */
-      margin: 170px 0px 0px;
+      margin: 76px 0px 0px;
       padding-left: 12px;
       padding-right: 12px;
-      position: relative;
-      top: 52px;
+
+      max-width: 750px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     /* NAVBAR
@@ -142,6 +144,8 @@
       border-radius: 12px;
       padding: 1rem;
       box-shadow: 0 3px 8px rgba(89, 13, 31, 0.05);
+      align-self: center;
+      width: 100%;
     }
 
     .service-img-thumb {
@@ -164,7 +168,8 @@
       font-size: 0.875rem;
       font-weight: 500;
       transition: background-color 0.2s ease;
-      width: 100%; /* Full width button on 320px screens */
+      width: 100%;
+      max-width: 277px;
     }
 
     .btn-custom-primary:hover, .btn-custom-primary:focus {
@@ -177,7 +182,6 @@
       border: 2px solid var(--color-accent);
       border-radius: 12px;
       overflow: hidden;
-      height: 200px;
       background-color: #e5e3e0;
     }
 
