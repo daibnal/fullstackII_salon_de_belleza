@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Administración Salón</title>
+
+    <!-- Link de Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Link de Iconos de Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <link rel="stylesheet" href="../css/admin.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/secondary.css" />
+
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <!-- Overlay para móviles -->
+        <div class="overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <!-- Asegúrate de poner la ruta correcta a tu logo -->
+                <img src="../assets/Logo_sm.png" class="rounded-circle bg-white" alt="Logo Salón">
+                <h5 class="mt-2 mb-0">Panel Admin</h5>
+                <small class="text-white-50">Salón de Belleza</small>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li class="active"> <!-- Clase active para indicar la página actual -->
+                    <a href="#"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="admin_agenda.html"><i class="bi bi-calendar3"></i> Agenda</a>
+                </li>
+                <li>
+                    <a href="admin_servicios.html"><i class="bi bi-scissors"></i> Servicios</a>
+                </li>
+                <li>
+                    <a href="admin_personal.html"><i class="bi bi-people"></i> Personal</a>
+                </li>
+                <li>
+                    <a href="admin_insumos.html"><i class="bi bi-box-seam"></i> Insumos</a>
+                </li>
+                <li>
+                    <a href="admin_reportes.html"><i class="bi bi-graph-up"></i> Reportes</a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <a href="#" class="text-white text-decoration-none"><i class="bi bi-box-arrow-left me-2"></i>Cerrar Sesión</a>
+            </div>
+        </nav>
+
+        <!-- Contenido -->
+        <div id="content">
+            <!-- Navbar Superior -->
+            <nav class="topnav">
+                <div>
+                    <button type="button" id="sidebarCollapse" class="topnav-btn">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <span class="ms-3 fw-bold color-primary d-none d-sm-inline">Bienvenida, Administradora</span>
+                </div>
+                <div>
+                    <a href="#" class="header-icon-btn position-relative" style="color: var(--color-primary); font-size: 1.2rem;">
+                        <i class="bi bi-bell"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                            <span class="visually-hidden">Nuevas alertas</span>
+                        </span>
+                    </a>
+                </div>
+            </nav>
+
+            <!-- Área de Contenido Principal -->
+            <div class="main-content-area container-fluid">
+                
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="fw-bold m-0" style="color: var(--color-primary);">Dashboard</h2>
+                    <button class="btn btn-custom-primary"><i class="bi bi-plus-lg me-2"></i>Nueva Cita</button>
+                </div>
+
+                <!-- Fila de Tarjetas Resumen -->
+                <div class="row g-4 mb-5">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="sketch-card text-center">
+                            <i class="bi bi-calendar-check card-icon"></i>
+                            <h5 class="card-title-custom">Citas Hoy</h5>
+                            <div class="card-value">12</div>
+                            <small class="text-success"><i class="bi bi-arrow-up-short"></i> 2 más que ayer</small>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="sketch-card text-center">
+                            <i class="bi bi-currency-dollar card-icon"></i>
+                            <h5 class="card-title-custom">Ingresos (Día)</h5>
+                            <div class="card-value">$245k</div>
+                            <small class="text-muted">Actualizado hace 10 min</small>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="sketch-card text-center">
+                            <i class="bi bi-box-seam card-icon"></i>
+                            <h5 class="card-title-custom">Alertas Stock</h5>
+                            <div class="card-value text-danger">3</div>
+                            <small class="text-danger">Productos por agotarse</small>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="sketch-card text-center">
+                            <i class="bi bi-people card-icon"></i>
+                            <h5 class="card-title-custom">Staff Activo</h5>
+                            <div class="card-value">5/6</div>
+                            <small class="text-muted">Turno mañana</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filas de contenido más grande -->
+                <div class="row g-4">
+                    <!-- Próximas Citas (Tabla) -->
+                    <div class="col-12 col-lg-8">
+                        <div class="sketch-card">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="card-title-custom m-0">Próximas Citas</h4>
+                                <a href="/admin_agenda.html" class="text-decoration-none" style="color: var(--color-secondary);">Ver calendario</a>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead style="border-bottom: 2px solid var(--color-accent);">
+                                        <tr>
+                                            <th>Hora</th>
+                                            <th>Cliente</th>
+                                            <th>Servicio</th>
+                                            <th>Profesional</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>10:00 AM</td>
+                                            <td>Ana García</td>
+                                            <td>Corte y Brushing</td>
+                                            <td>María</td>
+                                            <td><span class="badge bg-warning text-dark">Pendiente</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>11:30 AM</td>
+                                            <td>Valentina Soto</td>
+                                            <td>Manicura Permanente</td>
+                                            <td>Camila</td>
+                                            <td><span class="badge bg-success">Confirmada</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>12:15 PM</td>
+                                            <td>Laura Martínez</td>
+                                            <td>Balayage</td>
+                                            <td>Javiera</td>
+                                            <td><span class="badge bg-success">Confirmada</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resumen Rápido -->
+                    <div class="col-12 col-lg-4">
+                        <div class="sketch-card">
+                            <h4 class="card-title-custom mb-3">Acciones Rápidas</h4>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-secondary text-start" style="border-color: var(--color-accent); color: var(--color-primary);"><i class="bi bi-box-arrow-in-right me-2"></i> Registrar Venta</button>
+                                <button class="btn btn-outline-secondary text-start" style="border-color: var(--color-accent); color: var(--color-primary);"><i class="bi bi-person-plus me-2"></i> Nuevo Cliente</button>
+                                <button class="btn btn-outline-secondary text-start" style="border-color: var(--color-accent); color: var(--color-primary);"><i class="bi bi-cart-plus me-2"></i> Añadir Insumo</button>
+                            </div>
+                            
+                            <hr class="my-4" style="border-color: var(--color-accent);">
+                            
+                            <h4 class="card-title-custom mb-3">Rendimiento Semanal</h4>
+                            <!-- Aquí podrías insertar un gráfico usando una librería como Chart.js. Por ahora un placeholder -->
+                            <div class="bg-light rounded p-3 text-center border" style="height: 150px; border-color: var(--color-accent)!important;">
+                                <span class="text-muted d-block mt-4"><i class="bi bi-bar-chart-line fs-1"></i><br>Espacio para Gráfico de Ingresos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- Fin main-content-area -->
+        </div> <!-- Fin content -->
+    </div> <!-- Fin wrapper -->
+
+    <!-- Bootstrap 5 script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script para el Sidebar Responsive -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarCollapse = document.getElementById('sidebarCollapse');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
+
+            sidebarCollapse.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', toggleSidebar); // Cierra al hacer clic fuera
+        });
+    </script>
+</body>
+
+</html>
