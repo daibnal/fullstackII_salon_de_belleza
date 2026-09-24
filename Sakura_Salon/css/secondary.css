@@ -43,6 +43,20 @@
     .navbar {
       background-color: var(--color-primary);
     }
+    
+    .services-flex-container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin-left: -6px;
+      margin-right: -6px;
+    }
+
+    .custom-navbar {
+      background-color: #ffffff;
+      border-bottom: 2px solid var(--color-accent);
+      padding: 0.5rem 0;
+    }
 
     /* Imagen dentro del contenedor del logo*/
     .navbar-brand img {
@@ -202,4 +216,8 @@
 
     footer a:hover {
       color: var(--color-accent);
+    }
+
+    .carrusel-max-h {
+      max-height: 100vh;
     }
