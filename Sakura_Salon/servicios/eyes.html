@@ -12,7 +12,15 @@
 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
 			rel="stylesheet" />
 
+		<!-- Link de Iconos de Bootstrap -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
 		<!-- Link de estilos propios -->
+		<link
+			rel="stylesheet"
+			href="../css/secondary.css" />
 		<link
 			rel="stylesheet"
 			href="../css/main.css" />
@@ -21,57 +29,119 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 	</head>
 	<body class="container-fluid p-0">
-		<!-- Nav Bar -->
-		<nav class="navbar fixed-top bg-dark navbar-dark">
-			<div class="container-fluid">
-				<!-- Logo -->
-				<a
-					class="navbar-brand"
-					href="../index.html">
-					<img
-						src="../assets/Logo_sm.png"
-						class="rounded-circle"
-						style="width: 50px"
-						alt="Logo" />
-				</a>
-				<!-- 3 Rayitas -->
-				<button
-					class="navbar-toggler"
-					type="button"
-					data-bs-toggle="collapse"
-					data-bs-target="#collapsibleNavbar">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<!-- Menú desplegable -->
-				<div
-					class="collapse navbar-collapse"
-					id="collapsibleNavbar">
-					<ul class="navbar-nav">
-						<li class="nav-item">
-							<a
-								class="nav-link"
-								href="../index.html"
-								>Inicio
-							</a>
-						</li>
-						<li class="nav-item">
-							<a
-								class="nav-link"
-								href="hair.html"
-								>Cabello
-							</a>
-						</li>
-						<li class="nav-item">
-							<a
-								class="nav-link"
-								href="nails.html"
-								>Manicure
-							</a>
-						</li>
-					</ul>
+		<header>
+			<!-- Nav Bar -->
+			<nav class="navbar fixed-top">
+				<div class="container-fluid">
+					<!-- Logo -->
+					<a
+						class="navbar-brand"
+						href="../index.html">
+						<img
+							src="../assets/Logo_sm.png"
+							class="rounded-circle"
+							alt="Logo" />
+						<span class="brand-title ms-2">Sakura Salon</span>
+					</a>
+					<!-- 3 Rayitas -->
+					<button
+						class="header-icon-btn"
+						type="button"
+						data-bs-toggle="offcanvas"
+						data-bs-target="#offcanvasNavbar"
+						aria-controls="offcanvasNavbar"
+						aria-label="Menú desplegable lateral"
+						title="Menú desplegable">
+						<i class="navbar-toggler-icon"></i>
+					</button>
+
+					<!-- Menú lateral -->
+					<div
+						class="offcanvas offcanvas-end"
+						tabindex="-1"
+						id="offcanvasNavbar"
+						aria-labelledby="offcanvasNavbarLabel">
+						<!-- Encabezado Menú lateral -->
+						<div class="offcanvas-header">
+							<h5
+								class="offcanvas-title fw-bold"
+								id="offcanvasNavbarLabel">
+								Menú
+							</h5>
+							<button
+								type="button"
+								class="btn-close btn-close-white"
+								data-bs-dismiss="offcanvas"
+								aria-label="Close"></button>
+						</div>
+						<!-- Cuerpo del Menú Lateral -->
+						<div class="offcanvas-body">
+							<ul class="navbar-nav gap-2">
+								<li class="nav-item">
+									<a
+										class="nav-link fw-bold"
+										href="../index.html">
+										<i class="bi bi-house-door me-2"></i>Inicio
+									</a>
+								</li>
+								<li class="nav-item">
+									<a
+										class="nav-link fw-bold"
+										href="../index.html#about">
+										<i class="bi bi-info-circle me-2"></i>Acerca de Nosotros
+									</a>
+								</li>
+								<li class="nav-item">
+									<a
+										class="nav-link fw-bold"
+										href="../index.html#location">
+										<i class="bi bi-geo-alt me-2"></i>Donde encontrarnos
+									</a>
+								</li>
+								<li class="nav-item border-top pt-2">
+									<span class="text-uppercase text-muted extra-small fw-bold px-2">Servicios</span>
+								</li>
+								<li class="nav-item">
+									<a
+										class="nav-link fw-semibold active"
+										href="">
+										<i class="bi bi-eye me-2"></i>Lifting y Cejas
+									</a>
+								</li>
+								<li class="nav-item">
+									<a
+										class="nav-link fw-semibold"
+										href="hair.html">
+										<i class="bi bi-scissors me-2"></i>Cabello
+									</a>
+								</li>
+								<li class="nav-item">
+									<a
+										class="nav-link fw-semibold"
+										href="nails.html">
+										<i class="bi bi-brush me-2"></i>Manicure
+									</a>
+								</li>
+								<li class="nav-item border-top pt-2 mt-2">
+									<a
+										class="nav-link fw-semibold"
+										href="../usuario/login.html">
+										<i class="bi bi-box-arrow-in-right me-2"></i>Inicio de sesión
+									</a>
+								</li>
+								<li class="nav-item">
+									<a
+										class="nav-link fw-semibold"
+										href="../usuario/signin.html">
+										<i class="bi bi-person-plus me-2"></i>Creación de cuenta
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
 				</div>
-			</div>
-		</nav>
+			</nav>
+		</header>
 
 		<!-- Contenido principal -->
 		<main id="main">

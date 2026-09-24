@@ -29,53 +29,64 @@
     .mobile-container {
       width: 100%;
       max-width: 1440px; /* Constrains max width to resemble phone screens, fits nicely on 320px+ */
-      margin: 0 auto;
+      margin: 170px 0px 0px;
       padding-left: 12px;
       padding-right: 12px;
     }
 
-    .custom-navbar {
-      background-color: #ffffff;
-      border-bottom: 2px solid var(--color-accent);
-      padding: 0.5rem 0;
+    /* NAVBAR
+    Color de la barra */
+    .navbar {
+      background-color: var(--color-primary);
     }
 
-    .brand-logo-container {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 2px solid var(--color-primary);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--color-bg);
+    /* Imagen dentro del contenedor del logo*/
+    .navbar-brand img {
+      width: 50px;
+      height: 50px;
     }
 
-    .brand-logo-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    /* Nombre de la marca */
+    .brand-title {
+      color: var(--color-bg);
+      font-weight: bold;
     }
 
+    /* Boton menú lateral (3 rayitas)*/
     .header-icon-btn {
-      color: var(--color-primary);
+      color: var(--color-bg);
       font-size: 1.4rem;
       transition: color 0.2s ease, background-color 0.2s ease;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      border-radius: 10%;
       border: none;
-      background: transparent;
+      background: var(--color-bg);
     }
 
-    .header-icon-btn:hover, .header-icon-btn:focus {
-      color: var(--color-secondary);
-      background-color: rgba(165, 38, 71, 0.1);
+    /* Encabezado menú lateral */
+    .offcanvas-header {
+      background-color: var(--color-primary);
+      color: var(--color-bg);
+      height: 77px;
+    }
+
+    /* Cuerpo menú lateral */
+    .offcanvas-body {
+      background-color: var(--color-bg);
+    }
+
+    /* Links menú lateral */
+    .nav-link {
+      color: var(--color-primary);
+    }
+
+    .nav-link.active {
+      color: var(--color-text-dark);
     }
 
     .section-title {
