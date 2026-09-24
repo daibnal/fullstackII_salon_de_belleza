@@ -173,12 +173,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 sessionStorage.setItem('detallesCita', JSON.stringify(detalleCita));
                 
                 //Guardar en el historial general para el panel de Admin
-                //let listaCitas = JSON.parse(localStorage.getItem('citasSakura')) || [];
-                //listaCitas.push(detalleCita);
-                //localStorage.setItem('citasSakura', JSON.stringify(listaCitas));
+                let listaCitas = JSON.parse(localStorage.getItem('citasSakura')) || [];
+                listaCitas.push(detalleCita);
+                localStorage.setItem('citasSakura', JSON.stringify(listaCitas));
 
 
-                // Redirigimos a la nueva vista de confirmación en grande
+                // Redirigimos a la nueva vista de confirmación 
                 window.location.href = 'confirmacion.html';
             }
         });
