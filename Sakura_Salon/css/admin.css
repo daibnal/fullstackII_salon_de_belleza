@@ -357,3 +357,28 @@ body {
         padding: 15px;
     }
 }
+
+/* Invertir el orden de flexbox si se usa wrapper */
+.wrapper {
+    display: flex;
+    flex-direction: row; /* content a la izquierda, sidebar a la derecha */
+}
+
+/* Forzar la posición del sidebar a la derecha */
+#sidebar {
+    order: 2; /* Asegura que vaya después del contenido */
+    left: auto !important; 
+    right: 0 !important;
+}
+
+/* Lógica para pantallas pequeñas (móviles) */
+@media (max-width: 768px) {
+    #sidebar {
+        position: fixed;
+        right: -250px !important; /* Esconder hacia la derecha (ajusta el número al ancho de tu sidebar) */
+        transition: all 0.3s;
+    }
+    #sidebar.active {
+        right: 0 !important; /* Mostrar desde la derecha */
+    }
+}

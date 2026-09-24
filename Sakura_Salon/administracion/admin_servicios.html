@@ -60,20 +60,21 @@
 
         <!-- Contenido Principal -->
         <div id="content">
-            <!-- Navbar Superior -->
-            <nav class="topnav">
-                <div class="d-flex align-items-center">
-                    <button type="button" id="sidebarCollapse" class="topnav-btn d-md-none">
-                        <i class="bi bi-list"></i>
-                    </button>
-                    <span class="ms-3 fw-bold d-none d-md-inline" style="color: var(--color-primary);">Catálogo de
+            <nav class="topnav d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="fw-bold d-none d-md-inline" style="color: var(--color-primary);">Catálogo de
                         Servicios</span>
                 </div>
-                <div>
+
+                <div class="d-flex align-items-center gap-3">
                     <a href="#" class="position-relative text-decoration-none"
                         style="color: var(--color-primary); font-size: 1.2rem;">
                         <i class="bi bi-bell"></i>
                     </a>
+
+                    <button type="button" id="sidebarCollapse" class="topnav-btn d-md-none">
+                        <i class="bi bi-list"></i>
+                    </button>
                 </div>
             </nav>
 
@@ -92,7 +93,7 @@
                     <div class="col-12 col-md-4">
                         <div class="sketch-card text-center p-3">
                             <h6 class="text-muted mb-1">Total Servicios</h6>
-                            <h3 class="fw-bold text-dark m-0">10</h3>
+                            <h3 class="fw-bold text-dark m-0">14</h3>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
@@ -146,12 +147,44 @@
                             <tbody>
                                 <!-- CABELLO -->
                                 <tr>
-                                    <td><img src="../assets/carrusel-hair/alisado.png" class="service-thumbnail"
+                                    <td><img src="../assets/admin-servicios/botox1.png" class="service-thumbnail"
+                                            alt="Botox capilar"
+                                            onerror="this.src='https://placehold.co/60x60/e9ecef/6c757d?text=Img'"></td>
+                                    <td class="fw-bold">Botox capilar</td>
+                                    <td><span class="badge bg-secondary">Cabello</span></td>
+                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 1 hr</td>
+                                    <td class="fw-bold text-dark">$30.000</td>
+                                    <td><span class="badge bg-success-subtle text-success">Activo</span></td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-secondary me-1"><i
+                                                class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger"><i
+                                                class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><img src="../assets/admin-servicios/alisado.png" class="service-thumbnail"
                                             alt="Alisado"
                                             onerror="this.src='https://placehold.co/60x60/e9ecef/6c757d?text=Img'"></td>
-                                    <td class="fw-bold">Alisado Permanente</td>
+                                    <td class="fw-bold">Alisado</td>
                                     <td><span class="badge bg-secondary">Cabello</span></td>
-                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 120 min</td>
+                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 4 hr</td>
+                                    <td class="fw-bold text-dark">$70.000</td>
+                                    <td><span class="badge bg-success-subtle text-success">Activo</span></td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-secondary me-1"><i
+                                                class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger"><i
+                                                class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><img src="../assets/admin-servicios/coloracion3.png" class="service-thumbnail"
+                                            alt="Coloración"
+                                            onerror="this.src='https://placehold.co/60x60/e9ecef/6c757d?text=Img'"></td>
+                                    <td class="fw-bold">Coloración</td>
+                                    <td><span class="badge bg-secondary">Cabello</span></td>
+                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 2 hr</td>
                                     <td class="fw-bold text-dark">$45.000</td>
                                     <td><span class="badge bg-success-subtle text-success">Activo</span></td>
                                     <td class="text-end">
@@ -162,13 +195,13 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><img src="../assets/carrusel-hair/bob.png" class="service-thumbnail"
-                                            alt="Corte Bob"
+                                    <td><img src="../assets/admin-servicios/corte-puntas.png" class="service-thumbnail"
+                                            alt="Corte de puntas"
                                             onerror="this.src='https://placehold.co/60x60/e9ecef/6c757d?text=Img'"></td>
-                                    <td class="fw-bold">Corte Bob</td>
+                                    <td class="fw-bold">Corte de puntas</td>
                                     <td><span class="badge bg-secondary">Cabello</span></td>
-                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 45 min</td>
-                                    <td class="fw-bold text-dark">$18.000</td>
+                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 30 min</td>
+                                    <td class="fw-bold text-dark">$20.000</td>
                                     <td><span class="badge bg-success-subtle text-success">Activo</span></td>
                                     <td class="text-end">
                                         <button class="btn btn-sm btn-outline-secondary me-1"><i
@@ -178,13 +211,13 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><img src="../assets/carrusel-hair/capas.png" class="service-thumbnail"
-                                            alt="Corte Capas"
+                                    <td><img src="../assets/admin-servicios/balayage.png" class="service-thumbnail"
+                                            alt="Balayage"
                                             onerror="this.src='https://placehold.co/60x60/e9ecef/6c757d?text=Img'"></td>
-                                    <td class="fw-bold">Corte en Capas</td>
+                                    <td class="fw-bold">Balayage</td>
                                     <td><span class="badge bg-secondary">Cabello</span></td>
-                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 45 min</td>
-                                    <td class="fw-bold text-dark">$18.000</td>
+                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 5 hr</td>
+                                    <td class="fw-bold text-dark">$100.000</td>
                                     <td><span class="badge bg-success-subtle text-success">Activo</span></td>
                                     <td class="text-end">
                                         <button class="btn btn-sm btn-outline-secondary me-1"><i
@@ -194,13 +227,13 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><img src="../assets/carrusel-hair/rulos.png" class="service-thumbnail"
-                                            alt="Tratamiento Rulos"
+                                    <td><img src="../assets/carrusel-inicio/c1_1.png" class="service-thumbnail"
+                                            alt="Masaje hidratación"
                                             onerror="this.src='https://placehold.co/60x60/e9ecef/6c757d?text=Img'"></td>
-                                    <td class="fw-bold">Tratamiento Rulos</td>
+                                    <td class="fw-bold">Masaje hidratación</td>
                                     <td><span class="badge bg-secondary">Cabello</span></td>
-                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 60 min</td>
-                                    <td class="fw-bold text-dark">$25.000</td>
+                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 1 hr</td>
+                                    <td class="fw-bold text-dark">$30.000</td>
                                     <td><span class="badge bg-success-subtle text-success">Activo</span></td>
                                     <td class="text-end">
                                         <button class="btn btn-sm btn-outline-secondary me-1"><i
@@ -210,16 +243,16 @@
                                     </td>
                                 </tr>
 
-                                <!-- MANICURE -->
+                                <!-- UÑAS -->
                                 <tr>
-                                    <td><img src="../assets/carrusel-nails/mani-rusa.png" class="service-thumbnail"
-                                            alt="Manicura Rusa"
+                                    <td><img src="../assets/carrusel-nails/retiro.png" class="service-thumbnail"
+                                            alt="Retiro"
                                             onerror="this.src='https://placehold.co/60x60/e9ecef/6c757d?text=Img'"></td>
-                                    <td class="fw-bold">Manicura Rusa</td>
+                                    <td class="fw-bold">Retiro</td>
                                     <td><span class="badge"
                                             style="background-color: var(--color-secondary);">Manicure</span></td>
-                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 90 min</td>
-                                    <td class="fw-bold text-dark">$22.000</td>
+                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 30 min</td>
+                                    <td class="fw-bold text-dark">$10.000</td>
                                     <td><span class="badge bg-success-subtle text-success">Activo</span></td>
                                     <td class="text-end">
                                         <button class="btn btn-sm btn-outline-secondary me-1"><i
@@ -232,10 +265,10 @@
                                     <td><img src="../assets/carrusel-nails/polygel.png" class="service-thumbnail"
                                             alt="Polygel"
                                             onerror="this.src='https://placehold.co/60x60/e9ecef/6c757d?text=Img'"></td>
-                                    <td class="fw-bold">Esculpido Polygel</td>
+                                    <td class="fw-bold">Polygel</td>
                                     <td><span class="badge"
                                             style="background-color: var(--color-secondary);">Manicure</span></td>
-                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 150 min</td>
+                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 1 hr</td>
                                     <td class="fw-bold text-dark">$35.000</td>
                                     <td><span class="badge bg-success-subtle text-success">Activo</span></td>
                                     <td class="text-end">
@@ -246,14 +279,14 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><img src="../assets/carrusel-nails/semipermanente.png" class="service-thumbnail"
-                                            alt="Semipermanente"
+                                    <td><img src="../assets/carrusel-nails/mani-rusa.png" class="service-thumbnail"
+                                            alt="Manicure rusa"
                                             onerror="this.src='https://placehold.co/60x60/e9ecef/6c757d?text=Img'"></td>
-                                    <td class="fw-bold">Esmaltado Semipermanente</td>
+                                    <td class="fw-bold">Manicure rusa</td>
                                     <td><span class="badge"
                                             style="background-color: var(--color-secondary);">Manicure</span></td>
-                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 60 min</td>
-                                    <td class="fw-bold text-dark">$15.000</td>
+                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 2 hr</td>
+                                    <td class="fw-bold text-dark">$50.000</td>
                                     <td><span class="badge bg-success-subtle text-success">Activo</span></td>
                                     <td class="text-end">
                                         <button class="btn btn-sm btn-outline-secondary me-1"><i
@@ -263,14 +296,14 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><img src="../assets/carrusel-nails/retiro.png" class="service-thumbnail"
-                                            alt="Retiro"
+                                    <td><img src="../assets/carrusel-nails/semipermanente.png" class="service-thumbnail"
+                                            alt="Esmaltado permanente"
                                             onerror="this.src='https://placehold.co/60x60/e9ecef/6c757d?text=Img'"></td>
-                                    <td class="fw-bold">Retiro de Material</td>
+                                    <td class="fw-bold">Esmaltado permanente</td>
                                     <td><span class="badge"
                                             style="background-color: var(--color-secondary);">Manicure</span></td>
                                     <td class="text-muted"><i class="bi bi-clock me-1"></i> 30 min</td>
-                                    <td class="fw-bold text-dark">$5.000</td>
+                                    <td class="fw-bold text-dark">$20.000</td>
                                     <td><span class="badge bg-success-subtle text-success">Activo</span></td>
                                     <td class="text-end">
                                         <button class="btn btn-sm btn-outline-secondary me-1"><i
@@ -282,13 +315,13 @@
 
                                 <!-- LIFTING Y CEJAS -->
                                 <tr>
-                                    <td><img src="../assets/carrusel-eyes/lifting1_L.png" class="service-thumbnail"
-                                            alt="Lifting"
+                                    <td><img src="../assets/admin-servicios/tradicional.png" class="service-thumbnail"
+                                            alt="Lifting tradicional"
                                             onerror="this.src='https://placehold.co/60x60/e9ecef/6c757d?text=Img'"></td>
-                                    <td class="fw-bold">Lifting de Pestañas</td>
+                                    <td class="fw-bold">Lifting tradicional</td>
                                     <td><span class="badge bg-info text-dark">Lifting y Cejas</span></td>
-                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 60 min</td>
-                                    <td class="fw-bold text-dark">$20.000</td>
+                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 1 hr</td>
+                                    <td class="fw-bold text-dark">$25.000</td>
                                     <td><span class="badge bg-success-subtle text-success">Activo</span></td>
                                     <td class="text-end">
                                         <button class="btn btn-sm btn-outline-secondary me-1"><i
@@ -298,13 +331,45 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><img src="../assets/inicio-servicios/lifting_inicio.png"
-                                            class="service-thumbnail" alt="Cejas"
+                                    <td><img src="../assets/admin-servicios/coreano.png" class="service-thumbnail"
+                                            alt="Lifting coreano"
                                             onerror="this.src='https://placehold.co/60x60/e9ecef/6c757d?text=Img'"></td>
-                                    <td class="fw-bold">Diseño de Cejas + Perfilado</td>
+                                    <td class="fw-bold">Lifting coreano</td>
+                                    <td><span class="badge bg-info text-dark">Lifting y Cejas</span></td>
+                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 1 hr</td>
+                                    <td class="fw-bold text-dark">$35.000</td>
+                                    <td><span class="badge bg-success-subtle text-success">Activo</span></td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-secondary me-1"><i
+                                                class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger"><i
+                                                class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><img src="../assets/admin-servicios/perfilado.png" class="service-thumbnail"
+                                            alt="Perfilado de cejas"
+                                            onerror="this.src='https://placehold.co/60x60/e9ecef/6c757d?text=Img'"></td>
+                                    <td class="fw-bold">Perfilado de cejas</td>
                                     <td><span class="badge bg-info text-dark">Lifting y Cejas</span></td>
                                     <td class="text-muted"><i class="bi bi-clock me-1"></i> 30 min</td>
-                                    <td class="fw-bold text-dark">$12.000</td>
+                                    <td class="fw-bold text-dark">$10.000</td>
+                                    <td><span class="badge bg-success-subtle text-success">Activo</span></td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-secondary me-1"><i
+                                                class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger"><i
+                                                class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><img src="../assets/admin-servicios/laminado.png" class="service-thumbnail"
+                                            alt="Laminado de cejas"
+                                            onerror="this.src='https://placehold.co/60x60/e9ecef/6c757d?text=Img'"></td>
+                                    <td class="fw-bold">Laminado de cejas</td>
+                                    <td><span class="badge bg-info text-dark">Lifting y Cejas</span></td>
+                                    <td class="text-muted"><i class="bi bi-clock me-1"></i> 1 hr</td>
+                                    <td class="fw-bold text-dark">$15.000</td>
                                     <td><span class="badge bg-success-subtle text-success">Activo</span></td>
                                     <td class="text-end">
                                         <button class="btn btn-sm btn-outline-secondary me-1"><i

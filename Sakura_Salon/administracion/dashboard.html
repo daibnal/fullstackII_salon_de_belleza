@@ -52,38 +52,46 @@
                     <a href="admin_reportes.html"><i class="bi bi-graph-up"></i> Reportes</a>
                 </li>
             </ul>
-            
+
             <div class="sidebar-footer">
-                <a href="#" class="text-white text-decoration-none"><i class="bi bi-box-arrow-left me-2"></i>Cerrar Sesión</a>
+                <a href="#" class="text-white text-decoration-none"><i class="bi bi-box-arrow-left me-2"></i>Cerrar
+                    Sesión</a>
             </div>
         </nav>
 
         <!-- Contenido -->
         <div id="content">
             <!-- Navbar Superior -->
-            <nav class="topnav">
+            <nav class="topnav d-flex justify-content-between align-items-center">
                 <div>
-                    <button type="button" id="sidebarCollapse" class="topnav-btn">
-                        <i class="bi bi-list"></i>
-                    </button>
-                    <span class="ms-3 fw-bold color-primary d-none d-sm-inline">Bienvenida, Administradora</span>
+                    <span class="fw-bold d-none d-sm-inline" style="color: var(--color-primary);">Bienvenida,
+                        Administradora</span>
                 </div>
-                <div>
-                    <a href="#" class="header-icon-btn position-relative" style="color: var(--color-primary); font-size: 1.2rem;">
+
+                <!-- Contenedor derecho: Campana y Botón -->
+                <div class="d-flex align-items-center gap-3">
+                    <a href="#" class="header-icon-btn position-relative"
+                        style="color: var(--color-primary); font-size: 1.2rem;">
                         <i class="bi bi-bell"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                        <span
+                            class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
                             <span class="visually-hidden">Nuevas alertas</span>
                         </span>
                     </a>
+
+                    <!-- Botón movido aquí -->
+                    <button type="button" id="sidebarCollapse" class="topnav-btn d-md-none">
+                        <i class="bi bi-list"></i>
+                    </button>
                 </div>
             </nav>
 
             <!-- Área de Contenido Principal -->
             <div class="main-content-area container-fluid">
-                
-                <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
                     <h2 class="fw-bold m-0" style="color: var(--color-primary);">Dashboard</h2>
-                    <button class="btn btn-custom-primary"><i class="bi bi-plus-lg me-2"></i>Nueva Cita</button>
+                    <button class="btn btn-custom-primary w-auto"><i class="bi bi-plus-lg me-2"></i>Nueva Cita</button>
                 </div>
 
                 <!-- Fila de Tarjetas Resumen -->
@@ -109,7 +117,7 @@
                             <i class="bi bi-box-seam card-icon"></i>
                             <h5 class="card-title-custom">Alertas Stock</h5>
                             <div class="card-value text-danger">3</div>
-                            <small class="text-danger">Productos por agotarse</small>
+                            <small class="text-danger">Insumos por agotarse</small>
                         </div>
                     </div>
                     <div class="col-12 col-sm-6 col-lg-3">
@@ -129,7 +137,8 @@
                         <div class="sketch-card">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h4 class="card-title-custom m-0">Próximas Citas</h4>
-                                <a href="/admin_agenda.html" class="text-decoration-none" style="color: var(--color-secondary);">Ver calendario</a>
+                                <a href="/admin_agenda.html" class="text-decoration-none"
+                                    style="color: var(--color-secondary);">Ver calendario</a>
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle">
@@ -175,17 +184,26 @@
                         <div class="sketch-card">
                             <h4 class="card-title-custom mb-3">Acciones Rápidas</h4>
                             <div class="d-grid gap-2">
-                                <button class="btn btn-outline-secondary text-start" style="border-color: var(--color-accent); color: var(--color-primary);"><i class="bi bi-box-arrow-in-right me-2"></i> Registrar Venta</button>
-                                <button class="btn btn-outline-secondary text-start" style="border-color: var(--color-accent); color: var(--color-primary);"><i class="bi bi-person-plus me-2"></i> Nuevo Cliente</button>
-                                <button class="btn btn-outline-secondary text-start" style="border-color: var(--color-accent); color: var(--color-primary);"><i class="bi bi-cart-plus me-2"></i> Añadir Insumo</button>
+                                <button class="btn btn-outline-secondary text-start"
+                                    style="border-color: var(--color-accent); color: var(--color-primary);"><i
+                                        class="bi bi-box-arrow-in-right me-2"></i> Registrar Venta</button>
+                                <button class="btn btn-outline-secondary text-start"
+                                    style="border-color: var(--color-accent); color: var(--color-primary);"><i
+                                        class="bi bi-person-plus me-2"></i> Nuevo Cliente</button>
+                                <button class="btn btn-outline-secondary text-start"
+                                    style="border-color: var(--color-accent); color: var(--color-primary);"><i
+                                        class="bi bi-cart-plus me-2"></i> Añadir Insumo</button>
                             </div>
-                            
+
                             <hr class="my-4" style="border-color: var(--color-accent);">
-                            
+
                             <h4 class="card-title-custom mb-3">Rendimiento Semanal</h4>
                             <!-- Aquí podrías insertar un gráfico usando una librería como Chart.js. Por ahora un placeholder -->
-                            <div class="bg-light rounded p-3 text-center border" style="height: 150px; border-color: var(--color-accent)!important;">
-                                <span class="text-muted d-block mt-4"><i class="bi bi-bar-chart-line fs-1"></i><br>Espacio para Gráfico de Ingresos</span>
+                            <div class="bg-light rounded p-3 text-center border"
+                                style="height: 150px; border-color: var(--color-accent)!important;">
+                                <span class="text-muted d-block mt-4"><i
+                                        class="bi bi-bar-chart-line fs-1"></i><br>Espacio para Gráfico de
+                                    Ingresos</span>
                             </div>
                         </div>
                     </div>
@@ -197,10 +215,10 @@
 
     <!-- Bootstrap 5 script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- Script para el Sidebar Responsive -->
     <script>
-        document.addEventListener("DOMContentLoaded", function(event) {
+        document.addEventListener("DOMContentLoaded", function (event) {
             const sidebar = document.getElementById('sidebar');
             const sidebarCollapse = document.getElementById('sidebarCollapse');
             const overlay = document.getElementById('sidebarOverlay');

@@ -66,19 +66,20 @@
         <!-- Contenido Principal -->
         <div id="content">
             <!-- Navbar Superior -->
-            <nav class="topnav">
-                <div class="d-flex align-items-center">
-                    <button type="button" id="sidebarCollapse" class="topnav-btn d-md-none">
-                        <i class="bi bi-list"></i>
-                    </button>
-                    <span class="ms-3 fw-bold d-none d-md-inline" style="color: var(--color-primary);">Reportes y
-                        Estadísticas</span>
-                </div>
+            <nav class="topnav d-flex justify-content-between align-items-center">
                 <div>
+                    <span class="fw-bold d-none d-md-inline" style="color: var(--color-primary);">Reportes y estadísticas</span>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
                     <a href="#" class="position-relative text-decoration-none"
                         style="color: var(--color-primary); font-size: 1.2rem;">
                         <i class="bi bi-bell"></i>
                     </a>
+
+                    <button type="button" id="sidebarCollapse" class="topnav-btn d-md-none">
+                        <i class="bi bi-list"></i>
+                    </button>
                 </div>
             </nav>
 
@@ -233,45 +234,6 @@
                         </div>
                     </div>
 
-                    <!-- Panel de Compras Sugeridas -->
-                    <div class="col-12 col-lg-5">
-                        <div class="sketch-card border-secondary shadow-sm" style="background-color: #fff9fb;">
-                            <div class="d-flex align-items-center gap-3 mb-3">
-                                <div class="metric-icon-box bg-secondary text-white">
-                                    <i class="bi bi-cart-check"></i>
-                                </div>
-                                <div>
-                                    <h5 class="fw-bold mb-0 text-dark">Asistente de Compras</h5>
-                                    <small class="text-muted">Análisis en tiempo real</small>
-                                </div>
-                            </div>
-
-                            <div class="insight-box mb-4">
-                                <p class="m-0 text-dark small">Para asegurar la operación de las citas agendadas y
-                                    reponer el stock crítico, se recomienda realizar el siguiente pedido <strong>hoy
-                                        mismo</strong>.</p>
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="text-muted">Fecha límite de pedido:</span>
-                                <span class="fw-bold text-danger">Hoy, 18:00 hrs</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="text-muted">Proveedores involucrados:</span>
-                                <span class="fw-bold text-dark">2 (Distribuidora Capilar, TodoUñas)</span>
-                            </div>
-
-                            <hr class="text-muted opacity-25">
-
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <span class="fs-5 text-dark">Monto Sugerido Total:</span>
-                                <span class="fs-3 fw-bold" style="color: var(--color-secondary);">$145.500</span>
-                            </div>
-
-                            <button class="btn btn-custom-primary w-100 py-2 fw-bold"><i
-                                    class="bi bi-bag-plus me-2"></i>Generar Órdenes de Compra</button>
-                        </div>
-                    </div>
                 </div>
 
             </div> <!-- Fin main-content-area -->
