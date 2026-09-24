@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0" />
+        <title>Agendar Cita - Sakura Salón</title>
+
+        <!-- Link de Bootstrap -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet" />
+
+        <!-- Link de Iconos de Bootstrap -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+        <!-- Link de estilos propios del proyecto -->
+        <link rel="stylesheet" href="../css/secondary.css" />
+        <link rel="stylesheet" href="../css/main.css" />
+        
+        <!-- Bootstrap 5 script -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    </head>
+    <body class="container-fluid p-0">
+        <!-- Nav Bar (Idéntica a la página principal) -->
+        <nav class="navbar fixed-top color-primary">
+            <div class="container-fluid">
+                <!-- Logo -->
+                <a
+                    class="navbar-brand"
+                    href="index.html">
+                    <img src="../assets/Logo_sm.png" class="rounded-circle" style="width: 50px" alt="Logo" />
+                </a>
+                <!-- 3 Rayitas -->
+                <button
+                    class="navbar-toggler color-bg"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapsibleNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!-- Menú desplegable -->
+                <div
+                    class="collapse navbar-collapse"
+                    id="collapsibleNavbar">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a
+                                class="nav-link"
+                                href="servicios/eyes.html"
+                                >Lifting y Cejas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a
+                                class="nav-link"
+                                href="servicios/hair.html"
+                                >Cabello
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a
+                                class="nav-link"
+                                href="servicios/nails.html"
+                                >Manicure
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Contenido Principal del Formulario de Agendamiento -->
+        <main class="container my-5 pt-5">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 col-lg-6">
+                    <div class="card sketch-card p-4 shadow-sm">
+                        
+                        <div class="text-center mb-4">
+                            <h1 class="h3 fw-bold" style="color: var(--color-primary);">Reserva tu Cita</h1>
+                            <p class="text-muted small">Por favor, completa los datos requeridos para agendar</p>
+                        </div>
+
+                        <!-- Formulario de Cita con validación JS -->
+                        <form id="formAgendar" novalidate>
+                            
+                            <!-- Nombre y Apellido -->
+                            <div class="row">
+                                <div class="col-12 col-sm-6 mb-3">
+                                    <label for="nombre" class="form-label fw-bold small" style="color: var(--color-primary);">Nombre</label>
+                                    <input type="text" class="form-control" id="nombre" required placeholder="Tu nombre">
+                                    <div class="invalid-feedback">Ingresa un nombre válido (solo letras).</div>
+                                </div>
+                                <div class="col-12 col-sm-6 mb-3">
+                                    <label for="apellido" class="form-label fw-bold small" style="color: var(--color-primary);">Apellido</label>
+                                    <input type="text" class="form-control" id="apellido" required placeholder="Tu apellido">
+                                    <div class="invalid-feedback">Ingresa un apellido válido (solo letras).</div>
+                                </div>
+                            </div>
+
+                            <!-- RUT y Teléfono -->
+                            <div class="row">
+                                <div class="col-12 col-sm-6 mb-3">
+                                    <label for="rut" class="form-label fw-bold small" style="color: var(--color-primary);">RUT</label>
+                                    <input type="text" class="form-control" id="rut" required placeholder="12345678-9">
+                                    <div class="invalid-feedback">RUT inválido (Formato: 12345678-9).</div>
+                                </div>
+                                <div class="col-12 col-sm-6 mb-3">
+                                    <label for="telefono" class="form-label fw-bold small" style="color: var(--color-primary);">Teléfono</label>
+                                    <input type="tel" class="form-control" id="telefono" required placeholder="+56912345678">
+                                    <div class="invalid-feedback">Teléfono inválido (ej: +56991234567 o 9 dígitos).</div>
+                                </div>
+                            </div>
+
+                            <!-- Correo Electrónico -->
+                            <div class="mb-3">
+                                <label for="correo" class="form-label fw-bold small" style="color: var(--color-primary);">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="correo" required placeholder="correo@ejemplo.com">
+                                <div class="invalid-feedback">Ingresa un correo electrónico válido.</div>
+                            </div>
+
+                            <!-- Servicio -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small" style="color: var(--color-primary);">Servicio Seleccionado</label>
+                                <input type="text" class="form-control bg-white" id="nombreServicio" readonly value="Cargando servicio...">
+                            <!-- Input oculto para almacenar el precio base de forma interna -->
+                                <input type="hidden" id="precioServicio" value="0">
+                            </div>
+
+                            <!-- Profesional -->
+                            <div class="mb-3">
+                                <label for="profesional" class="form-label fw-bold small" style="color: var(--color-primary);">Profesional</label>
+                                <select class="form-select" id="profesional" required>
+                                    <option value="" selected disabled>Selecciona un profesional...</option>
+                                    <option value="carlos">Carlos Pérez</option>
+                                    <option value="maria">María Gómez</option>
+                                    <option value="valentina">Valentina Soto</option>
+                                    <option value="Alicia">Alicia Varela</option>
+                                    <option value="Sebastián">Sebastián Vasquez</option>
+                                    <option value="lucia">Lucia Garrido</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor selecciona un profesional.</div>
+                            </div>
+
+                            <!-- Fecha de la Cita -->
+                            <div class="mb-3">
+                                <label for="fechaCita" class="form-label fw-bold small" style="color: var(--color-primary);">Fecha de la Cita</label>
+                                <input type="date" class="form-control" id="fechaCita" required>
+                                <div class="invalid-feedback">Selecciona una fecha válida.</div>
+                            </div>
+
+                            <!-- Selección de Horarios -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold small d-block" style="color: var(--color-primary);">Horarios Disponibles</label>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <input type="radio" class="btn-check" name="hora" id="h1" value="09:00 AM" required>
+                                        <label class="btn btn-outline-secondary w-100 btn-sm" for="h1">09:00 AM</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="radio" class="btn-check" name="hora" id="h2" value="10:00 AM">
+                                        <label class="btn btn-outline-secondary w-100 btn-sm" for="h2">10:00 AM</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="radio" class="btn-check" name="hora" id="h3" value="11:00 AM">
+                                        <label class="btn btn-outline-secondary w-100 btn-sm" for="h3">11:00 AM</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="radio" class="btn-check" name="hora" id="h4" value="12:00 PM">
+                                        <label class="btn btn-outline-secondary w-100 btn-sm" for="h4">12:00 PM</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="radio" class="btn-check" name="hora" id="h5" value="12:30 PM">
+                                        <label class="btn btn-outline-secondary w-100 btn-sm" for="h5">12:30 PM</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="radio" class="btn-check" name="hora" id="h6" value="14:00 PM">
+                                        <label class="btn btn-outline-secondary w-100 btn-sm" for="h6">14:00 PM</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="radio" class="btn-check" name="hora" id="h7" value="15:00 PM">
+                                        <label class="btn btn-outline-secondary w-100 btn-sm" for="h7">15:00 PM</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="radio" class="btn-check" name="hora" id="h8" value="16:00 PM">
+                                        <label class="btn btn-outline-secondary w-100 btn-sm" for="h8">16:00 PM</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="radio" class="btn-check" name="hora" id="h9" value="17:00 PM">
+                                        <label class="btn btn-outline-secondary w-100 btn-sm" for="h9">17:00 PM</label>
+                                    </div>
+                                     <div class="col-6">
+                                        <input type="radio" class="btn-check" name="hora" id="h10" value="18:00 PM">
+                                        <label class="btn btn-outline-secondary w-100 btn-sm" for="h10">18:00 PM</label>
+                                    </div>
+                                     <div class="col-6">
+                                        <input type="radio" class="btn-check" name="hora" id="h11" value="19:00 PM">
+                                        <label class="btn btn-outline-secondary w-100 btn-sm" for="h11">19:00 PM</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- RESUMEN DE LA CITA ESTILO TARJETA -->
+                            <div class="summary-box mb-4">
+                                <h6 class="fw-bold mb-3" style="color: var(--color-primary);"><i class="bi bi-stars"></i> Resumen de tu cita</h6>
+                                <div class="row small text-muted">
+                                    <div class="col-sm-6">
+                                        <p class="mb-1"><strong>Servicio:</strong> <span id="resumenServicio">No seleccionado</span></p>
+                                        <p class="mb-1"><strong>Profesional:</strong> <span id="resumenProfesional">No seleccionado</span></p>
+                                        <p class="mb-1"><strong>Fecha y Hora:</strong> <span id="resumenFechaHora">Por definir</span></p>
+                                    </div>
+                                    <div class="col-sm-6 border-start-sm ps-sm-3 mt-2 mt-sm-0">
+                                        <p class="mb-1 text-uppercase text-secondary" style="font-size: 0.75rem;">Valor final</p>
+                                        <h4 class="fw-bold text-dark mb-2" id="resumenPrecioTotal">$ 0</h4>
+                                        <div class="p-2 rounded bg-white border" id="resumenMontoPagar">
+                                            Abono (50%): <strong>$ 0</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- MÉTODO DE PAGO CON TARJETAS SELECCIONABLES -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold mb-3" style="color: var(--color-primary);"><i class="bi bi-credit-card"></i> Método de pago</label>
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6">
+                                        <input type="radio" class="btn-check" name="tipoPago" id="abono" value="abono" checked>
+                                        <label class="payment-card h-100 d-block" for="abono">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <i class="bi bi-cash-stack fs-4 me-2 text-secondary"></i>
+                                                <span class="fw-bold">Abonar (50%)</span>
+                                            </div>
+                                            <p class="text-muted small mb-0">Puedes pagar solo el 50% ahora y el resto el día de tu cita.</p>
+                                        </label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <input type="radio" class="btn-check" name="tipoPago" id="total" value="total">
+                                        <label class="payment-card h-100 d-block" for="total">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <i class="bi bi-credit-card-2-front fs-4 me-2 text-secondary"></i>
+                                                <span class="fw-bold">Pagar el total</span>
+                                            </div>
+                                            <p class="text-muted small mb-0">Cancela el valor completo de tu cita ahora.</p>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botón que simula la pasarela de pago y envío -->
+                            <button type="submit" class="btn btn-custom-primary w-100 py-2">Pagar y Confirmar Cita</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Script de validación en archivo externo -->
+        <script src="../js/agendar.js"></script>
+    </body>
+</html>
