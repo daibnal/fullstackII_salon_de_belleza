@@ -140,6 +140,35 @@
                     </div>
                 </div>
 
+                <!-- Citas Agendadas desde la Web -->
+                <div class="sketch-card p-4 mb-4 shadow-sm">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold m-0" style="color: var(--color-primary);"><i class="bi bi-globe"></i> Citas Agendadas por Clientes (Web)</h5>
+                        <button class="btn btn-outline-danger btn-sm" onclick="vaciarCitasWeb()">Vaciar Registros</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>RUT</th>
+                                    <th>Servicio</th>
+                                    <th>Profesional</th>
+                                    <th>Fecha y Hora</th>
+                                    <th>Pago</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaCitasWeb">
+                                <!-- Las citas se inyectarán aquí automáticamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="sinCitasWeb" class="text-center text-muted py-3 d-none">
+                        No hay nuevas citas agendadas desde la web en este momento.
+                    </div>
+                </div>
+
                 <!-- Calendario por Profesionales -->
                 <div class="sketch-card p-0 overflow-hidden">
                     <div class="table-responsive">
@@ -265,6 +294,104 @@
             if (overlay) overlay.addEventListener('click', toggleSidebar);
         });
     </script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Control del Sidebar
+        const sidebar = document.getElementById('sidebar');
+        const sidebarCollapse = document.getElementById('sidebarCollapse');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        if (sidebarCollapse) sidebarCollapse.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // Cargar las citas web al iniciar
+        cargarCitasWebEnAdmin();
+    });
+
+    function cargarCitasWebEnAdmin() {
+        const tbody = document.getElementById('tablaCitasWeb');
+        const mensajeVacio = document.getElementById('sinCitasWeb');
+        
+        if (!tbody) return;
+
+        let listaCitas = JSON.parse(localStorage.getItem('citasSakura')) || [];
+        const citaIndividual = JSON.parse(localStorage.getItem('detallesCita')) || JSON.parse(sessionStorage.getItem('detallesCita'));
+        
+        if (listaCitas.length === 0 && citaIndividual) {
+            listaCitas.push(citaIndividual);
+        }
+
+        tbody.innerHTML = '';
+
+        if (listaCitas.length === 0) {
+            if (mensajeVacio) mensajeVacio.classList.remove('d-none');
+            return;
+        } else {
+            if (mensajeVacio) mensajeVacio.classList.add('d-none');
+        }
+
+        listaCitas.forEach((cita, index) => {
+            const nombreCliente = (cita.nombre || '') + ' ' + (cita.apellido || 'Cliente');
+            const correoCliente = cita.correo || 'Sin correo';
+            
+            // CORRECCIÓN: Buscamos el RUT en diferentes propiedades posibles para que nunca falle
+            const rutCliente = cita.rut || cita.run || 'No registrado';
+            
+            const servicioCliente = cita.servicio || 'Servicio General';
+            const profesionalCliente = cita.profesional || 'Por asignar';
+            const fechaCliente = cita.fecha || 'Próximamente';
+            const horaCliente = cita.hora || '';
+            const montoMostrar = cita.montoPagado || 0;
+            
+            const badgePago = cita.tipoPago === 'abono' 
+                ? `<span class="badge bg-success">Abono 50% ($${Number(montoMostrar).toLocaleString('es-CL')})</span>` 
+                : `<span class="badge bg-primary">Total ($${Number(montoMostrar).toLocaleString('es-CL')})</span>`;
+
+            const fila = `
+                <tr>
+                    <td><strong>${nombreCliente}</strong><br><small class="text-muted">${correoCliente}</small></td>
+                    <td>${rutCliente}</td>
+                    <td>${servicioCliente}</td>
+                    <td>${profesionalCliente}</td>
+                    <td>${fechaCliente} <br><small class="text-muted">${horaCliente}</small></td>
+                    <td>${badgePago}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger" onclick="eliminarCitaWeb(${index})" title="Eliminar cita">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+            tbody.innerHTML += fila;
+        });
+    }
+
+    function eliminarCitaWeb(index) {
+        if (confirm('¿Estás seguro de eliminar esta cita del sistema?')) {
+            let listaCitas = JSON.parse(localStorage.getItem('citasSakura')) || [];
+            listaCitas.splice(index, 1);
+            localStorage.setItem('citasSakura', JSON.stringify(listaCitas));
+            localStorage.removeItem('detallesCita');
+            sessionStorage.removeItem('detallesCita');
+            cargarCitasWebEnAdmin();
+        }
+    }
+
+    function vaciarCitasWeb() {
+        if (confirm('¿Deseas eliminar todas las reservas web?')) {
+            localStorage.removeItem('citasSakura');
+            localStorage.removeItem('detallesCita');
+            sessionStorage.removeItem('detallesCita');
+            cargarCitasWebEnAdmin();
+        }
+    }
+</script>
 </body>
 
 </html>

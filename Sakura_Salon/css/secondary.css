@@ -249,3 +249,7 @@
     .carrusel-max-h {
       max-height: 100vh;
     }
+
+    .btn-action{
+      align-self: center;
+    }
