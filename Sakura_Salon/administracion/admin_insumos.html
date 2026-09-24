@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Insumos - Administración Salón</title>
+
+    <!-- Link de Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Link de Iconos de Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+
+    <link rel="stylesheet" href="../css/admin.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/secondary.css" />
+
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <!-- Overlay para móviles -->
+        <div class="overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <img src="../assets/Logo_sm.png" class="rounded-circle bg-white" alt="Logo Salón">
+
+                <h5 class="mt-3 mb-0">Panel Admin</h5>
+                <small class="text-white-50">Salón de Belleza</small>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="dashboard.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="admin_agenda.html"><i class="bi bi-calendar3"></i> Agenda</a>
+                </li>
+                <li>
+                    <a href="admin_servicios.html"><i class="bi bi-scissors"></i> Servicios</a>
+                </li>
+                <li>
+                    <a href="admin_personal.html"><i class="bi bi-people"></i> Personal</a>
+                </li>
+                <li class="active">
+                    <a href="admin_insumos.html"><i class="bi bi-box-seam"></i> Insumos</a>
+                </li>
+                <li>
+                    <a href="admin_reportes.html"><i class="bi bi-graph-up"></i> Reportes</a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="#" class="text-white text-decoration-none"><i class="bi bi-box-arrow-left me-2"></i>Cerrar
+                    Sesión</a>
+            </div>
+        </nav>
+
+        <!-- Contenido Principal -->
+        <div id="content">
+             <nav class="topnav d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="fw-bold d-none d-md-inline" style="color: var(--color-primary);">Inventario de insumos</span>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                    <a href="#" class="position-relative text-decoration-none"
+                        style="color: var(--color-primary); font-size: 1.2rem;">
+                        <i class="bi bi-bell"></i>
+                    </a>
+
+                    <button type="button" id="sidebarCollapse" class="topnav-btn d-md-none">
+                        <i class="bi bi-list"></i>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Área de Contenido Principal -->
+            <div class="main-content-area container-fluid pb-5">
+
+                <!-- Cabecera y Controles -->
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+                    <h2 class="fw-bold m-0" style="color: var(--color-primary);">Control de Stock</h2>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary"><i
+                                class="bi bi-file-earmark-arrow-down me-2"></i>Exportar</button>
+                        <button class="btn btn-custom-primary"><i class="bi bi-plus-lg me-2"></i>Nuevo Producto</button>
+                    </div>
+                </div>
+
+                <!-- Tarjetas de Resumen de Inventario -->
+                <div class="row g-4 mb-4">
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="sketch-card d-flex align-items-center p-3">
+                            <div class="metric-icon-box bg-primary-subtle text-primary me-3">
+                                <i class="bi bi-boxes"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-muted mb-0 small">Total Productos</h6>
+                                <span class="fs-4 fw-bold text-dark">145</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="sketch-card d-flex align-items-center p-3 border-danger shadow-sm">
+                            <div class="metric-icon-box bg-danger text-white me-3">
+                                <i class="bi bi-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-danger mb-0 small fw-bold">Stock Crítico</h6>
+                                <span class="fs-4 fw-bold text-dark">3</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="sketch-card d-flex align-items-center p-3">
+                            <div class="metric-icon-box bg-warning-subtle text-warning me-3">
+                                <i class="bi bi-cart-dash"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-muted mb-0 small">Por Reponer</h6>
+                                <span class="fs-4 fw-bold text-dark">8</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="sketch-card d-flex align-items-center p-3">
+                            <div class="metric-icon-box bg-success-subtle text-success me-3">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-muted mb-0 small">Valor Inventario</h6>
+                                <span class="fs-4 fw-bold text-dark">$1.2M</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filtros y Buscador -->
+                <div class="sketch-card mb-4 p-3">
+                    <div class="row g-2">
+                        <div class="col-12 col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                                <input type="text" class="form-control"
+                                    placeholder="Buscar insumo (ej: Decolorante, Tintura 6.0)...">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <select class="form-select">
+                                <option value="">Todas las Categorías</option>
+                                <option value="color">Colorimetría</option>
+                                <option value="cuidado">Cuidado Capilar</option>
+                                <option value="manicura">Manicura</option>
+                                <option value="desechables">Desechables</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <select class="form-select">
+                                <option value="">Cualquier Estado</option>
+                                <option value="critico">Stock Crítico</option>
+                                <option value="bajo">Stock Bajo</option>
+                                <option value="ok">Stock Óptimo</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-1 d-grid">
+                            <button class="btn btn-outline-secondary"><i class="bi bi-funnel"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Insumos -->
+                <div class="sketch-card p-0 overflow-hidden">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 text-nowrap">
+                            <thead class="table-light border-bottom">
+                                <tr>
+                                    <th class="ps-4">Producto</th>
+                                    <th>Categoría</th>
+                                    <th>Uso en Servicio</th>
+                                    <th style="width: 200px;">Nivel de Stock</th>
+                                    <th>Estado</th>
+                                    <th class="text-end pe-4">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Item Crítico -->
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="fw-bold text-dark">Decolorante Polvo Azul 500g</div>
+                                        <small class="text-muted">SKU: COL-001</small>
+                                    </td>
+                                    <td><span class="badge bg-light text-dark border">Colorimetría</span></td>
+                                    <td class="text-muted small">Balayage, Mechas</td>
+                                    <td>
+                                        <div class="d-flex justify-content-between small mb-1">
+                                            <span class="fw-bold text-danger">1 unidad</span>
+                                            <span class="text-muted">Min: 4</span>
+                                        </div>
+                                        <div class="stock-progress">
+                                            <div class="stock-bar bg-danger" style="width: 15%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-danger">Crítico</span></td>
+                                    <td class="text-end pe-4">
+                                        <button class="btn btn-sm btn-outline-success me-1" title="Añadir Stock"><i
+                                                class="bi bi-plus-circle"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary" title="Editar"><i
+                                                class="bi bi-pencil"></i></button>
+                                    </td>
+                                </tr>
+
+                                <!-- Item Bajo -->
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="fw-bold text-dark">Tintura Tono 6.0 60ml</div>
+                                        <small class="text-muted">SKU: TIN-060</small>
+                                    </td>
+                                    <td><span class="badge bg-light text-dark border">Colorimetría</span></td>
+                                    <td class="text-muted small">Tintura Global, Raíz</td>
+                                    <td>
+                                        <div class="d-flex justify-content-between small mb-1">
+                                            <span class="fw-bold text-warning">4 unidades</span>
+                                            <span class="text-muted">Min: 10</span>
+                                        </div>
+                                        <div class="stock-progress">
+                                            <div class="stock-bar bg-warning" style="width: 40%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-warning text-dark">Bajo</span></td>
+                                    <td class="text-end pe-4">
+                                        <button class="btn btn-sm btn-outline-success me-1"><i
+                                                class="bi bi-plus-circle"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary"><i
+                                                class="bi bi-pencil"></i></button>
+                                    </td>
+                                </tr>
+
+                                <!-- Item Crítico Manicura -->
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="fw-bold text-dark">Esmalte Base Coat Gel</div>
+                                        <small class="text-muted">SKU: MAN-012</small>
+                                    </td>
+                                    <td><span class="badge bg-light text-dark border">Manicura</span></td>
+                                    <td class="text-muted small">Esmaltado Permanente</td>
+                                    <td>
+                                        <div class="d-flex justify-content-between small mb-1">
+                                            <span class="fw-bold text-danger">0 unidades</span>
+                                            <span class="text-muted">Min: 2</span>
+                                        </div>
+                                        <div class="stock-progress">
+                                            <div class="stock-bar bg-danger" style="width: 0%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-danger">Agotado</span></td>
+                                    <td class="text-end pe-4">
+                                        <button class="btn btn-sm btn-outline-success me-1"><i
+                                                class="bi bi-plus-circle"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary"><i
+                                                class="bi bi-pencil"></i></button>
+                                    </td>
+                                </tr>
+
+                                <!-- Item OK -->
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="fw-bold text-dark">Shampoo Neutro 1 Litro</div>
+                                        <small class="text-muted">SKU: LAV-001</small>
+                                    </td>
+                                    <td><span class="badge bg-light text-dark border">Cuidado Capilar</span></td>
+                                    <td class="text-muted small">Todos los lavados</td>
+                                    <td>
+                                        <div class="d-flex justify-content-between small mb-1">
+                                            <span class="fw-bold text-success">12 unidades</span>
+                                            <span class="text-muted">Min: 5</span>
+                                        </div>
+                                        <div class="stock-progress">
+                                            <div class="stock-bar bg-success" style="width: 100%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-success">Óptimo</span></td>
+                                    <td class="text-end pe-4">
+                                        <button class="btn btn-sm btn-outline-success me-1"><i
+                                                class="bi bi-plus-circle"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary"><i
+                                                class="bi bi-pencil"></i></button>
+                                    </td>
+                                </tr>
+
+                                <!-- Item OK -->
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="fw-bold text-dark">Toallas Desechables (Paquete 50)</div>
+                                        <small class="text-muted">SKU: DES-005</small>
+                                    </td>
+                                    <td><span class="badge bg-light text-dark border">Desechables</span></td>
+                                    <td class="text-muted small">Lavado, Secado</td>
+                                    <td>
+                                        <div class="d-flex justify-content-between small mb-1">
+                                            <span class="fw-bold text-success">8 paquetes</span>
+                                            <span class="text-muted">Min: 3</span>
+                                        </div>
+                                        <div class="stock-progress">
+                                            <div class="stock-bar bg-success" style="width: 80%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-success">Óptimo</span></td>
+                                    <td class="text-end pe-4">
+                                        <button class="btn btn-sm btn-outline-success me-1"><i
+                                                class="bi bi-plus-circle"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary"><i
+                                                class="bi bi-pencil"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div> <!-- Fin main-content-area -->
+        </div> <!-- Fin content -->
+    </div> <!-- Fin wrapper -->
+
+    <!-- Bootstrap 5 script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para el Sidebar -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarCollapse = document.getElementById('sidebarCollapse');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
+
+            if (sidebarCollapse) sidebarCollapse.addEventListener('click', toggleSidebar);
+            if (overlay) overlay.addEventListener('click', toggleSidebar);
+        });
+    </script>
+</body>
+
+</html>

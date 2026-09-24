@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reportes - Administración Salón</title>
+
+    <!-- Link de Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Link de Iconos de Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+
+    <link rel="stylesheet" href="../css/admin.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/secondary.css" />
+
+    <!-- Chart.js para Gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <!-- Overlay para móviles -->
+        <div class="overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <img src="../assets/Logo_sm.png" class="rounded-circle bg-white" alt="Logo Salón">
+
+                <h5 class="mt-3 mb-0">Panel Admin</h5>
+                <small class="text-white-50">Salón de Belleza</small>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="dashboard.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="admin_agenda.html"><i class="bi bi-calendar3"></i> Agenda</a>
+                </li>
+                <li>
+                    <a href="admin_servicios.html"><i class="bi bi-scissors"></i> Servicios</a>
+                </li>
+                <li>
+                    <a href="admin_personal.html"><i class="bi bi-people"></i> Personal</a>
+                </li>
+                <li>
+                    <a href="admin_insumos.html"><i class="bi bi-box-seam"></i> Insumos</a>
+                </li>
+                <li class="active">
+                    <a href="admin_reportes.html"><i class="bi bi-graph-up"></i> Reportes</a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="#" class="text-white text-decoration-none"><i class="bi bi-box-arrow-left me-2"></i>Cerrar
+                    Sesión</a>
+            </div>
+        </nav>
+
+        <!-- Contenido Principal -->
+        <div id="content">
+            <!-- Navbar Superior -->
+            <nav class="topnav d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="fw-bold d-none d-md-inline" style="color: var(--color-primary);">Reportes y estadísticas</span>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                    <a href="#" class="position-relative text-decoration-none"
+                        style="color: var(--color-primary); font-size: 1.2rem;">
+                        <i class="bi bi-bell"></i>
+                    </a>
+
+                    <button type="button" id="sidebarCollapse" class="topnav-btn d-md-none">
+                        <i class="bi bi-list"></i>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Área de Contenido Principal -->
+            <div class="main-content-area container-fluid pb-5">
+
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-4 gap-3">
+                    <h2 class="fw-bold m-0" style="color: var(--color-primary);">Mes Actual: Octubre</h2>
+                    <div class="d-flex gap-2">
+                        <select class="form-select w-auto">
+                            <option>Este Mes</option>
+                            <option>Mes Anterior</option>
+                            <option>Últimos 3 Meses</option>
+                            <option>Año Completo</option>
+                        </select>
+                        <button class="btn btn-outline-secondary"><i class="bi bi-download me-2"></i>Exportar
+                            PDF</button>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 1: FINANZAS Y VENTAS -->
+                <h4 class="fw-bold mb-3 mt-4"
+                    style="color: var(--color-primary); border-bottom: 2px solid var(--color-accent); padding-bottom: 10px;">
+                    Rendimiento Financiero</h4>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="sketch-card d-flex align-items-center p-3">
+                            <div class="metric-icon-box bg-success-subtle text-success me-3">
+                                <i class="bi bi-cash-coin"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-muted mb-0 small">Ingresos Totales (Mes)</h6>
+                                <span class="fs-4 fw-bold text-dark">$3.250.000</span>
+                                <small class="text-success d-block mt-1"><i class="bi bi-arrow-up-short"></i> 12% vs mes
+                                    anterior</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="sketch-card d-flex align-items-center p-3">
+                            <div class="metric-icon-box bg-primary-subtle text-primary me-3">
+                                <i class="bi bi-receipt"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-muted mb-0 small">Servicios Realizados</h6>
+                                <span class="fs-4 fw-bold text-dark">184</span>
+                                <small class="text-success d-block mt-1"><i class="bi bi-arrow-up-short"></i> 5% vs mes
+                                    anterior</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="sketch-card d-flex align-items-center p-3">
+                            <div class="metric-icon-box bg-info-subtle text-info me-3">
+                                <i class="bi bi-tags"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-muted mb-0 small">Ticket Promedio</h6>
+                                <span class="fs-4 fw-bold text-dark">$17.660</span>
+                                <small class="text-muted d-block mt-1">Por cliente atendido</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="sketch-card d-flex align-items-center p-3">
+                            <div class="metric-icon-box bg-danger-subtle text-danger me-3">
+                                <i class="bi bi-cart-x"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-muted mb-0 small">Costo de Insumos (Mes)</h6>
+                                <span class="fs-4 fw-bold text-dark">$420.000</span>
+                                <small class="text-danger d-block mt-1">13% de los ingresos</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-5">
+                    <!-- Gráfico de Ingresos Diarios -->
+                    <div class="col-12 col-lg-8">
+                        <div class="sketch-card">
+                            <h5 class="fw-bold mb-4 text-dark">Evolución de Ingresos y Citas (Últimos 7 días)</h5>
+                            <div class="chart-container">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Gráfico de Servicios más vendidos -->
+                    <div class="col-12 col-lg-4">
+                        <div class="sketch-card">
+                            <h5 class="fw-bold mb-4 text-dark">Distribución por Categoría</h5>
+                            <div class="chart-container d-flex justify-content-center" style="height: 250px;">
+                                <canvas id="servicesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 2: INTELIGENCIA DE INSUMOS -->
+                <h4 class="fw-bold mb-3"
+                    style="color: var(--color-primary); border-bottom: 2px solid var(--color-accent); padding-bottom: 10px;">
+                    Proyección e Inteligencia de Inventario</h4>
+
+                <div class="row g-4">
+                    <!-- Análisis predictivo de insumos vs agenda -->
+                    <div class="col-12 col-lg-7">
+                        <div class="sketch-card">
+                            <h5 class="fw-bold mb-3 text-dark">Demanda Proyectada (Próximos 7 días)</h5>
+                            <p class="text-muted small mb-4">Basado en las <strong class="text-dark">45 citas
+                                    confirmadas</strong> para la próxima semana, este es el material que se consumirá:
+                            </p>
+
+                            <div class="table-responsive">
+                                <table class="table table-sm align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Insumo Requerido</th>
+                                            <th>Uso Estimado</th>
+                                            <th>Stock Actual</th>
+                                            <th>Estado para Agenda</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="fw-medium">Decolorante Polvo</td>
+                                            <td>2.5 Kg (15 Balayages)</td>
+                                            <td>3.0 Kg</td>
+                                            <td><span class="badge bg-warning text-dark">Al Límite</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">Esmalte Base Gel</td>
+                                            <td>60 ml (20 Manicuras)</td>
+                                            <td>15 ml</td>
+                                            <td><span class="badge bg-danger">Quiebre Inminente</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">Loción Lifting #1</td>
+                                            <td>15 Sobres (15 Liftings)</td>
+                                            <td>40 Sobres</td>
+                                            <td><span class="badge bg-success">Suficiente</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium">Shampoo Neutro</td>
+                                            <td>1.5 Litros</td>
+                                            <td>5 Litros</td>
+                                            <td><span class="badge bg-success">Suficiente</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div> <!-- Fin main-content-area -->
+        </div> <!-- Fin content -->
+    </div> <!-- Fin wrapper -->
+
+    <!-- Bootstrap 5 script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para los Gráficos y Sidebar -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Sidebar Logic
+            const sidebar = document.getElementById('sidebar');
+            const sidebarCollapse = document.getElementById('sidebarCollapse');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
+
+            if (sidebarCollapse) sidebarCollapse.addEventListener('click', toggleSidebar);
+            if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+            // --- Inicialización de Chart.js ---
+
+            // 1. Gráfico de Ingresos (Líneas y Barras combinadas)
+            const ctxRev = document.getElementById('revenueChart').getContext('2d');
+            new Chart(ctxRev, {
+                type: 'bar',
+                data: {
+                    labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                    datasets: [
+                        {
+                            label: 'Ingresos ($)',
+                            data: [120000, 145000, 90000, 180000, 250000, 310000, 0],
+                            backgroundColor: 'rgba(232, 67, 147, 0.7)', // Color secondary
+                            borderRadius: 6,
+                            order: 2
+                        },
+                        {
+                            label: 'Citas Atendidas',
+                            data: [8, 10, 6, 12, 16, 22, 0],
+                            type: 'line',
+                            borderColor: '#2C3E50', // Color primary
+                            backgroundColor: '#2C3E50',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            yAxisID: 'y1',
+                            order: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            position: 'left',
+                            ticks: { callback: function (value) { return '$' + value / 1000 + 'k'; } }
+                        },
+                        y1: {
+                            beginAtZero: true,
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            ticks: { stepSize: 5 }
+                        }
+                    },
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
+
+            // 2. Gráfico de Categorías (Doughnut)
+            const ctxServ = document.getElementById('servicesChart').getContext('2d');
+            new Chart(ctxServ, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Cabello', 'Manicure', 'Lifting/Cejas'],
+                    datasets: [{
+                        data: [45, 35, 20],
+                        backgroundColor: [
+                            '#2C3E50', // primary
+                            '#E84393', // secondary
+                            '#FFB8D2'  // light pink
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
