@@ -12,19 +12,3 @@ cambia a modo .container */
     }
 }
 
-/* El ancho máximo del carrusel */
-.carousel {
-    max-width: 760px;
-}
-
-
-/* CONTENIDO ---------------------------------------------
-El contenedor main tiene un padding
-superior para evitar quedar detras
-del navbar.
-También tiene un ancho minimo, después
-del cual el contenido se encoge */
-#main {
-    padding-top: 77px;
-    min-width: 270px;
-}

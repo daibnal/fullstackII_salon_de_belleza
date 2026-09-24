@@ -20,11 +20,13 @@
       color: var(--color-text-dark);
       display: flex;
       flex-direction: column;
+      align-items: center;
       min-height: 100vh;
       overflow-x: hidden;
       min-width: 320px;
     }
 
+    /*MAIN*/
     /* Mobile Viewport Container Constraint for Phone-First View */
     .mobile-container {
       width: 100%;
@@ -32,6 +34,8 @@
       margin: 170px 0px 0px;
       padding-left: 12px;
       padding-right: 12px;
+      position: relative;
+      top: 52px;
     }
 
     /* NAVBAR
@@ -88,6 +92,14 @@
     .nav-link.active {
       color: var(--color-text-dark);
     }
+
+    /* CARRUSEL
+    El ancho máximo del carrusel */
+    .carousel {
+      max-width: 760px;
+      max-height: 100vh;
+    }
+
 
     .section-title {
       font-size: 1.6rem;
