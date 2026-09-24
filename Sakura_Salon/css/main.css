@@ -1,35 +1,3 @@
-/* NAVBAR
-Cuando la pantalla es muy pequeña
-los links del menú desplegable del
-navbar se alinean al centro */
-@media screen and (max-width: 376px) {
-    .navbar-nav {
-        align-items: center;
-    }
-
-    .nav-link {
-        text-align: center;
-    }
-}
-
-/*
-Cuando la pantalla es mas grande
-los links del menú desplegable del
-navbar se alinean a la derecha */
-@media screen and (min-width: 375px) {
-    .navbar-nav {
-        align-items: end;
-    }
-}
-
-
-/*
-El texto de los links en el menú
-desplegable se alinean a la derecha */
-.nav-link {
-    width: 100px;
-}
-
 /* CARRUSEL ----------------------------------------------
 Cuando la pantalla es mas de 760 px de
 ancho, el carrusel deja de crecer y 
@@ -44,19 +12,3 @@ cambia a modo .container */
     }
 }
 
-/* El ancho máximo del carrusel */
-.carousel {
-    max-width: 760px;
-}
-
-
-/* CONTENIDO ---------------------------------------------
-El contenedor main tiene un padding
-superior para evitar quedar detras
-del navbar.
-También tiene un ancho minimo, después
-del cual el contenido se encoge */
-#main {
-    padding-top: 77px;
-    min-width: 270px;
-}
