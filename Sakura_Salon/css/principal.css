@@ -226,6 +226,11 @@ footer {
 	margin-top: auto;
 }
 
+footer .row {
+	flex-direction: row-reverse;
+	max-width: 1440px;
+}
+
 .footer-label {
 	background-color: rgba(0, 0, 0, 0.18);
 	text-align: center;
