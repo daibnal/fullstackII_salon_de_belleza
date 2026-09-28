@@ -40,7 +40,7 @@ body {
 	max-width: 750px;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	align-items: center;
 }
 
 /* =======================================================
@@ -100,6 +100,43 @@ BARRA DE NAVEGACIÓN
 
 .nav-link.active {
 	color: var(--color-text-dark);
+}
+
+/* =======================================================
+FORMULARIOS
+======================================================= */
+/* --- Pestañas de navegación --- */
+ul.nav {
+	flex-wrap: nowrap;
+	justify-content: center;
+	max-width: 580px;
+}
+
+div.tab-content {
+	max-width: 580px;
+}
+
+label {
+	color: var(--color-primary);
+}
+
+@media (min-width: 410px) {
+	#formRegistrar .col-sm-6 {
+		flex: 0 0 auto;
+		width: 50%;
+	}
+}
+
+.nav-pills .nav-link.active {
+	color: var(--color-bg);
+	font-weight: bold;
+	background-color: var(--color-secondary);
+}
+
+.nav-pills {
+	background-color: var(--color-accent);
+	border-radius: 6px;
+	color: var(--color-bg);
 }
 
 /* =======================================================

@@ -164,7 +164,6 @@
 									<label
 										for="nombre"
 										class="form-label fw-bold small"
-										style="color: var(--color-primary)"
 										>Nombre</label
 									>
 									<input
@@ -179,7 +178,6 @@
 									<label
 										for="apellido"
 										class="form-label fw-bold small"
-										style="color: var(--color-primary)"
 										>Apellido</label
 									>
 									<input
@@ -198,7 +196,6 @@
 									<label
 										for="rut"
 										class="form-label fw-bold small"
-										style="color: var(--color-primary)"
 										>RUT</label
 									>
 									<input
@@ -213,7 +210,6 @@
 									<label
 										for="telefono"
 										class="form-label fw-bold small"
-										style="color: var(--color-primary)"
 										>Teléfono</label
 									>
 									<input
@@ -233,7 +229,6 @@
 								<label
 									for="correo"
 									class="form-label fw-bold small"
-									style="color: var(--color-primary)"
 									>Correo Electrónico</label
 								>
 								<input
@@ -247,11 +242,7 @@
 
 							<!-- Servicio -->
 							<div class="mb-3">
-								<label
-									class="form-label fw-bold small"
-									style="color: var(--color-primary)"
-									>Servicio Seleccionado</label
-								>
+								<label class="form-label fw-bold small">Servicio Seleccionado</label>
 								<input
 									type="text"
 									class="form-control bg-white"
@@ -270,7 +261,6 @@
 								<label
 									for="profesional"
 									class="form-label fw-bold small"
-									style="color: var(--color-primary)"
 									>Profesional</label
 								>
 								<select
@@ -298,7 +288,6 @@
 								<label
 									for="fechaCita"
 									class="form-label fw-bold small"
-									style="color: var(--color-primary)"
 									>Fecha de la Cita</label
 								>
 								<input
@@ -311,11 +300,7 @@
 
 							<!-- Selección de Horarios -->
 							<div class="mb-4">
-								<label
-									class="form-label fw-bold small d-block"
-									style="color: var(--color-primary)"
-									>Horarios Disponibles</label
-								>
+								<label class="form-label fw-bold small d-block">Horarios Disponibles</label>
 								<div class="row g-2">
 									<div class="col-6">
 										<input
@@ -506,9 +491,7 @@
 
 							<!-- MÉTODO DE PAGO CON TARJETAS SELECCIONABLES -->
 							<div class="mb-4">
-								<label
-									class="form-label fw-bold mb-3"
-									style="color: var(--color-primary)"
+								<label class="form-label fw-bold mb-3"
 									><i class="bi bi-credit-card"></i> Método de pago</label
 								>
 								<div class="row g-3">
@@ -555,11 +538,13 @@
 							</div>
 
 							<!-- Botón que simula la pasarela de pago y envío -->
-							<button
-								type="submit"
-								class="btn btn-custom-primary w-100 py-2">
-								Pagar y Confirmar Cita
-							</button>
+							<div class="d-flex justify-content-center">
+								<button
+									type="submit"
+									class="btn btn-custom-primary w-100 py-2">
+									Pagar y Confirmar Cita
+								</button>
+							</div>
 						</form>
 					</div>
 				</div>
