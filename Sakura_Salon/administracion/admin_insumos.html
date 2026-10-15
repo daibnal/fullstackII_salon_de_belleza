@@ -7,100 +7,141 @@
 			content="width=device-width, initial-scale=1.0" />
 		<title>Insumos - Administración Salón</title>
 
-		<!-- Link de Bootstrap -->
+		<!-- Estilos Bootstrap -->
 		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
 			rel="stylesheet" />
-		<!-- Link de Iconos de Bootstrap -->
+
+		<!-- Iconos de Bootstrap -->
 		<link
 			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+		<!-- Estilos propios -->
+		<link
+			rel="stylesheet"
+			href="../css/principal.css" />
 
 		<link
 			rel="stylesheet"
 			href="../css/admin.css" />
-		<link
-			rel="stylesheet"
-			href="../css/principal.css" />
+
+		<!-- Script Bootstrap 5 -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 	</head>
 
-	<body>
-		<div class="wrapper">
-			<!-- Overlay para móviles -->
-			<div
-				class="overlay"
-				id="sidebarOverlay"></div>
-
-			<!-- Sidebar -->
-			<nav id="sidebar">
-				<div class="sidebar-header">
-					<img
-						src="../assets/Logo_sm.png"
-						class="rounded-circle bg-white"
-						alt="Logo Salón" />
-
-					<h5 class="mt-3 mb-0">Panel Admin</h5>
-					<small class="text-white-50">Salón de Belleza</small>
-				</div>
-
-				<ul class="list-unstyled components">
-					<li>
-						<a href="dashboard.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
-					</li>
-					<li>
-						<a href="admin_agenda.html"><i class="bi bi-calendar3"></i> Agenda</a>
-					</li>
-					<li>
-						<a href="admin_servicios.html"><i class="bi bi-scissors"></i> Servicios</a>
-					</li>
-					<li>
-						<a href="admin_personal.html"><i class="bi bi-people"></i> Personal</a>
-					</li>
-					<li class="active">
-						<a href="admin_insumos.html"><i class="bi bi-box-seam"></i> Insumos</a>
-					</li>
-					<li>
-						<a href="admin_reportes.html"><i class="bi bi-graph-up"></i> Reportes</a>
-					</li>
-				</ul>
-
-				<div class="sidebar-footer">
+	<body class="admin">
+		<header>
+			<nav class="navbar fixed-top">
+				<div class="container-fluid">
+					<button
+						class="header-icon-btn me-3"
+						type="button"
+						data-bs-toggle="offcanvas"
+						data-bs-target="#offcanvasNavbar"
+						aria-controls="offcanvasNavbar"
+						aria-label="Menú desplegable lateral"
+						title="Menú desplegable">
+						<i class="navbar-toggler-icon"></i>
+					</button>
 					<a
-						href="#"
-						class="text-white text-decoration-none"
-						><i class="bi bi-box-arrow-left me-2"></i>Cerrar Sesión</a
-					>
-				</div>
-			</nav>
+						class="navbar-brand"
+						href="dashboard.html">
+						<img
+							src="../assets/Logo_sm.png"
+							class="rounded-circle"
+							alt="Logo" />
+						<span class="brand-title ms-2">Panel Admin</span>
+					</a>
 
-			<!-- Contenido Principal -->
-			<div id="content">
-				<nav class="topnav d-flex justify-content-between align-items-center">
-					<div>
-						<span
-							class="fw-bold d-none d-md-inline"
-							style="color: var(--color-primary)"
-							>Inventario de insumos</span
-						>
-					</div>
-
-					<div class="d-flex align-items-center gap-3">
+					<div class="ms-auto d-flex align-items-center gap-2">
+						<span class="admin-greeting d-none d-md-inline">Bienvenida, Administradora</span>
 						<a
 							href="#"
-							class="position-relative text-decoration-none"
-							style="color: var(--color-primary); font-size: 1.2rem">
+							class="header-icon-btn admin-bell position-relative"
+							title="Notificaciones"
+							aria-label="Notificaciones">
 							<i class="bi bi-bell"></i>
 						</a>
-
-						<button
-							type="button"
-							id="sidebarCollapse"
-							class="topnav-btn d-md-none">
-							<i class="bi bi-list"></i>
-						</button>
 					</div>
-				</nav>
 
+					<div
+						class="offcanvas offcanvas-start"
+						tabindex="-1"
+						id="offcanvasNavbar"
+						aria-labelledby="offcanvasNavbarLabel">
+						<div class="offcanvas-header">
+							<h5
+								class="offcanvas-title fw-bold"
+								id="offcanvasNavbarLabel">
+								Menú
+							</h5>
+							<button
+								type="button"
+								class="btn-close btn-close-white"
+								data-bs-dismiss="offcanvas"
+								aria-label="Cerrar"></button>
+						</div>
+						<div class="offcanvas-body">
+							<ul class="navbar-nav gap-2">
+								<li class="nav-item">
+									<a
+										class="nav-link fw-bold"
+										href="dashboard.html">
+										<i class="bi bi-speedometer2 me-2"></i>Dashboard
+									</a>
+								</li>
+								<li class="nav-item">
+									<a
+										class="nav-link fw-bold"
+										href="admin_agenda.html">
+										<i class="bi bi-calendar3 me-2"></i>Agenda
+									</a>
+								</li>
+								<li class="nav-item">
+									<a
+										class="nav-link fw-bold"
+										href="admin_servicios.html">
+										<i class="bi bi-scissors me-2"></i>Servicios
+									</a>
+								</li>
+								<li class="nav-item">
+									<a
+										class="nav-link fw-bold"
+										href="admin_personal.html">
+										<i class="bi bi-people me-2"></i>Personal
+									</a>
+								</li>
+								<li class="nav-item">
+									<a
+										class="nav-link fw-bold active"
+										href="admin_insumos.html">
+										<i class="bi bi-box-seam me-2"></i>Insumos
+									</a>
+								</li>
+								<li class="nav-item">
+									<a
+										class="nav-link fw-bold"
+										href="admin_reportes.html">
+										<i class="bi bi-graph-up me-2"></i>Reportes
+									</a>
+								</li>
+								<li class="nav-item border-top pt-2 mt-2">
+									<a
+										class="nav-link fw-semibold"
+										href="#">
+										<i class="bi bi-box-arrow-left me-2"></i>Cerrar sesión
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</header>
+
+		<div class="wrapper">
+			<div id="content">
 				<!-- Área de Contenido Principal -->
 				<div class="main-content-area container-fluid pb-5">
 					<!-- Cabecera y Controles -->
@@ -385,24 +426,6 @@
 		</div>
 		<!-- Fin wrapper -->
 
-		<!-- Bootstrap 5 script -->
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-		<!-- Script para el Sidebar -->
-		<script>
-			document.addEventListener("DOMContentLoaded", function () {
-				const sidebar = document.getElementById("sidebar");
-				const sidebarCollapse = document.getElementById("sidebarCollapse");
-				const overlay = document.getElementById("sidebarOverlay");
-
-				function toggleSidebar() {
-					sidebar.classList.toggle("active");
-					overlay.classList.toggle("active");
-				}
-
-				if (sidebarCollapse) sidebarCollapse.addEventListener("click", toggleSidebar);
-				if (overlay) overlay.addEventListener("click", toggleSidebar);
-			});
-		</script>
 	</body>
 </html>
