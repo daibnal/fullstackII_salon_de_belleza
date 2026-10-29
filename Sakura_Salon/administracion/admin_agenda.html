@@ -51,19 +51,8 @@
 							src="../assets/Logo_sm.png"
 							class="rounded-circle"
 							alt="Logo" />
-						<span class="brand-title ms-2">Panel Admin</span>
+						<span class="brand-title ms-2">Sakura Salón</span>
 					</a>
-
-					<div class="ms-auto d-flex align-items-center gap-2">
-						<span class="admin-greeting d-none d-md-inline">Bienvenida, Administradora</span>
-						<a
-							href="#"
-							class="header-icon-btn admin-bell position-relative"
-							title="Notificaciones"
-							aria-label="Notificaciones">
-							<i class="bi bi-bell"></i>
-						</a>
-					</div>
 
 					<div
 						class="offcanvas offcanvas-start"
@@ -129,7 +118,7 @@
 								<li class="nav-item border-top pt-2 mt-2">
 									<a
 										class="nav-link fw-semibold"
-										href="#">
+										href="../usuario/registro_login.html">
 										<i class="bi bi-box-arrow-left me-2"></i>Cerrar sesión
 									</a>
 								</li>
@@ -143,97 +132,32 @@
 		<div class="wrapper">
 			<div id="content">
 				<!-- Área de Contenido Principal -->
-				<div class="main-content-area container-fluid pb-5">
-					<!-- Controles de la Agenda -->
-					<div
-						class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mb-4 gap-3">
-						<div class="d-flex align-items-center gap-3">
-							<h2
-								class="fw-bold m-0"
-								style="color: var(--color-primary)">
-								Hoy: 24 Octubre
-							</h2>
+				<div class="main-content-area container-fluid">
+					<div class="page-header">
+						<div class="d-flex flex-wrap align-items-end gap-3">
+							<h2 class="admin-title">Agenda</h2>
 							<input
 								type="date"
-								class="form-control form-control-sm w-auto border-secondary" />
+								id="fechaAgenda"
+								class="form-control form-control-sm w-auto"
+								value="2026-10-24"
+								aria-label="Fecha de la agenda" />
 						</div>
-
-						<div class="d-flex gap-2 w-100 w-lg-auto">
-							<button class="btn btn-outline-secondary w-100 w-lg-auto">
-								<i class="bi bi-funnel"></i> Filtrar
-							</button>
-							<button class="btn btn-custom-primary w-100 w-lg-auto text-nowrap">
-								<i class="bi bi-plus-lg me-2"></i>Bloquear Horario
-							</button>
-							<button class="btn btn-custom-primary w-100 w-lg-auto text-nowrap">
-								<i class="bi bi-calendar-plus me-2"></i>Nueva Cita
-							</button>
-						</div>
+						<button class="btn btn-custom-primary" type="button" id="btnNuevaCita">
+							<i class="bi bi-calendar-plus me-2"></i>Nueva Cita
+						</button>
 					</div>
 
-					<!-- Métricas Rápidas del Día -->
-					<div class="row g-3 mb-4">
-						<div class="col-6 col-xl-3">
-							<div class="sketch-card d-flex align-items-center gap-3 p-3">
-								<div class="agenda-metric-icon"><i class="bi bi-calendar-check"></i></div>
-								<div>
-									<h6 class="text-muted mb-0 small">Citas Hoy</h6>
-									<span class="fs-4 fw-bold text-dark">28</span>
-								</div>
-							</div>
-						</div>
-						<div class="col-6 col-xl-3">
-							<div class="sketch-card d-flex align-items-center gap-3 p-3">
-								<div class="agenda-metric-icon bg-success-subtle text-success">
-									<i class="bi bi-percent"></i>
-								</div>
-								<div>
-									<h6 class="text-muted mb-0 small">Ocupación</h6>
-									<span class="fs-4 fw-bold text-dark">82%</span>
-								</div>
-							</div>
-						</div>
-						<div class="col-6 col-xl-3">
-							<div class="sketch-card d-flex align-items-center gap-3 p-3">
-								<div class="agenda-metric-icon bg-warning-subtle text-warning">
-									<i class="bi bi-cash-stack"></i>
-								</div>
-								<div>
-									<h6 class="text-muted mb-0 small">Ingreso Proyectado</h6>
-									<span class="fs-4 fw-bold text-dark">$450k</span>
-								</div>
-							</div>
-						</div>
-						<div class="col-6 col-xl-3">
-							<div class="sketch-card d-flex align-items-center gap-3 p-3">
-								<div class="agenda-metric-icon bg-danger-subtle text-danger">
-									<i class="bi bi-person-x"></i>
-								</div>
-								<div>
-									<h6 class="text-muted mb-0 small">Cancelaciones</h6>
-									<span class="fs-4 fw-bold text-dark">2</span>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Citas Agendadas desde la Web -->
-					<div class="sketch-card p-4 mb-4 shadow-sm">
-						<div class="d-flex justify-content-between align-items-center mb-3">
-							<h5
-								class="fw-bold m-0"
-								style="color: var(--color-primary)">
-								<i class="bi bi-globe"></i> Citas Agendadas por Clientes (Web)
-							</h5>
-							<button
-								class="btn btn-outline-danger btn-sm"
-								onclick="vaciarCitasWeb()">
-								Vaciar Registros
+					<div class="sketch-card mb-4">
+						<div class="d-flex justify-content-between align-items-center mb-3 gap-3">
+							<h3 class="admin-subtitle">Citas agendadas en la web</h3>
+							<button class="btn btn-salon btn-sm" type="button" id="btnVaciar">
+								Vaciar registros
 							</button>
 						</div>
 						<div class="table-responsive">
 							<table class="table table-hover align-middle mb-0">
-								<thead class="table-light">
+								<thead>
 									<tr>
 										<th>Cliente</th>
 										<th>RUT</th>
@@ -258,6 +182,9 @@
 
 					<!-- Calendario por Profesionales -->
 					<div class="sketch-card p-0 overflow-hidden">
+						<div class="p-3">
+							<h3 class="admin-subtitle" id="tituloDiaCalendario">24 de octubre de 2026</h3>
+						</div>
 						<div class="table-responsive">
 							<table class="table table-bordered calendar-table m-0">
 								<thead>
@@ -265,11 +192,7 @@
 										<th class="time-col border-bottom-0"><i class="bi bi-clock"></i></th>
 										<th>
 											<div class="d-flex align-items-center justify-content-center gap-2">
-												<div
-													class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center"
-													style="width: 30px; height: 30px; font-size: 12px">
-													MA
-												</div>
+												<div class="iniciales iniciales-sm">MA</div>
 												<div>
 													María <br /><small class="text-muted fw-normal">Peluquería</small>
 												</div>
@@ -277,21 +200,13 @@
 										</th>
 										<th>
 											<div class="d-flex align-items-center justify-content-center gap-2">
-												<div
-													class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center"
-													style="width: 30px; height: 30px; font-size: 12px">
-													CA
-												</div>
+												<div class="iniciales iniciales-sm">CA</div>
 												<div>Camila <br /><small class="text-muted fw-normal">Manicura</small></div>
 											</div>
 										</th>
 										<th>
 											<div class="d-flex align-items-center justify-content-center gap-2">
-												<div
-													class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center"
-													style="width: 30px; height: 30px; font-size: 12px">
-													JA
-												</div>
+												<div class="iniciales iniciales-sm">JA</div>
 												<div>
 													Javiera <br /><small class="text-muted fw-normal">Colorimetría</small>
 												</div>
@@ -299,7 +214,7 @@
 										</th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody id="cuerpoCalendario">
 									<!-- Fila 09:00 -->
 									<tr>
 										<td class="time-col">09:00</td>
@@ -323,9 +238,7 @@
 												<span class="event-time"
 													><i class="bi bi-clock-history"></i> 09:00 - 11:00</span
 												>
-												<span class="badge bg-primary mt-1 w-auto align-self-start"
-													>En progreso</span
-												>
+												<span class="estado estado-proceso mt-1 align-self-start">En curso</span>
 											</div>
 										</td>
 									</tr>
@@ -354,7 +267,7 @@
 									<!-- Fila 11:00 -->
 									<tr>
 										<td class="time-col">11:00</td>
-										<td class="bg-light text-center align-middle text-muted small">
+										<td class="bloque-libre text-center align-middle small">
 											<i class="bi bi-cup-hot"></i> Descanso / Bloqueado
 										</td>
 										<td></td>
@@ -381,91 +294,86 @@
 
 
 
-		<script>
-			document.addEventListener("DOMContentLoaded", function () {
-				cargarCitasWebEnAdmin();
-			});
-
-			function cargarCitasWebEnAdmin() {
-				const tbody = document.getElementById("tablaCitasWeb");
-				const mensajeVacio = document.getElementById("sinCitasWeb");
-
-				if (!tbody) return;
-
-				let listaCitas = JSON.parse(localStorage.getItem("citasSakura")) || [];
-				const citaIndividual =
-					JSON.parse(localStorage.getItem("detallesCita")) ||
-					JSON.parse(sessionStorage.getItem("detallesCita"));
-
-				if (listaCitas.length === 0 && citaIndividual) {
-					listaCitas.push(citaIndividual);
-				}
-
-				tbody.innerHTML = "";
-
-				if (listaCitas.length === 0) {
-					if (mensajeVacio) mensajeVacio.classList.remove("d-none");
-					return;
-				} else {
-					if (mensajeVacio) mensajeVacio.classList.add("d-none");
-				}
-
-				listaCitas.forEach((cita, index) => {
-					const nombreCliente = (cita.nombre || "") + " " + (cita.apellido || "Cliente");
-					const correoCliente = cita.correo || "Sin correo";
-
-					// CORRECCIÓN: Buscamos el RUT en diferentes propiedades posibles para que nunca falle
-					const rutCliente = cita.rut || cita.run || "No registrado";
-
-					const servicioCliente = cita.servicio || "Servicio General";
-					const profesionalCliente = cita.profesional || "Por asignar";
-					const fechaCliente = cita.fecha || "Próximamente";
-					const horaCliente = cita.hora || "";
-					const montoMostrar = cita.montoPagado || 0;
-
-					const badgePago =
-						cita.tipoPago === "abono"
-							? `<span class="badge bg-success">Abono 50% ($${Number(montoMostrar).toLocaleString("es-CL")})</span>`
-							: `<span class="badge bg-primary">Total ($${Number(montoMostrar).toLocaleString("es-CL")})</span>`;
-
-					const fila = `
-                <tr>
-                    <td><strong>${nombreCliente}</strong><br><small class="text-muted">${correoCliente}</small></td>
-                    <td>${rutCliente}</td>
-                    <td>${servicioCliente}</td>
-                    <td>${profesionalCliente}</td>
-                    <td>${fechaCliente} <br><small class="text-muted">${horaCliente}</small></td>
-                    <td>${badgePago}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-danger" onclick="eliminarCitaWeb(${index})" title="Eliminar cita">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
-					tbody.innerHTML += fila;
-				});
-			}
-
-			function eliminarCitaWeb(index) {
-				if (confirm("¿Estás seguro de eliminar esta cita del sistema?")) {
-					let listaCitas = JSON.parse(localStorage.getItem("citasSakura")) || [];
-					listaCitas.splice(index, 1);
-					localStorage.setItem("citasSakura", JSON.stringify(listaCitas));
-					localStorage.removeItem("detallesCita");
-					sessionStorage.removeItem("detallesCita");
-					cargarCitasWebEnAdmin();
-				}
-			}
-
-			function vaciarCitasWeb() {
-				if (confirm("¿Deseas eliminar todas las reservas web?")) {
-					localStorage.removeItem("citasSakura");
-					localStorage.removeItem("detallesCita");
-					sessionStorage.removeItem("detallesCita");
-					cargarCitasWebEnAdmin();
-				}
-			}
-		</script>
+		<div
+			class="modal fade"
+			id="modalCita"
+			tabindex="-1"
+			aria-labelledby="tituloModalCita"
+			aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<form id="formCita" novalidate>
+						<div class="modal-header">
+							<h5 class="modal-title" id="tituloModalCita">Nueva cita</h5>
+							<button
+								type="button"
+								class="btn-close btn-close-white"
+								data-bs-dismiss="modal"
+								aria-label="Cerrar"></button>
+						</div>
+						<div class="modal-body">
+							<div class="row g-3">
+								<div class="col-sm-6">
+									<label class="form-label fw-bold small" for="citaNombre">Nombre</label>
+									<input class="form-control" id="citaNombre" />
+									<div class="invalid-feedback">Ingresa un nombre válido.</div>
+								</div>
+								<div class="col-sm-6">
+									<label class="form-label fw-bold small" for="citaApellido">Apellido</label>
+									<input class="form-control" id="citaApellido" />
+									<div class="invalid-feedback">Ingresa un apellido válido.</div>
+								</div>
+								<div class="col-sm-6">
+									<label class="form-label fw-bold small" for="citaRut">RUT</label>
+									<input class="form-control" id="citaRut" placeholder="12345678-5" />
+									<div class="invalid-feedback">El RUT no es válido.</div>
+								</div>
+								<div class="col-sm-6">
+									<label class="form-label fw-bold small" for="citaCorreo">Correo</label>
+									<input class="form-control" id="citaCorreo" type="email" />
+									<div class="invalid-feedback">Ingresa un correo válido.</div>
+								</div>
+								<div class="col-12">
+									<label class="form-label fw-bold small" for="citaServicio">Servicio</label>
+									<input class="form-control" id="citaServicio" />
+									<div class="invalid-feedback">Indica el servicio.</div>
+								</div>
+								<div class="col-sm-6">
+									<label class="form-label fw-bold small" for="citaProfesional">Profesional</label>
+									<select class="form-select" id="citaProfesional">
+										<option value="">Elegir</option>
+										<option>María</option>
+										<option>Camila</option>
+										<option>Javiera</option>
+										<option>Por asignar</option>
+									</select>
+									<div class="invalid-feedback">Elige una profesional.</div>
+								</div>
+								<div class="col-sm-6">
+									<label class="form-label fw-bold small" for="citaMonto">Monto</label>
+									<input class="form-control" id="citaMonto" inputmode="numeric" />
+									<div class="invalid-feedback">Ingresa un monto.</div>
+								</div>
+								<div class="col-sm-6">
+									<label class="form-label fw-bold small" for="citaFecha">Fecha</label>
+									<input class="form-control" id="citaFecha" type="date" />
+									<div class="invalid-feedback">Elige una fecha.</div>
+								</div>
+								<div class="col-sm-6">
+									<label class="form-label fw-bold small" for="citaHora">Hora</label>
+									<input class="form-control" id="citaHora" type="time" />
+									<div class="invalid-feedback">Elige una hora.</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-salon" data-bs-dismiss="modal">Cancelar</button>
+							<button type="submit" class="btn btn-custom-primary">Guardar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script type="module" src="../js/admin/agenda.js"></script>
 	</body>
 </html>

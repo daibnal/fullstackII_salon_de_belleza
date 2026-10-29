@@ -1,6 +1,34 @@
+function rutChilenoValido(valor) {
+    const limpio = valor.trim().replace(/\./g, '').replace(/-/g, '').toUpperCase();
+    if (!/^\d{7,8}[\dK]$/.test(limpio)) {
+        return false;
+    }
+
+    const cuerpo = limpio.slice(0, -1);
+    const digito = limpio.slice(-1);
+    let suma = 0;
+    let multiplicador = 2;
+
+    for (let i = cuerpo.length - 1; i >= 0; i--) {
+        suma += Number(cuerpo[i]) * multiplicador;
+        multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+    }
+
+    const resto = 11 - (suma % 11);
+    const esperado = resto === 11 ? '0' : resto === 10 ? 'K' : String(resto);
+    return digito === esperado;
+}
+
+function hoyLocal() {
+    const ahora = new Date();
+    const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+    const dia = String(ahora.getDate()).padStart(2, '0');
+    return `${ahora.getFullYear()}-${mes}-${dia}`;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // 1. Bloquear fechas anteriores a la actual en el campo de fecha
-    const hoy = new Date().toISOString().split('T')[0];
+    const hoy = hoyLocal();
     const inputFecha = document.getElementById('fechaCita');
     if (inputFecha) {
         inputFecha.setAttribute('min', hoy);
@@ -107,10 +135,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 apellido.classList.remove('is-invalid');
             }
 
-            // Validar RUT chileno (ej: 12345678-9 o 12345678-K)
+            // Validar RUT chileno con el dígito verificador (módulo 11)
             const rut = document.getElementById('rut');
-            const regexRut = /^\d{7,8}-[\dKk]$/;
-            if (!regexRut.test(rut.value.trim())) {
+            if (!rutChilenoValido(rut.value)) {
                 rut.classList.add('is-invalid');
                 formIsValid = false;
             } else {
@@ -135,6 +162,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 formIsValid = false;
             } else {
                 correo.classList.remove('is-invalid');
+            }
+
+            // Validar que la cita no sea anterior al día actual
+            const fechaCita = document.getElementById('fechaCita');
+            const avisoFecha = fechaCita.parentElement.querySelector('.invalid-feedback');
+            if (!fechaCita.value || fechaCita.value < hoyLocal()) {
+                if (avisoFecha) {
+                    avisoFecha.textContent = fechaCita.value
+                        ? 'No puedes agendar una cita anterior al día actual.'
+                        : 'Selecciona una fecha válida.';
+                }
+                fechaCita.classList.add('is-invalid');
+                formIsValid = false;
+            } else {
+                fechaCita.classList.remove('is-invalid');
             }
 
             // Si hay errores, detenemos el envío

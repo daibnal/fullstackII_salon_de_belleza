@@ -51,19 +51,8 @@
 							src="../assets/Logo_sm.png"
 							class="rounded-circle"
 							alt="Logo" />
-						<span class="brand-title ms-2">Panel Admin</span>
+						<span class="brand-title ms-2">Sakura Salón</span>
 					</a>
-
-					<div class="ms-auto d-flex align-items-center gap-2">
-						<span class="admin-greeting d-none d-md-inline">Bienvenida, Administradora</span>
-						<a
-							href="#"
-							class="header-icon-btn admin-bell position-relative"
-							title="Notificaciones"
-							aria-label="Notificaciones">
-							<i class="bi bi-bell"></i>
-						</a>
-					</div>
 
 					<div
 						class="offcanvas offcanvas-start"
@@ -129,7 +118,7 @@
 								<li class="nav-item border-top pt-2 mt-2">
 									<a
 										class="nav-link fw-semibold"
-										href="#">
+										href="../usuario/registro_login.html">
 										<i class="bi bi-box-arrow-left me-2"></i>Cerrar sesión
 									</a>
 								</li>
@@ -143,78 +132,17 @@
 		<div class="wrapper">
 			<div id="content">
 				<!-- Área de Contenido Principal -->
-				<div class="main-content-area container-fluid pb-5">
-					<!-- Cabecera -->
-					<div
-						class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-4 gap-3">
-						<h2
-							class="fw-bold m-0"
-							style="color: var(--color-primary)">
-							Equipo de Trabajo
-						</h2>
-						<div class="d-flex gap-2">
-							<button class="btn btn-outline-secondary">
-								<i class="bi bi-calendar-range me-2"></i>Planilla Turnos
-							</button>
-							<button class="btn btn-custom-primary">
-								<i class="bi bi-person-plus me-2"></i>Nuevo Contrato
-							</button>
-						</div>
+				<div class="main-content-area container-fluid">
+					<div class="page-header">
+						<h2 class="admin-title">Personal</h2>
+						<button class="btn btn-custom-primary" type="button" id="btnNuevoContrato">
+							<i class="bi bi-person-plus me-2"></i>Nuevo contrato
+						</button>
 					</div>
 
-					<!-- Tarjetas de Resumen de Personal -->
-					<div class="row g-4 mb-4">
-						<div class="col-12 col-sm-6 col-xl-3">
-							<div class="sketch-card d-flex align-items-center p-3">
-								<div class="metric-icon-box bg-primary-subtle text-primary me-3">
-									<i class="bi bi-people"></i>
-								</div>
-								<div>
-									<h6 class="text-muted mb-0 small">Total Staff</h6>
-									<span class="fs-4 fw-bold text-dark">6</span>
-								</div>
-							</div>
-						</div>
-						<div class="col-12 col-sm-6 col-xl-3">
-							<div class="sketch-card d-flex align-items-center p-3">
-								<div class="metric-icon-box bg-success-subtle text-success me-3">
-									<i class="bi bi-person-check"></i>
-								</div>
-								<div>
-									<h6 class="text-muted mb-0 small">En Turno Hoy</h6>
-									<span class="fs-4 fw-bold text-dark">4</span>
-								</div>
-							</div>
-						</div>
-						<div class="col-12 col-sm-6 col-xl-3">
-							<div class="sketch-card d-flex align-items-center p-3">
-								<div class="metric-icon-box bg-warning-subtle text-warning me-3">
-									<i class="bi bi-airplane"></i>
-								</div>
-								<div>
-									<h6 class="text-muted mb-0 small">Vacaciones Próx.</h6>
-									<span class="fs-4 fw-bold text-dark">1</span>
-								</div>
-							</div>
-						</div>
-						<div class="col-12 col-sm-6 col-xl-3">
-							<div class="sketch-card d-flex align-items-center p-3">
-								<div class="metric-icon-box bg-info-subtle text-info me-3">
-									<i class="bi bi-file-earmark-text"></i>
-								</div>
-								<div>
-									<h6 class="text-muted mb-0 small">Contratos por Renovar</h6>
-									<span class="fs-4 fw-bold text-dark">0</span>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Tabla de Personal y Contratos -->
 					<div class="sketch-card p-0 overflow-hidden mb-4">
-						<div
-							class="p-3 border-bottom d-flex justify-content-between align-items-center bg-light">
-							<h5 class="m-0 fw-bold text-dark">Directorio y Contratos</h5>
+						<div class="p-3 d-flex flex-wrap justify-content-between align-items-center gap-3">
+							<h3 class="admin-subtitle">Equipo</h3>
 							<div class="input-group w-auto">
 								<span class="input-group-text bg-white"
 									><i class="bi bi-search text-muted"></i
@@ -222,12 +150,13 @@
 								<input
 									type="text"
 									class="form-control form-control-sm"
+									id="buscarEmpleado"
 									placeholder="Buscar empleado..." />
 							</div>
 						</div>
 						<div class="table-responsive">
 							<table class="table table-hover align-middle mb-0 text-nowrap">
-								<thead class="table-light">
+								<thead>
 									<tr>
 										<th class="ps-4">Profesional</th>
 										<th>Especialidad</th>
@@ -238,24 +167,22 @@
 										<th class="text-end pe-4">Acciones</th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody id="tablaPersonal">
 									<!-- Empleado 1 -->
 									<tr>
 										<td class="ps-4">
 											<div class="d-flex align-items-center gap-3">
-												<div
-													class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center"
-													style="width: 45px; height: 45px; font-size: 16px">
+												<div class="iniciales">
 													MA
 												</div>
 												<div>
 													<div class="fw-bold text-dark">María González</div>
-													<small class="text-muted">RUT: 18.234.567-8</small>
+													<small class="text-muted">RUT: 18.234.567-9</small>
 												</div>
 											</div>
 										</td>
 										<td>
-											<span class="badge bg-secondary-subtle text-dark border">Peluquería</span>
+											<span class="badge-salon">Peluquería</span>
 										</td>
 										<td>
 											<div class="text-dark fw-medium">Indefinido</div>
@@ -263,23 +190,27 @@
 										</td>
 										<td>
 											<div class="text-dark fw-medium">$500.000</div>
-											<small class="text-success">40% servicios</small>
+											<small>40% servicios</small>
 										</td>
 										<td>
 											<span class="schedule-badge"
 												><i class="bi bi-sun"></i> Mañana (09:00 - 15:00)</span
 											>
 										</td>
-										<td><span class="badge bg-success">Activa</span></td>
+										<td><span class="estado estado-activo">Activa</span></td>
 										<td class="text-end pe-4">
 											<button
-												class="btn btn-sm btn-outline-secondary me-1"
-												title="Editar Perfil/Contrato">
+												class="btn btn-sm btn-salon me-1"
+												type="button"
+												data-accion="editar"
+												title="Editar contrato">
 												<i class="bi bi-pencil"></i>
 											</button>
 											<button
-												class="btn btn-sm btn-outline-primary"
-												title="Asignar Turnos">
+												class="btn btn-sm btn-salon"
+												type="button"
+												data-accion="turno"
+												title="Asignar turno">
 												<i class="bi bi-calendar2-week"></i>
 											</button>
 										</td>
@@ -289,19 +220,17 @@
 									<tr>
 										<td class="ps-4">
 											<div class="d-flex align-items-center gap-3">
-												<div
-													class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center"
-													style="width: 45px; height: 45px; font-size: 16px">
+												<div class="iniciales">
 													CA
 												</div>
 												<div>
 													<div class="fw-bold text-dark">Camila Soto</div>
-													<small class="text-muted">RUT: 19.876.543-2</small>
+													<small class="text-muted">RUT: 19.876.543-0</small>
 												</div>
 											</div>
 										</td>
 										<td>
-											<span class="badge bg-secondary-subtle text-dark border">Manicura</span>
+											<span class="badge-salon">Manicura</span>
 										</td>
 										<td>
 											<div class="text-dark fw-medium">Plazo Fijo</div>
@@ -309,19 +238,19 @@
 										</td>
 										<td>
 											<div class="text-dark fw-medium">$450.000</div>
-											<small class="text-success">45% servicios</small>
+											<small>45% servicios</small>
 										</td>
 										<td>
 											<span class="schedule-badge"
 												><i class="bi bi-moon"></i> Tarde (14:00 - 20:00)</span
 											>
 										</td>
-										<td><span class="badge bg-success">Activa</span></td>
+										<td><span class="estado estado-activo">Activa</span></td>
 										<td class="text-end pe-4">
-											<button class="btn btn-sm btn-outline-secondary me-1">
+											<button class="btn btn-sm btn-salon me-1" type="button" data-accion="editar" title="Editar contrato">
 												<i class="bi bi-pencil"></i>
 											</button>
-											<button class="btn btn-sm btn-outline-primary">
+											<button class="btn btn-sm btn-salon" type="button" data-accion="turno" title="Asignar turno">
 												<i class="bi bi-calendar2-week"></i>
 											</button>
 										</td>
@@ -331,19 +260,17 @@
 									<tr>
 										<td class="ps-4">
 											<div class="d-flex align-items-center gap-3">
-												<div
-													class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center"
-													style="width: 45px; height: 45px; font-size: 16px">
+												<div class="iniciales">
 													JA
 												</div>
 												<div>
 													<div class="fw-bold text-dark">Javiera Muñoz</div>
-													<small class="text-muted">RUT: 17.555.444-1</small>
+													<small class="text-muted">RUT: 17.555.444-0</small>
 												</div>
 											</div>
 										</td>
 										<td>
-											<span class="badge bg-secondary-subtle text-dark border">Colorimetría</span>
+											<span class="badge-salon">Colorimetría</span>
 										</td>
 										<td>
 											<div class="text-dark fw-medium">Honorarios (Prestación)</div>
@@ -351,41 +278,39 @@
 										</td>
 										<td>
 											<div class="text-dark fw-medium">$0 Base</div>
-											<small class="text-success">60% servicios</small>
+											<small>60% servicios</small>
 										</td>
 										<td>
-											<span class="schedule-badge bg-warning-subtle border-warning text-dark"
+											<span class="schedule-badge"
 												><i class="bi bi-cup-hot"></i> Día Libre</span
 											>
 										</td>
-										<td><span class="badge bg-warning text-dark">Descanso</span></td>
+										<td><span class="estado estado-descanso">Descanso</span></td>
 										<td class="text-end pe-4">
-											<button class="btn btn-sm btn-outline-secondary me-1">
+											<button class="btn btn-sm btn-salon me-1" type="button" data-accion="editar" title="Editar contrato">
 												<i class="bi bi-pencil"></i>
 											</button>
-											<button class="btn btn-sm btn-outline-primary">
+											<button class="btn btn-sm btn-salon" type="button" data-accion="turno" title="Asignar turno">
 												<i class="bi bi-calendar2-week"></i>
 											</button>
 										</td>
 									</tr>
 
 									<!-- Empleado 4 -->
-									<tr class="opacity-75 bg-light">
+									<tr class="fila-ausente">
 										<td class="ps-4">
 											<div class="d-flex align-items-center gap-3">
-												<div
-													class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center opacity-50"
-													style="width: 45px; height: 45px; font-size: 16px">
+												<div class="iniciales">
 													AN
 												</div>
 												<div>
 													<div class="fw-bold text-dark">Andrea Castro</div>
-													<small class="text-muted">RUT: 16.111.222-3</small>
+													<small class="text-muted">RUT: 16.111.222-4</small>
 												</div>
 											</div>
 										</td>
 										<td>
-											<span class="badge bg-secondary-subtle text-dark border"
+											<span class="badge-salon"
 												>Lifting y Cejas</span
 											>
 										</td>
@@ -395,21 +320,19 @@
 										</td>
 										<td>
 											<div class="text-dark fw-medium">$450.000</div>
-											<small class="text-success">40% servicios</small>
+											<small>40% servicios</small>
 										</td>
 										<td>
-											<span class="schedule-badge text-muted"
+											<span class="schedule-badge"
 												><i class="bi bi-airplane"></i> Vacaciones</span
 											>
 										</td>
-										<td><span class="badge bg-secondary">Ausente</span></td>
+										<td><span class="estado estado-ausente">Ausente</span></td>
 										<td class="text-end pe-4">
-											<button class="btn btn-sm btn-outline-secondary me-1">
+											<button class="btn btn-sm btn-salon me-1" type="button" data-accion="editar" title="Editar contrato">
 												<i class="bi bi-pencil"></i>
 											</button>
-											<button
-												class="btn btn-sm btn-outline-primary"
-												disabled>
+											<button class="btn btn-sm btn-salon" type="button" data-accion="turno" title="Asignar turno">
 												<i class="bi bi-calendar2-week"></i>
 											</button>
 										</td>
@@ -426,5 +349,108 @@
 		<!-- Fin wrapper -->
 
 
+		<div class="modal fade" id="modalContrato" tabindex="-1" aria-labelledby="tituloModalContrato" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<form id="formContrato" novalidate>
+						<input type="hidden" id="empId" />
+						<div class="modal-header">
+							<h5 class="modal-title" id="tituloModalContrato">Nuevo contrato</h5>
+							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+						</div>
+						<div class="modal-body">
+							<div class="row g-3">
+								<div class="col-sm-6">
+									<label class="form-label fw-bold small" for="empNombre">Nombre</label>
+									<input class="form-control" id="empNombre" />
+									<div class="invalid-feedback">Ingresa un nombre válido.</div>
+								</div>
+								<div class="col-sm-6">
+									<label class="form-label fw-bold small" for="empRut">RUT</label>
+									<input class="form-control" id="empRut" placeholder="12.345.678-5" />
+									<div class="invalid-feedback">El RUT no es válido.</div>
+								</div>
+								<div class="col-sm-6">
+									<label class="form-label fw-bold small" for="empEspecialidad">Especialidad</label>
+									<select class="form-select" id="empEspecialidad">
+										<option value="">Elegir</option>
+										<option>Peluquería</option>
+										<option>Manicura</option>
+										<option>Colorimetría</option>
+										<option>Lifting y Cejas</option>
+									</select>
+									<div class="invalid-feedback">Elige una especialidad.</div>
+								</div>
+								<div class="col-sm-6">
+									<label class="form-label fw-bold small" for="empContrato">Contrato</label>
+									<select class="form-select" id="empContrato">
+										<option value="">Elegir</option>
+										<option>Indefinido</option>
+										<option>Plazo Fijo</option>
+										<option>Honorarios (Prestación)</option>
+									</select>
+									<div class="invalid-feedback">Elige un contrato.</div>
+								</div>
+								<div class="col-sm-6">
+									<label class="form-label fw-bold small" for="empSueldo">Sueldo</label>
+									<input class="form-control" id="empSueldo" inputmode="numeric" />
+									<div class="invalid-feedback">Ingresa el sueldo.</div>
+								</div>
+								<div class="col-sm-6">
+									<label class="form-label fw-bold small" for="empComision">Comisión %</label>
+									<input class="form-control" id="empComision" inputmode="numeric" />
+									<div class="invalid-feedback">Usa un porcentaje entre 0 y 100.</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-salon" data-bs-dismiss="modal">Cancelar</button>
+							<button type="submit" class="btn btn-custom-primary">Guardar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="modalTurno" tabindex="-1" aria-labelledby="tituloModalTurno" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-sm">
+				<div class="modal-content">
+					<form id="formTurno" novalidate>
+						<input type="hidden" id="turnoId" />
+						<div class="modal-header">
+							<h5 class="modal-title" id="tituloModalTurno">Turno</h5>
+							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+						</div>
+						<div class="modal-body">
+							<div class="mb-3">
+								<label class="form-label fw-bold small" for="turnoValor">Turno</label>
+								<select class="form-select" id="turnoValor">
+									<option value="">Elegir</option>
+									<option>Mañana (09:00 - 15:00)</option>
+									<option>Tarde (14:00 - 20:00)</option>
+									<option>Día Libre</option>
+									<option>Vacaciones</option>
+								</select>
+								<div class="invalid-feedback">Elige un turno.</div>
+							</div>
+							<div>
+								<label class="form-label fw-bold small" for="turnoEstado">Estado</label>
+								<select class="form-select" id="turnoEstado">
+									<option value="Activa">Activa</option>
+									<option value="Descanso">Descanso</option>
+									<option value="Ausente">Ausente</option>
+								</select>
+								<div class="invalid-feedback">Elige un estado.</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-salon" data-bs-dismiss="modal">Cancelar</button>
+							<button type="submit" class="btn btn-custom-primary">Guardar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script type="module" src="../js/admin/personal.js"></script>
 	</body>
 </html>

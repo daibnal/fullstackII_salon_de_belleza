@@ -30,16 +30,30 @@ document.addEventListener('DOMContentLoaded', function() {
 		return true;
 	}
 
-	// Validar RUT chileno (ej: 12345678-9 o 12345678-K)
+	// Validar RUT chileno con el dígito verificador (módulo 11)
 	function rutEsValido() {
-		// Expresion regular rut
-		const regexRut = /^\d{7,8}-[\dKk]$/;
-
-		// Selecciona el campo del documento html
 		const rut = document.getElementById("rut");
+		const limpio = rut.value.trim().replace(/\./g, "").replace(/-/g, "").toUpperCase();
 
-		// Si es invalido, lo añade a la lista negra
-		if (!regexRut.test(rut.value.trim())) {
+		if (!/^\d{7,8}[\dK]$/.test(limpio)) {
+			rut.classList.add("is-invalid");
+			return false;
+		}
+
+		const cuerpo = limpio.slice(0, -1);
+		const digito = limpio.slice(-1);
+		let suma = 0;
+		let multiplicador = 2;
+
+		for (let i = cuerpo.length - 1; i >= 0; i--) {
+			suma += Number(cuerpo[i]) * multiplicador;
+			multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+		}
+
+		const resto = 11 - (suma % 11);
+		const esperado = resto === 11 ? "0" : resto === 10 ? "K" : String(resto);
+
+		if (digito !== esperado) {
 			rut.classList.add("is-invalid");
 			return false;
 		}

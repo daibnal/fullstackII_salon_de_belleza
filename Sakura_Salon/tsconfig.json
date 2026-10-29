@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"target": "ES2020",
+		"module": "ES2020",
+		"moduleResolution": "bundler",
+		"strict": true,
+		"rootDir": "ts/admin",
+		"outDir": "js/admin",
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true
+	},
+	"include": ["ts/admin/**/*.ts"]
+}
