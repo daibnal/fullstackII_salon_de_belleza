@@ -38,7 +38,6 @@ body {
 	padding-left: 12px;
 	padding-right: 12px;
 
-	max-width: 750px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -178,6 +177,16 @@ CONTENIDO PRINCIPAL
 	margin: 6px auto 0 auto;
 	border-radius: 2px;
 }
+
+/* --- Tarjeta de servicio --- */
+/* .service-card {
+	background-color: #ffffff;
+	border: 2px solid var(--color-accent);
+	border-radius: 12px;
+	padding: 1rem;
+	box-shadow: 0 3px 8px rgba(89, 13, 31, 0.05);
+	max-width: 460px;
+} */
 
 /* --- Tarjeta: Imagen + Texto --- */
 .sketch-card {
