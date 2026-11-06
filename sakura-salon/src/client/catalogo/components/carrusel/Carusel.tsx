@@ -5,7 +5,11 @@ interface Imagen {
 	alt: string;
 }
 
-export function Carusel(imagenes: Imagen[]) {
+interface ImagenesProps {
+	imagenes: Imagen[];
+}
+
+export function Carusel({imagenes}: ImagenesProps) {
     
     return (
         <>
@@ -32,7 +36,7 @@ export function Carusel(imagenes: Imagen[]) {
 				{/*   El slideshow/carrusel  */}
 				<div className="carousel-inner">
 					{
-						imagenes.map((img, index) => (
+						imagenes?.map((img, index) => (
 							<Slide key={index} index={index} imagen={img.imagen} alt={img.alt}/>
 						))
 					}
