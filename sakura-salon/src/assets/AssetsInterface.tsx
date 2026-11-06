@@ -2,7 +2,17 @@
    Ejem: admin-servicios => adminServicios
    
    El src por defecto es "src/assets/" lo que viene
-   despues es lo que va variando */
+   despues es lo que va variando
+
+   Estructura (reemplazar texto entre '<>'):
+
+   <nombreCarpeta>: {
+       <imagen>: {
+           src: "src/assets/<ruta>.png",
+           alt: "<texto alternativo>" 
+       }
+   }
+*/
 
 export const assets = {
     adminServicios: {
@@ -42,6 +52,8 @@ export const assets = {
             src: "src/assets/admin-servicios/laminado.png",
             alt: ""
         }
+        /* To Do: Agregar Perfilado y Tradicional*/
+
     },
     carruselEyes: {
         lifting1: {
@@ -102,9 +114,13 @@ export const assets = {
             src: "src/assets/carrusel-nails/polygel.png",
             alt: ""
         },
+        /* To Do: Añadir Retiro */
         semipermanente: {
             src: "src/assets/carrusel-nails/semipermanente.png",
             alt: ""
         }
     }
+    /* To Do: Añadir Favicon */
+    /* To Do: Añadir Inicio-acerca-de */
+    /* To Do: Añadir Inicio-servicios */
 }
