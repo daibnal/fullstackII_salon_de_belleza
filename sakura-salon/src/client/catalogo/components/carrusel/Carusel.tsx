@@ -17,7 +17,7 @@ export function Carusel(imagenes: Imagen[]) {
 				{/*   Indicadores a los pies de las imagenes  */}
 				<div className="carousel-indicators">
 					{
-						imagenes.map((img, index) => (
+						imagenes.map((_img, index) => (
 							<button
 								key={index}
 								type="button"
@@ -25,15 +25,15 @@ export function Carusel(imagenes: Imagen[]) {
 								data-bs-slide-to={index}
 								className={index === 0 ? "active" : ""}
 							></button>
-					))}
+						))
+					}
 				</div>
 
 				{/*   El slideshow/carrusel  */}
 				<div className="carousel-inner">
 					{
 						imagenes.map((img, index) => (
-							{/* TO DO: Fix  */}
-							<Slide key={index} {...img} className={index === 0 ? "active" : ""} />
+							<Slide key={index} index={index} imagen={img.imagen} alt={img.alt}/>
 						))
 					}
 				</div>
