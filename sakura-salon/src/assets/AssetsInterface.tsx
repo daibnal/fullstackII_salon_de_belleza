@@ -5,6 +5,10 @@
    despues es lo que va variando */
 
 export const assets = {
+    logo: {
+        src: "src/assets/Logo_sm.png",
+        alt: ""
+    },
     adminServicios: {
         alisado: {
             src: "src/assets/admin-servicios/alisado.png",
