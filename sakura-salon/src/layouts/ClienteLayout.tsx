@@ -5,7 +5,7 @@ import { Navbar } from "./components/navigation/Navbar";
 const estructura = [
 	{
 		titulo: "",
-		links: [
+		enlaces: [
 			{
 				url: "/",
 				titulo: "Inicio",
@@ -15,7 +15,7 @@ const estructura = [
 	},
 	{
 		titulo: "Servicios",
-		links: [
+		enlaces: [
 			{
 				url: "/catalogo/eyes",
 				titulo: "Lifting y Cejas",
@@ -35,7 +35,7 @@ const estructura = [
 	},
 	{
 		titulo: "Sesión",
-		links: [
+		enlaces: [
 			{
 				url: "/cuenta/login",
 				titulo: "Iniciar sesión",

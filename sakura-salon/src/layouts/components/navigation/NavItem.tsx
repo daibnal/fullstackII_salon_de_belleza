@@ -1,12 +1,12 @@
 import { Link } from "react-router";
 
-interface direccionProps {
+export interface linkProps {
     url: string;
     titulo: string;
     icono: string;
 }
 
-export function NavItem({url, titulo, icono}: direccionProps) {
+export function NavItem({url, titulo, icono}: linkProps) {
     return (
         <li className="nav-item">
             <Link

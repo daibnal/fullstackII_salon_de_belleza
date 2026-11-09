@@ -1,16 +1,11 @@
 import { Link } from "react-router";
 import { assets } from "../../../assets/AssetsInterface";
 import { NavItem } from "./NavItem";
-
-interface link {
-	url: string;
-	titulo: string;
-	icono: string;
-};
+import type { linkProps } from "./NavItem";
 
 interface seccion {
 	titulo: string;
-	links: link[];
+	enlaces: linkProps[];
 }
 
 interface estructuraProps {
@@ -79,7 +74,7 @@ export function Navbar({estructura}: estructuraProps) {
 												)
 											}
 											{
-												item.links?.map((link, j) => (
+												item.enlaces?.map((link, j) => (
 													<NavItem key={i.toString() + j.toString()} url={link.url} titulo={link.titulo} icono={link.icono}/>
 												))
 											}
