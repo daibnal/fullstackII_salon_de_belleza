@@ -3,6 +3,7 @@ import { ClienteLayout } from "../layouts/ClienteLayout";
 import { Nails } from "../client/catalogo/pages/Nails";
 import { Eyes } from "../client/catalogo/pages/Eyes";
 import { Hair } from "../client/catalogo/pages/Hair";
+import { Inicio } from "../home/page/Inicio";
 
 export const rootRouter = createBrowserRouter([
     {
@@ -11,7 +12,7 @@ export const rootRouter = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Nails/>
+                element: <Inicio/>
             },
             {
                 path: '/catalogo/eyes',
