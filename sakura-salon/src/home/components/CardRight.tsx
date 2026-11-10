@@ -1,4 +1,4 @@
-interface servicioProps {
+export interface servicioProps {
     titulo: string;
     descripcion: string;
     imagen: string;
@@ -18,7 +18,6 @@ export function CardRight({titulo, descripcion, imagen, alt}: servicioProps) {
                     <p className="text-muted small mb-2">
                         {descripcion}
                     </p>
-                    <button className="btn btn-custom-primary mb-2 mb-sm-0">Ir al servicio</button>
                     <a
                         className="btn btn-custom-primary"
                         href="servicios/eyes.html">

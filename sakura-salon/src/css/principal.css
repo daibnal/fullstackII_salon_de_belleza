@@ -207,6 +207,7 @@ CONTENIDO PRINCIPAL
 	background-color: #ffffff;
 	width: 100%;
 	max-width: 460px;
+	min-height: 260px;
 	height: auto;
 	object-fit: cover;
 }
