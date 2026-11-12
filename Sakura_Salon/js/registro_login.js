@@ -80,17 +80,43 @@ document.addEventListener('DOMContentLoaded', function() {
 		return true;
 	}
 
+	const CORREO_ADMIN = "admin@sakura.cl";
+	const CLAVE_ADMIN = "Sakura1&";
+	const CLAVE_SESION = "sesionSakura";
+
+	function guardarSesion(mantener) {
+		const datos = JSON.stringify({ correo: CORREO_ADMIN, rol: "ADMIN" });
+		sessionStorage.removeItem(CLAVE_SESION);
+		localStorage.removeItem(CLAVE_SESION);
+		const destino = mantener ? localStorage : sessionStorage;
+		destino.setItem(CLAVE_SESION, datos);
+	}
+
+	function haySesionAdmin() {
+		const crudo = sessionStorage.getItem(CLAVE_SESION) || localStorage.getItem(CLAVE_SESION);
+		if (!crudo) {
+			return false;
+		}
+		try {
+			return JSON.parse(crudo).rol === "ADMIN";
+		} catch {
+			return false;
+		}
+	}
+
 	// Validar Correo Electrónico
-	function correoEsValido() {
+	function correoEsValido(idCampo) {
 		// Expresion regular correo
 		const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 		// Selecciona el campo del documento html
-		const correo = document.getElementById("correo");
+		const correo = document.getElementById(idCampo);
 
 		// Si es invalido, lo añade a la lista negra
-		if (!regexCorreo.test(correo.value.trim())) {
-			correo.classList.add("is-invalid");
+		if (!correo || !regexCorreo.test(correo.value.trim())) {
+			if (correo) {
+				correo.classList.add("is-invalid");
+			}
 			return false;
 		}
 
@@ -115,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			formIsValid = rutEsValido();
 			formIsValid = telefonoEsValido();
-			formIsValid = correoEsValido();
+			formIsValid = correoEsValido("correoRegistro");
 			//------------------------------------------------------
 			// VALIDACION CONTRASEÑA
 			// Selecciona el campo del documento html
@@ -152,19 +178,47 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
+	if (haySesionAdmin()) {
+		window.location.replace("../administracion/dashboard.html");
+		return;
+	}
+
 	// VALIDACION FORMULARIO INICIO DE SESION
 	const formLogin = document.getElementById("formLogin");
 	if (formLogin) {
 		formLogin.addEventListener("submit", function (event) {
-			let formIsValid = true;
+			event.preventDefault();
+			event.stopPropagation();
 
-			formIsValid = correoEsValido();
+			const correo = document.getElementById("correoLogin");
+			const password = document.getElementById("passwordLogin");
+			const aviso = document.getElementById("loginError");
+			const correoOk = correoEsValido("correoLogin");
+			const claveOk = password.value.length > 0;
 
-			if (!formIsValid) {
-				// Si hay errores, detenemos el envío
-				event.preventDefault();
-				event.stopPropagation();
+			password.classList.toggle("is-invalid", !claveOk);
+			if (aviso) {
+				aviso.hidden = true;
 			}
+
+			if (!correoOk || !claveOk) {
+				return;
+			}
+
+			const esAdmin =
+				correo.value.trim().toLowerCase() === CORREO_ADMIN &&
+				password.value === CLAVE_ADMIN;
+
+			if (!esAdmin) {
+				if (aviso) {
+					aviso.hidden = false;
+				}
+				return;
+			}
+
+			const mantener = document.getElementById("mantenerSesion");
+			guardarSesion(mantener && mantener.checked);
+			window.location.href = "../administracion/dashboard.html";
 		});
 	}
 });

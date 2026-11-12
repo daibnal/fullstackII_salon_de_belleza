@@ -2,16 +2,10 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<<<<<<< HEAD
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Iniciar Sesión - Sakura Salón</title>
 		<!-- Favicon -->
 		<link rel="icon" type="image/x-icon" href="../assets/favicon/sakura-salon-icon.png" />
-
-		=======
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Inicio de Sesión</title>
-		>>>>>>> validacion-in-progress
 		<!-- Estilos Bootstrap -->
 		<link
 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
@@ -169,7 +163,11 @@
 								class="form-control bg-white"
 								id="passwordLogin"
 								placeholder="..." />
+							<div class="invalid-feedback">Ingresa la contraseña.</div>
 						</div>
+						<p id="loginError" class="text-danger small text-center mb-3" hidden>
+							Correo o contraseña incorrectos.
+						</p>
 
 						<!-- Mantener la sesión iniciada -->
 						<div class="my-3 form-check">
