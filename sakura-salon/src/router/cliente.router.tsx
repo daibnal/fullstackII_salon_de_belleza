@@ -6,6 +6,7 @@ import { Hair } from "../client/catalogo/pages/Hair";
 import { Inicio } from "../home/page/Inicio";
 import { AgendarCita } from "../client/formularios/pages/Agendar";
 import { CitaConfirmada } from "../client/formularios/pages/Confirmacion";
+import { adminRouteBranch } from "./admin.router";
 
 export const rootRouter = createBrowserRouter([
     {
@@ -37,5 +38,6 @@ export const rootRouter = createBrowserRouter([
                 element: <CitaConfirmada/>
             }
         ]
-    }
+    },
+    adminRouteBranch,
 ]);
