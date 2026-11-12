@@ -1,6 +1,7 @@
 import { Carusel } from "../components/carrusel/Carusel";
 import { assets } from "../../../assets/AssetsInterface";
 import { ListadoCards } from "../components/listado_servicios/ListadoCards";
+import { useServicios } from "../../../hooks/useServicios";
 
 const sliedes = [
     {
@@ -21,7 +22,7 @@ const sliedes = [
     }
 ];
 
-const test = [
+/* const test = [
     {
         id: 1,
         nombre: "Retiro esmalte",
@@ -50,9 +51,11 @@ const test = [
         duracion: 50,
         precio: 20000
     }
-];
+]; */
 
+const categoria = 1;
 export function Hair() {
+    const { servicios, error } = useServicios(categoria);
     return (
         <>
             {/* Titulo de la seccion */}
@@ -62,7 +65,9 @@ export function Hair() {
             <Carusel imagenes={sliedes} />
 
             {/* Listado de servicios */}
-            <ListadoCards servicios={test} />
+            <ListadoCards servicios={servicios} />
+
+            <p>{error?.message}</p>
         </>
     );
 };
