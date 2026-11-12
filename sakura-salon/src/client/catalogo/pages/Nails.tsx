@@ -1,3 +1,4 @@
+import { useServicios } from "../../../hooks/useServicios";
 import { Carusel } from "../components/carrusel/Carusel";
 import { ListadoCards } from "../components/listado_servicios/ListadoCards";
 
@@ -16,7 +17,7 @@ const sliedes = [
     }
 ];
 
-const test = [
+/* const test = [
     {
         id: 1,
         nombre: "Retiro esmalte",
@@ -45,9 +46,12 @@ const test = [
         duracion: 50,
         precio: 20000
     }
-];
+]; */
+
+const categoria = 2;
 
 export function Nails() {
+    const { servicios, error } = useServicios(categoria);
     return (
         <>
             {/* Titulo de la seccion */}
@@ -57,7 +61,9 @@ export function Nails() {
             <Carusel imagenes={sliedes} />
 
             {/* Listado de servicios */}
-            <ListadoCards servicios={test}/>
+            <ListadoCards servicios={servicios}/>
+
+            <p>{error?.message}</p>
         </>
     );
 };
