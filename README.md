@@ -21,7 +21,7 @@
 
 | Módulo / Característica | Descripción |
 | :--- | :--- |
-|  **Diseño Responsivo e Inmersivo** | Adaptado perfectamente para dispositivos móviles, tabletas y ordenadores de escritorio con una interfaz fluida basada en **Tailwind CSS**. |
+|  **Diseño Responsivo e Inmersivo** | Adaptado perfectamente para dispositivos móviles, tabletas y ordenadores de escritorio con una interfaz fluida basada en **Bootstrap 5**. |
 |  **Sistema de Reservas Interactivo** | Flujo paso a paso intuitivo para agendar citas, elegir servicios específicos y seleccionar horarios disponibles en tiempo real. |
 |  **Catálogo de Servicios Detallado** | Vista completa de precios, tiempos estimados de atención y descripciones detalladas de cada tratamiento especializado. |
 |  **Validaciones de Formularios Robustas** | Control exhaustivo de entradas de usuario en tiempo real para el registro, inicio de sesión y agendamiento de citas. |
