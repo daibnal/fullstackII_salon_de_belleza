@@ -1,18 +1,8 @@
 import { Card } from "./Card";
+import type { Servicios } from "../../../../interfaces/Servicios";
 
-interface servicio {
-    id: number;
-    nombre: string;
-    descripcion: string;
-    duracion: number;
-    precio: number;
-}
 
-interface serviciosProps {
-    servicios: servicio[];
-}
-
-export function ListadoCards({servicios}: serviciosProps) {
+export function ListadoCards({servicios}: Servicios) {
     return (
         <>
             <div className="d-flex flex-wrap justify-content-center gap-5 pt-5">

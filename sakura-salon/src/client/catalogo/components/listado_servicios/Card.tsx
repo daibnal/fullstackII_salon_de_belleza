@@ -1,12 +1,6 @@
-interface Props {
-    id: number;
-    nombre: string;
-    descripcion: string;
-    duracion: number;
-    precio: number;
-};
+import type { Servicio } from "../../../../interfaces/Servicios";
 
-export function Card({ id, nombre, descripcion, duracion, precio }: Props) {
+export function Card({ id, nombre, descripcion, duracion_minutos, precio }: Servicio) {
     return (
         <>
             <div className="d-flex flex-wrap justify-content-center gap-5 pt-5">
@@ -24,7 +18,7 @@ export function Card({ id, nombre, descripcion, duracion, precio }: Props) {
                         </p>
                         <p className="small fw-semibold text-secondary mb-3">
                             <i className="bi bi-clock me-1"></i>
-                            Duración: {duracion} min
+                            Duración: {duracion_minutos} min
                         </p>
                         <div
                             className="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
