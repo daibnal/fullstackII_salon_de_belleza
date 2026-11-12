@@ -4,8 +4,6 @@ import { MiAppIdk } from './MiAppIdk'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <body className="container-fluid p-0">
-      <MiAppIdk/>
-    </body>
+    <MiAppIdk />
   </StrictMode>
 )

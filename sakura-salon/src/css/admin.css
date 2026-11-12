@@ -1,0 +1,272 @@
+/* =======================================================
+   PALETA DE COLORES Y VARIABLES GLOBALES
+   ======================================================= */
+:root {
+    --color-primary: #590D1F;      /* Primario: Dark Burgundy */
+    --color-secondary: #A52647;    /* Secundario: Rose Red */
+    --color-accent: #F0A6A8;       /* Acento: Soft Pink */
+    --color-bg: #F4F2F0;           /* Background: Off-White */
+    --color-text-dark: #2A181C;    /* Texto oscuro */
+}
+
+/* Anula el centrado de body en principal.css (display:flex; align-items:center). */
+body.admin {
+    display: block;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+body.admin #root {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+}
+
+/* =======================================================
+   ESTRUCTURA DEL PANEL (navbar fija + contenido)
+   La barra y el offcanvas reutilizan css/principal.css.
+   ======================================================= */
+body.admin .wrapper {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+    padding-top: 72px; /* altura de .navbar en principal.css */
+}
+
+body.admin #content {
+    width: 100%;
+    min-height: calc(100vh - 72px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Saludo y campana dentro de la navbar burdeos */
+.admin-greeting {
+    color: var(--color-bg);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.header-icon-btn.admin-bell {
+    color: var(--color-primary);
+    font-size: 1.2rem;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+/* El offcanvas está dentro de .navbar; iguala la especificidad de Bootstrap
+   para conservar los colores de .nav-link definidos en principal.css */
+body.admin .offcanvas .navbar-nav .nav-link {
+    color: var(--color-primary);
+}
+
+body.admin .offcanvas .navbar-nav .nav-link.active,
+body.admin .offcanvas .navbar-nav .nav-link:hover {
+    color: var(--color-text-dark);
+}
+
+.main-content-area {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+/* =======================================================
+   COMPONENTES GLOBALES (Tarjetas, Botones, Iconos)
+   ======================================================= */
+
+/* Botones */
+.btn-custom-primary {
+    background-color: var(--color-primary);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1.2rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.btn-custom-primary:hover, .btn-custom-primary:focus {
+    background-color: var(--color-secondary);
+    color: #ffffff;
+}
+
+/* Tarjetas (Cards) estilo Sketch */
+.sketch-card {
+    background-color: #ffffff;
+    border: 2px solid var(--color-accent);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(89, 13, 31, 0.08);
+    height: 100%;
+    transition: transform 0.2s ease;
+}
+
+.sketch-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(89, 13, 31, 0.12);
+}
+
+/* Tipografía de Tarjetas (Dashboard) */
+.card-icon {
+    font-size: 2.5rem;
+    color: var(--color-secondary);
+    margin-bottom: 1rem;
+}
+.card-title-custom {
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+.card-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-dark);
+}
+
+/* Iconos de métricas cuadradas */
+.metric-icon-box, .agenda-metric-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 1.5rem;
+}
+.agenda-metric-icon {
+    color: var(--color-secondary);
+    background: rgba(165, 38, 71, 0.1); /* RGBA del color secondary */
+}
+
+/* =======================================================
+   ESTILOS ESPECÍFICOS POR MÓDULO
+   ======================================================= */
+
+/* --- Agenda --- */
+.calendar-table th {
+    text-align: center;
+    background-color: var(--color-bg);
+    color: var(--color-primary);
+    font-weight: 600;
+    border-bottom: 2px solid var(--color-accent);
+}
+.calendar-table td {
+    vertical-align: top;
+    border-color: var(--color-accent);
+    min-width: 180px;
+    height: 80px;
+    position: relative;
+}
+.time-col {
+    min-width: 80px !important;
+    width: 80px;
+    text-align: center;
+    font-weight: 600;
+    color: #6c757d;
+    background-color: var(--color-bg);
+    vertical-align: middle !important;
+}
+
+/* Bloques de Eventos (Citas) */
+.event-block {
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    border-left: 4px solid;
+    cursor: pointer;
+    transition: transform 0.1s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.event-block:hover { transform: scale(1.02); }
+
+.event-confirmed { background-color: #e8f5e9; border-left-color: #4caf50; color: #2e7d32; }
+.event-pending { background-color: #fff3e0; border-left-color: #ff9800; color: #ef6c00; }
+.event-process { background-color: #e3f2fd; border-left-color: #2196f3; color: #1565c0; }
+
+.event-title { font-weight: 700; display: block; margin-bottom: 2px; }
+.event-client { font-weight: 500; display: block; }
+.event-time { font-size: 0.75rem; opacity: 0.8; }
+
+/* --- Insumos --- */
+.stock-progress {
+    height: 8px;
+    border-radius: 4px;
+    background-color: #e9ecef;
+    margin-top: 5px;
+    overflow: hidden;
+}
+.stock-bar {
+    height: 100%;
+    border-radius: 4px;
+}
+
+/* --- Personal --- */
+.staff-avatar {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--color-accent);
+}
+.schedule-badge {
+    font-size: 0.75rem;
+    padding: 5px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--color-accent);
+    background: #ffffff;
+    color: var(--color-primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* --- Reportes --- */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+.insight-box {
+    border-left: 4px solid var(--color-secondary);
+    background-color: rgba(165, 38, 71, 0.05); /* RGBA del color secondary */
+    padding: 15px;
+    border-radius: 0 8px 8px 0;
+}
+
+/* --- Servicios --- */
+.service-thumbnail {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--color-accent);
+}
+.nav-tabs .nav-link {
+    color: var(--color-primary);
+    font-weight: 500;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 10px 20px;
+}
+.nav-tabs .nav-link.active {
+    color: var(--color-secondary);
+    background: none;
+    border-bottom: 3px solid var(--color-secondary);
+}
+.nav-tabs { border-bottom: 2px solid var(--color-accent); }
+
+
+/* =======================================================
+   RESPONSIVO (Móviles y Tablets)
+   ======================================================= */
+@media (max-width: 768px) {
+    .main-content-area {
+        padding: 16px 15px;
+    }
+}

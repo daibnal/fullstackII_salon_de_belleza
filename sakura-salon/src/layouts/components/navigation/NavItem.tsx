@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { NavLink } from "react-router";
 
 export interface linkProps {
     url: string;
@@ -6,14 +6,18 @@ export interface linkProps {
     icono: string;
 }
 
-export function NavItem({url, titulo, icono}: linkProps) {
+export function NavItem({ url, titulo, icono }: linkProps) {
     return (
         <li className="nav-item">
-            <Link
-                className="nav-link fw-bold"
-                to={url}>
-                <i className={"bi " + icono  + " me-2"}></i>{titulo}
-            </Link>
+            <NavLink
+                className={({ isActive }) =>
+                    "nav-link fw-bold" + (isActive ? " active" : "")
+                }
+                to={url}
+                end={url === "/" || url === "/admin"}>
+                <i className={"bi " + icono + " me-2"}></i>
+                {titulo}
+            </NavLink>
         </li>
     );
-};
+}
