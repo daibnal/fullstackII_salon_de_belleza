@@ -2,10 +2,13 @@ export interface Servicio {
     id: number;
     activo: boolean;
     descripcion: string;
-    duracion_minutos: number;
+    duracionMinutos: number;
     nombre: string;
     precio: number;
-    categoria: number;
+    categoria: {
+        id: number;
+        nombre: string;
+    }
 }
 
 export interface Servicios {

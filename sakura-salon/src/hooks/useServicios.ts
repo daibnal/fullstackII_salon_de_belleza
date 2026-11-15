@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { Servicio } from '../interfaces/Servicios';
-import { Catalogo } from '../client/catalogo/services/catalogo.service';
+import { Catalogo } from '../services/catalogo.service';
 
-export type ServicioPayload = Omit<Servicio, 'categoria'>;
+//export type ServicioPayload = Omit<Servicio, 'categoria'>;
 
 export function useServicios(idCategoria: number) {
     const [servicios, setServicios] = useState<Servicio[]>([]);
