@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
+import { haySesionAdmin } from "../client/cuenta/pages/LoginRegistro";
 import { Navbar } from "./components/navigation/Navbar";
 
 const adminEstructura = [
@@ -42,7 +43,7 @@ const adminEstructura = [
 		titulo: "",
 		enlaces: [
 			{
-				url: "/",
+				url: "/cuenta/logout",
 				titulo: "Cerrar sesión",
 				icono: "bi-box-arrow-left",
 			},
@@ -51,12 +52,20 @@ const adminEstructura = [
 ];
 
 export function AdminLayout() {
+	const navigate = useNavigate();
+
 	useEffect(() => {
 		document.body.classList.add("admin");
 		return () => {
 			document.body.classList.remove("admin");
 		};
 	}, []);
+
+	useEffect(() => {
+		if (!haySesionAdmin()) {
+			navigate("/cuenta/login");
+		}
+	}, [navigate]);
 
 	return (
 		<div className="wrapper">
