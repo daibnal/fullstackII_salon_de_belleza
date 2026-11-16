@@ -17,17 +17,17 @@ const estructura = [
 		titulo: "Servicios",
 		enlaces: [
 			{
-				url: "/catalogo/eyes",
+				url: "/catalogo/3",
 				titulo: "Lifting y Cejas",
 				icono: "bi-eye"
 			},
 			{
-				url: "/catalogo/hair",
+				url: "/catalogo/1",
 				titulo: "Cabello",
 				icono: "bi-scissors"
 			},
 			{
-				url: "/catalogo/nails",
+				url: "/catalogo/2",
 				titulo: "Manicure",
 				icono: "bi-brush"
 			}

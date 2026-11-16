@@ -14,3 +14,16 @@ export interface Servicio {
 export interface Servicios {
     servicios: Servicio[];
 }
+
+export const sinConexion: Servicio = {
+    id: -1,
+    nombre: "▆▆▆ ▆ ▆▆▆▆▆▆▆",
+    descripcion: "▆▆▆▆▆ ▆▆▆ ▆▆▆▆▆▆▆ ▆ ▆▆▆▆▆▆▆▆▆▆ ▆▆▆▆ ▆▆ ▆▆▆ ▆ ▆▆▆▆▆ ▆▆▆▆▆▆▆ ▆▆▆▆▆▆▆▆▆▆▆ ▆▆ ▆▆▆",
+    duracionMinutos: 0,
+    precio: 0,
+    categoria: {
+        id: -1,
+        nombre: ""
+    },
+    activo: false,
+};

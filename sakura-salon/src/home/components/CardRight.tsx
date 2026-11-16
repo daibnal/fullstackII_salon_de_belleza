@@ -1,11 +1,7 @@
-export interface servicioProps {
-    titulo: string;
-    descripcion: string;
-    imagen: string;
-    alt: string;
-};
+import { Link } from "react-router";
+import type { Catalogo } from "../../interfaces/Catalogo";
 
-export function CardRight({titulo, descripcion, imagen, alt}: servicioProps) {
+export function CardRight({nombre, id, descripcion}: Catalogo) {
     return (
         <div className="sketch-card">
             <div className="row g-3 align-items-center">
@@ -13,21 +9,21 @@ export function CardRight({titulo, descripcion, imagen, alt}: servicioProps) {
                     <h2
                         className="h5 fw-bold mb-1"
                         style={{ color: 'var(--color-primary)' }}>
-                        {titulo}
+                        {nombre}
                     </h2>
                     <p className="text-muted small mb-2">
                         {descripcion}
                     </p>
-                    <a
+                    <Link
                         className="btn btn-custom-primary"
-                        href="servicios/eyes.html">
+                        to={`catalogo/${id}`}>
                         Ver opciones
-                    </a>
+                    </Link>
                 </div>
                 <div className="col-12 col-sm-6 text-center">
                     <img
-                        src={imagen}
-                        alt={alt}
+                        src={undefined}
+                        alt={undefined}
                         className="img-thumbnail service-img-thumb"
                         onError={(event) => {
                             event.currentTarget.onerror = null;

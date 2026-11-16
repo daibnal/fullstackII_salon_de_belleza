@@ -24,7 +24,7 @@ const sliedes = [
 
 const categoria = 1;
 export function Hair() {
-    const { servicios, error } = useCatalogoById(categoria);
+    const { servicios } = useCatalogoById(categoria);
     return (
         <>
             {/* Titulo de la seccion */}
@@ -35,8 +35,6 @@ export function Hair() {
 
             {/* Listado de servicios */}
             <ListadoCards servicios={servicios} />
-
-            <p>{error?.message}</p>
         </>
     );
 };

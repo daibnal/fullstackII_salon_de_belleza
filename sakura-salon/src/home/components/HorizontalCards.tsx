@@ -1,22 +1,24 @@
+import type { Catalogos } from "../../interfaces/Catalogo";
+import { sinConexion } from "../../interfaces/Servicios";
 import { CardLeft } from "./CardLeft";
-import { CardRight, type servicioProps } from "./CardRight";
+import { CardRight } from "./CardRight";
 
-interface serviciosProps {
-    servicios: servicioProps[];
-}
 
-export function HorizontalCards({servicios}: serviciosProps) {
+export function HorizontalCards({catalogos}: Catalogos) {
+    const errorPlaceholder = sinConexion;
     return (
         <div className="d-flex flex-column gap-5">
-                {
-                    servicios.map((item, index) => (
+                {(catalogos.length === 0 ?
+                    <CardLeft {...errorPlaceholder}/>
+                    :
+                    catalogos.map((item, index) => (
                         (index % 2 === 0 ? (
                             <CardRight key={index} {...item}/>
                         ) : (
                             <CardLeft key={index} {...item}/>
                         ))
                     ))
-                }
+                )}
         </div>
     );
 };

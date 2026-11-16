@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import type { Servicio } from "../../../../interfaces/Servicios";
 
 export function Card({ id, nombre, descripcion, duracionMinutos, precio }: Servicio) {
@@ -22,10 +23,17 @@ export function Card({ id, nombre, descripcion, duracionMinutos, precio }: Servi
                         </p>
                         <div
                             className="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
-                            <a
-                                href="agendar.html?servicio=Retiro%20esmalte&precio=10000"
-                                className="btn btn-custom-primary btn-sm w-auto px-3"
-                                >Ir</a>
+                            {(id === -1 ? 
+                                <a
+                                    className="btn bg-light disabled"
+                                    >Sin conexión 
+                                </a>
+                                :
+                                <Link
+                                    to="/agendar"
+                                    className="btn btn-custom-primary btn-sm w-auto px-3"
+                                    >Ir</Link>
+                            )}
                             <span className="fw-bold text-dark">
                                 ${precio.toLocaleString('es-CO')}
                             </span>

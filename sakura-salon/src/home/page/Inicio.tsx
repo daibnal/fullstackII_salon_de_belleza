@@ -1,6 +1,7 @@
 import { Carusel } from "../../client/catalogo/components/carrusel/Carusel";
 import { assets } from "../../assets/AssetsInterface";
 import { HorizontalCards } from "../components/HorizontalCards";
+import { useCatalogo } from "../../hooks/useServicios";
 
 const fotos = [
     {
@@ -21,28 +22,13 @@ const fotos = [
     }
 ];
 
-const catalogo = [
-    {
-        titulo: "Lifting y Cejas",
-        descripcion: "Realza tu mirada con un lifting de pestañas y diseño de cejas, logrando una apariencia natural, definida y armoniosa.",
-        imagen: "",
-        alt: ""
-    },
-    {
-        titulo: "Cabello",
-        descripcion: "Transforma tu cabello con cortes, color y tratamientos personalizados, diseñados para resaltar tu estilo y mantenerlo saludable y radiante.",
-        imagen: "",
-        alt: ""
-    },
-    {
-        titulo: "Manicure",
-        descripcion: "Cuida y embellece tus manos con manicures personalizados, desde esmaltados y diseños hasta extensiones, siempre con un acabado prolijo y elegante.",
-        imagen: "",
-        alt: ""
-    }
-];
-
 export function Inicio() {
+	let { catalogos } = useCatalogo();
+	if (catalogos.length > 0) {
+		catalogos[0].descripcion = "Transforma tu cabello con cortes, color y tratamientos personalizados, diseñados para resaltar tu estilo y mantenerlo saludable y radiante.";
+		catalogos[1].descripcion = "Cuida y embellece tus manos con manicures personalizados, desde esmaltados y diseños hasta extensiones, siempre con un acabado prolijo y elegante.";
+		catalogos[2].descripcion = "Realza tu mirada con un lifting de pestañas y diseño de cejas, logrando una apariencia natural, definida y armoniosa.";
+	}
     return (
         <>
             <Carusel imagenes={fotos}/>
@@ -52,7 +38,7 @@ export function Inicio() {
 				className="mb-5 pt-5">
 				<h1 className="section-title">Nuestros servicios</h1>
             
-                <HorizontalCards servicios={catalogo}/>
+                <HorizontalCards catalogos={catalogos}/>
             </section>
 
             {/* ACERCA DE NOSOTROS */}

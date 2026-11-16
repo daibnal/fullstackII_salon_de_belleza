@@ -20,7 +20,7 @@ const slides = [
 const categoria = 3
 
 export function Eyes() {
-    const { servicios, error } = useCatalogoById(categoria);
+    const { servicios } = useCatalogoById(categoria);
     return (
         <>
             {/* Titulo de la seccion */}
@@ -31,8 +31,6 @@ export function Eyes() {
 
             {/* Listado de servicios */}
             <ListadoCards servicios={servicios} />
-
-            <p>{error?.message}</p>
         </>
     );
 };

@@ -18,15 +18,15 @@ export const rootRouter = createBrowserRouter([
                 element: <Inicio/>
             },
             {
-                path: '/catalogo/eyes',
+                path: '/catalogo/3',
                 element: <Eyes/>
             },
             {
-                path: '/catalogo/hair',
+                path: '/catalogo/1',
                 element: <Hair/>
             },
             {
-                path: '/catalogo/nails',
+                path: '/catalogo/2',
                 element: <Nails/>
             },
             {

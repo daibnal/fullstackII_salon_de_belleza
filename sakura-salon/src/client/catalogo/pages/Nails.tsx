@@ -20,7 +20,7 @@ const sliedes = [
 const categoria = 2;
 
 export function Nails() {
-    const { servicios, error } = useCatalogoById(categoria);
+    const { servicios } = useCatalogoById(categoria);
     return (
         <>
             {/* Titulo de la seccion */}
@@ -31,8 +31,6 @@ export function Nails() {
 
             {/* Listado de servicios */}
             <ListadoCards servicios={servicios}/>
-
-            <p>{error?.message}</p>
         </>
     );
 };
