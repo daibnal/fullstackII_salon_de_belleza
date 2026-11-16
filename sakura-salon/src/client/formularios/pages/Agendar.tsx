@@ -1,4 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {
+    nombreValido,
+    rutValido,
+    telefonoValido,
+    correoValido,
+    fechaNoAnterior,
+    hoyLocal,
+    guardarCitaEnStorage,
+    type Cita
+} from "./validacionesCita";
 
 interface CitaForm {
     nombre: string;
@@ -12,8 +22,9 @@ interface CitaForm {
     tipoPago: "abono" | "total";
 }
 
+type FormErrors = Partial<Record<keyof CitaForm, string>>;
+
 export function AgendarCita() {
-    // Estado del formulario
     const [formData, setFormData] = useState<CitaForm>({
         nombre: "",
         apellido: "",
@@ -26,10 +37,34 @@ export function AgendarCita() {
         tipoPago: "abono"
     });
 
+    const [errors, setErrors] = useState<FormErrors>({});
+
+    // Replicates URL query param pre-fill (?fecha=YYYY-MM-DD) from agenda.ts
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const fechaUrl = params.get("fecha");
+        if (fechaUrl && fechaNoAnterior(fechaUrl)) {
+            setFormData((prev) => ({ ...prev, fechaCita: fechaUrl }));
+        }
+    }, []);
+
     // Simulación de servicio cargado
     const servicioActual = {
         nombre: "Lifting y Cejas",
         precio: 25000
+    };
+
+    const montoAbono = servicioActual.precio * 0.5;
+
+    // Clears the field's error as soon as the user corrects it
+    const clearError = (field: keyof CitaForm) => {
+        if (errors[field]) {
+            setErrors((prev) => {
+                const updated = { ...prev };
+                delete updated[field];
+                return updated;
+            });
+        }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -38,23 +73,91 @@ export function AgendarCita() {
             ...prev,
             [id]: value
         }));
+        clearError(id as keyof CitaForm);
     };
 
     const handleHoraChange = (hora: string) => {
         setFormData((prev) => ({ ...prev, hora }));
+        clearError("hora");
     };
 
     const handlePagoChange = (tipoPago: "abono" | "total") => {
         setFormData((prev) => ({ ...prev, tipoPago }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log("Datos de la cita a enviar:", { ...formData, servicio: servicioActual.nombre, total: servicioActual.precio });
-        alert("¡Cita agendada con éxito! Redirigiendo a pasarela de pago...");
+    // Translated validation rules from comun.ts & citas.ts
+    const validateForm = (): boolean => {
+        const newErrors: FormErrors = {};
+
+        if (!nombreValido(formData.nombre)) {
+            newErrors.nombre = "Ingresa un nombre válido (solo letras, mínimo 2 caracteres).";
+        }
+
+        if (!nombreValido(formData.apellido)) {
+            newErrors.apellido = "Ingresa un apellido válido (solo letras, mínimo 2 caracteres).";
+        }
+
+        if (!rutValido(formData.rut)) {
+            newErrors.rut = "Ingresa un RUT válido (ej: 12345678-9).";
+        }
+
+        if (!telefonoValido(formData.telefono)) {
+            newErrors.telefono = "Ingresa un teléfono móvil válido (ej: +56912345678).";
+        }
+
+        if (!correoValido(formData.correo)) {
+            newErrors.correo = "Ingresa un correo electrónico válido.";
+        }
+
+        if (formData.profesional.trim() === "") {
+            newErrors.profesional = "Selecciona un profesional.";
+        }
+
+        // Dynamic date message translated from citas.ts
+        if (!fechaNoAnterior(formData.fechaCita)) {
+            newErrors.fechaCita =
+                formData.fechaCita.trim() !== "" && formData.fechaCita < hoyLocal()
+                    ? "La fecha no puede ser anterior al día actual."
+                    : "Elige una fecha válida.";
+        }
+
+        if (formData.hora.trim() === "") {
+            newErrors.hora = "Selecciona un horario disponible.";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
-    const montoAbono = servicioActual.precio * 0.5;
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!validateForm()) {
+            return;
+        }
+
+        const montoPagado = formData.tipoPago === "abono" ? montoAbono : servicioActual.precio;
+
+        const nuevaCita: Cita = {
+            nombre: formData.nombre.trim(),
+            apellido: formData.apellido.trim(),
+            rut: formData.rut.trim(),
+            telefono: formData.telefono.trim(),
+            correo: formData.correo.trim(),
+            servicio: servicioActual.nombre,
+            profesional: formData.profesional,
+            fecha: formData.fechaCita,
+            hora: formData.hora,
+            tipoPago: formData.tipoPago,
+            montoPagado
+        };
+
+        // Saves to "citasSakura" so agenda.ts can read and render it immediately
+        guardarCitaEnStorage(nuevaCita);
+
+        console.log("Datos de la cita guardados:", nuevaCita);
+        alert("¡Cita agendada con éxito! Redirigiendo a pasarela de pago...");
+    };
 
     return (
         <main className="container my-5 pt-5">
@@ -75,25 +178,27 @@ export function AgendarCita() {
                                     <label htmlFor="nombre" className="form-label fw-bold small">Nombre</label>
                                     <input
                                         type="text"
-                                        className="form-control"
+                                        className={`form-control ${errors.nombre ? "is-invalid" : ""}`}
                                         id="nombre"
                                         required
                                         placeholder="Tu nombre"
                                         value={formData.nombre}
                                         onChange={handleChange}
                                     />
+                                    {errors.nombre && <div className="invalid-feedback">{errors.nombre}</div>}
                                 </div>
                                 <div className="col-12 col-sm-6 mb-3">
                                     <label htmlFor="apellido" className="form-label fw-bold small">Apellido</label>
                                     <input
                                         type="text"
-                                        className="form-control"
+                                        className={`form-control ${errors.apellido ? "is-invalid" : ""}`}
                                         id="apellido"
                                         required
                                         placeholder="Tu apellido"
                                         value={formData.apellido}
                                         onChange={handleChange}
                                     />
+                                    {errors.apellido && <div className="invalid-feedback">{errors.apellido}</div>}
                                 </div>
                             </div>
 
@@ -103,25 +208,27 @@ export function AgendarCita() {
                                     <label htmlFor="rut" className="form-label fw-bold small">RUT</label>
                                     <input
                                         type="text"
-                                        className="form-control"
+                                        className={`form-control ${errors.rut ? "is-invalid" : ""}`}
                                         id="rut"
                                         required
                                         placeholder="12345678-9"
                                         value={formData.rut}
                                         onChange={handleChange}
                                     />
+                                    {errors.rut && <div className="invalid-feedback">{errors.rut}</div>}
                                 </div>
                                 <div className="col-12 col-sm-6 mb-3">
                                     <label htmlFor="telefono" className="form-label fw-bold small">Teléfono</label>
                                     <input
                                         type="tel"
-                                        className="form-control"
+                                        className={`form-control ${errors.telefono ? "is-invalid" : ""}`}
                                         id="telefono"
                                         required
                                         placeholder="+56912345678"
                                         value={formData.telefono}
                                         onChange={handleChange}
                                     />
+                                    {errors.telefono && <div className="invalid-feedback">{errors.telefono}</div>}
                                 </div>
                             </div>
 
@@ -130,13 +237,14 @@ export function AgendarCita() {
                                 <label htmlFor="correo" className="form-label fw-bold small">Correo Electrónico</label>
                                 <input
                                     type="email"
-                                    className="form-control"
+                                    className={`form-control ${errors.correo ? "is-invalid" : ""}`}
                                     id="correo"
                                     required
                                     placeholder="correo@ejemplo.com"
                                     value={formData.correo}
                                     onChange={handleChange}
                                 />
+                                {errors.correo && <div className="invalid-feedback">{errors.correo}</div>}
                             </div>
 
                             {/* Servicio */}
@@ -154,7 +262,7 @@ export function AgendarCita() {
                             <div className="mb-3">
                                 <label htmlFor="profesional" className="form-label fw-bold small">Profesional</label>
                                 <select
-                                    className="form-select"
+                                    className={`form-select ${errors.profesional ? "is-invalid" : ""}`}
                                     id="profesional"
                                     required
                                     value={formData.profesional}
@@ -168,6 +276,7 @@ export function AgendarCita() {
                                     <option value="Sebastián Vasquez">Sebastián Vasquez</option>
                                     <option value="Lucia Garrido">Lucia Garrido</option>
                                 </select>
+                                {errors.profesional && <div className="invalid-feedback">{errors.profesional}</div>}
                             </div>
 
                             {/* Fecha de la Cita */}
@@ -175,18 +284,20 @@ export function AgendarCita() {
                                 <label htmlFor="fechaCita" className="form-label fw-bold small">Fecha de la Cita</label>
                                 <input
                                     type="date"
-                                    className="form-control"
+                                    className={`form-control ${errors.fechaCita ? "is-invalid" : ""}`}
                                     id="fechaCita"
+                                    min={hoyLocal()}
                                     required
                                     value={formData.fechaCita}
                                     onChange={handleChange}
                                 />
+                                {errors.fechaCita && <div className="invalid-feedback">{errors.fechaCita}</div>}
                             </div>
 
                             {/* Selección de Horarios */}
                             <div className="mb-4">
                                 <label className="form-label fw-bold small d-block">Horarios Disponibles</label>
-                                <div className="row g-2">
+                                <div className={`row g-2 ${errors.hora ? "is-invalid" : ""}`}>
                                     {["09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "12:30 PM", "14:00 PM", "15:00 PM", "16:00 PM", "17:00 PM", "18:00 PM", "19:00 PM"].map((hora, idx) => (
                                         <div className="col-6" key={idx}>
                                             <input
@@ -203,6 +314,9 @@ export function AgendarCita() {
                                         </div>
                                     ))}
                                 </div>
+                                {errors.hora && (
+                                    <div className="invalid-feedback d-block">{errors.hora}</div>
+                                )}
                             </div>
 
                             {/* Resumen de la Cita */}

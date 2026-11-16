@@ -18,7 +18,7 @@ type CitaWeb = {
 
 function leerCitas(): CitaWeb[] {
 	try {
-		const guardadas = JSON.parse(localStorage.getItem("citasSakura") || "[]");
+		const guardadas = JSON.parse(localStorage.getItem("detallesCita") || "[]");
 		if (Array.isArray(guardadas) && guardadas.length > 0) {
 			return guardadas;
 		}
@@ -55,7 +55,7 @@ function fechaEnISO(fecha?: string) {
 }
 
 function guardarCitas(lista: CitaWeb[]) {
-	localStorage.setItem("citasSakura", JSON.stringify(lista));
+	localStorage.setItem("detallesCita", JSON.stringify(lista));
 	localStorage.removeItem("detallesCita");
 	sessionStorage.removeItem("detallesCita");
 }
