@@ -1,19 +1,20 @@
 import { Carusel } from "../components/carrusel/Carusel";
 import { ListadoCards } from "../components/listado_servicios/ListadoCards";
 import { useCatalogoById } from "../../../hooks/useServicios";
+import { assets } from "../../../assets/AssetsInterface";
 
 const slides = [
     {
-        imagen: "src/assets/carrusel-eyes/lifting1_L.png",
-		alt: "Primer plano detallado del proceso de lifting de pestañas. Una especialista con guantes rosados utiliza un microcepillo rosa para aplicar una loción en las pestañas de una clienta, que están fijadas sobre un molde de silicona. Se aprecia un parche protector blanco debajo del ojo."
+        imagen: assets.carruselEyes.lifting1.src,
+		alt: assets.carruselEyes.lifting1.alt
     },
     {
-        imagen: "src/assets/carrusel-eyes/lifting2.png",
-		alt: "Un collage de imágenes que muestran una moderna sala de estética en tonos rosados y primer plano de los materiales necesarios para un lifting de pestañas: botellas numeradas de lociones, moldes de silicona en tonos rosa, pinzas quirúrgicas y algunos suministros desechables."
+        imagen: assets.carruselEyes.lifting2.src,
+		alt: assets.carruselEyes.lifting2.alt
     },
     {
-     	imagen: "src/assets/carrusel-eyes/lifting3_R.png",
-		alt: "Primer plano detallado del proceso de lifting de pestañas. Una especialista con guantes rosados utiliza un microcepillo rosa para aplicar una loción en las pestañas de una clienta, que están fijadas sobre un molde de silicona. Se aprecia un parche protector blanco debajo del ojo."
+     	imagen: assets.carruselEyes.lifting3.src,
+		alt: assets.carruselEyes.lifting3.alt
     }
 ];
 

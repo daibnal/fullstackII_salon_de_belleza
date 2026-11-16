@@ -1,5 +1,5 @@
 import { Carusel } from "../../client/catalogo/components/carrusel/Carusel";
-import { assets } from "../../assets/AssetsInterface";
+import { assets } from '../../assets/AssetsInterface';
 import { HorizontalCards } from "../components/HorizontalCards";
 import { useCatalogo } from "../../hooks/useServicios";
 
@@ -93,7 +93,7 @@ export function Inicio() {
 					{/* Top: Map Picture Overview */}
 					<div className="map-container">
 						<img
-							src="assets/inicio-acerca-de/mapa_salon.png"
+							src={assets.inicioAcercaDe.mapaSalon.src}
 							alt="map picture overview"
 							className="w-100 ratio ratio-1x1"
                             onError={(event) => {

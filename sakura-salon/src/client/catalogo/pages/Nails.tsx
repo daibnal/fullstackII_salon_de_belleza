@@ -1,19 +1,20 @@
+import { assets } from "../../../assets/AssetsInterface";
 import { useCatalogoById } from "../../../hooks/useServicios";
 import { Carusel } from "../components/carrusel/Carusel";
 import { ListadoCards } from "../components/listado_servicios/ListadoCards";
 
 const sliedes = [
     {
-        imagen: "src/assets/carrusel-nails/mani-rusa.png",
-        alt: "Mano mostrando uñas cortas con esmaltado semipermanente color rojo vino brillante, con recuadros que detallan la manicura rusa y el acabado."
+        imagen: assets.carruselNails.maniRusa.src,
+        alt: assets.carruselNails.maniRusa.alt
     },
     {
-        imagen: "src/assets/carrusel-nails/retiro.png",
-        alt: "Especialista con guantes negros retirando esmalte de uñas con un torno eléctrico, junto a productos de acetona y algodón."
+        imagen: assets.carruselNails.polygel.src,
+        alt: assets.carruselNails.polygel.alt
     },
     {
-        imagen: "src/assets/carrusel-nails/semipermanente.png",
-        alt: "Manos apoyadas sobre un cojín de manicura exhibiendo uñas cortas con esmaltado semipermanente color rosa con efecto ojo de gato."
+        imagen: assets.carruselNails.semipermanente.src,
+        alt: assets.carruselNails.semipermanente.alt
     }
 ];
 

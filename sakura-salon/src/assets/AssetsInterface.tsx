@@ -120,5 +120,19 @@ export const assets = {
             src: assetSrc("src/assets/carrusel-nails/semipermanente.png"),
             alt: ""
         }
+    },
+    inicioAcercaDe: {
+        fachadaSalon: {
+            src: assetSrc("src/assets/inicio-acerca-de/fechada_salon.png"),
+            alt: ""
+        },
+        interiorSalon: {
+            src: assetSrc("src/assets/inicio-acerca-de/interior_salon.png"),
+            alt: ""
+        },
+        mapaSalon: {
+            src: assetSrc("src/assets/inicio-acerca-de/mapa_salon.png"),
+            alt: ""
+        }
     }
 }
