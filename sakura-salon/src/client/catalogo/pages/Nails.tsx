@@ -1,4 +1,4 @@
-import { useServicios } from "../../../hooks/useServicios";
+import { useCatalogoById } from "../../../hooks/useServicios";
 import { Carusel } from "../components/carrusel/Carusel";
 import { ListadoCards } from "../components/listado_servicios/ListadoCards";
 
@@ -17,41 +17,10 @@ const sliedes = [
     }
 ];
 
-/* const test = [
-    {
-        id: 1,
-        nombre: "Retiro esmalte",
-        descripcion: "Retiro cuidadoso del producto sin dañar la uña natural",
-        duracion: 45,
-        precio: 10000
-    },
-    {
-        id: 2,
-        nombre: "Polygel",
-        descripcion: "Extensión resistente y ligera con acabado natural y personalizado.",
-        duracion: 60,
-        precio: 35000
-    },
-    {
-        id: 3,
-        nombre: "Manicure rusa",
-        descripcion: "Manicure de precisión para un contorno limpio y acabado impecable.",
-        duracion: 60,
-        precio: 50000
-    },
-    {
-        id: 4,
-        nombre: "Esmaltado Permanente",
-        descripcion: "Color duradero con acabado brillante y prolijo.",
-        duracion: 50,
-        precio: 20000
-    }
-]; */
-
 const categoria = 2;
 
 export function Nails() {
-    const { servicios, error } = useServicios(categoria);
+    const { servicios, error } = useCatalogoById(categoria);
     return (
         <>
             {/* Titulo de la seccion */}

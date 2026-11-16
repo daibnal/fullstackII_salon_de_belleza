@@ -15,6 +15,7 @@ import coreano from "../../assets/admin-servicios/coreano.png";
 import perfilado from "../../assets/admin-servicios/perfilado.png";
 import laminado from "../../assets/admin-servicios/laminado.png";
 import { Modal } from "../components/Modal";
+import { useCatalogo, useCatalogoById, useServicios } from "../../hooks/useServicios";
 
 type Categoria = "Cabello" | "Manicure" | "Lifting y Cejas";
 
@@ -28,7 +29,6 @@ type Servicio = {
 	alt: string;
 };
 
-const pestanas = ["Todos", "Cabello", "Manicure", "Lifting y Cejas"];
 
 const serviciosIniciales: Servicio[] = [
 	{ id: 1, nombre: "Botox capilar", categoria: "Cabello", duracion: "1 hr", precio: 30000, imagen: botox, alt: "Botox capilar" },
@@ -50,10 +50,17 @@ const serviciosIniciales: Servicio[] = [
 let siguienteId = 15;
 
 export function Servicios() {
+
+	const { catalogos } = useCatalogo(); // Lista de catalogos (Pestañas)
+	const [pestana, setPestana] = useState(0); // Id de la pestaña actual
+	const { servicios: allServicios } = useServicios();
+	const { servicios: servicioByCatalogo } = useCatalogoById(pestana);
+
+	const listaActiva = (pestana === 0 ? allServicios : servicioByCatalogo);
+
 	const [params] = useSearchParams();
 	const navigate = useNavigate();
 	const [lista, setLista] = useState(serviciosIniciales);
-	const [pestana, setPestana] = useState("Todos");
 	const [modal, setModal] = useState<"" | "crear" | "editar">("");
 	const [idActivo, setIdActivo] = useState(0);
 	const [invalidos, setInvalidos] = useState<Record<string, boolean>>({});
@@ -63,7 +70,7 @@ export function Servicios() {
 	const [formDuracion, setFormDuracion] = useState("");
 	const [formPrecio, setFormPrecio] = useState("");
 
-	const visibles = lista.filter((servicio) => pestana === "Todos" || servicio.categoria === pestana);
+	//const visibles = lista.filter((servicio) => pestana === "Todos" || servicio.categoria === pestana);
 
 	function cerrarModal() {
 		setModal("");
@@ -164,13 +171,23 @@ export function Servicios() {
 
 			<div className="sketch-card p-0">
 				<ul className="nav nav-tabs px-3 pt-2">
-					{pestanas.map((nombre) => (
-						<li className="nav-item" key={nombre}>
+					<li className="nav-item">
+						<button
+							type="button"
+							className={`nav-link ${pestana === 0 ? "active" : ""}`}
+							onClick={() => setPestana(0)
+							}>
+							Todos
+						</button>
+					</li>
+					{catalogos.map((cat) => (
+						<li className={`nav-link ${pestana === cat.id ? "active" : ""}`} key={cat.id}>
 							<button
 								type="button"
-								className={"nav-link" + (pestana === nombre ? " active" : "")}
-								onClick={() => setPestana(nombre)}>
-								{nombre}
+								className={"nav-link"}
+								onClick={() => setPestana(cat.id)
+								}>
+								{cat.nombre}
 							</button>
 						</li>
 					))}
@@ -190,22 +207,22 @@ export function Servicios() {
 							</tr>
 						</thead>
 						<tbody>
-							{visibles.map((servicio) => (
+							{listaActiva.map((servicio) => (
 								<tr key={servicio.id}>
 									<td>
-										<img src={servicio.imagen} className="service-thumbnail" alt={servicio.alt} />
+										<img src={undefined /*servicio.imagen*/} className="service-thumbnail" alt={undefined /* servicio.alt */} />
 									</td>
 									<td className="fw-bold">{servicio.nombre}</td>
 									<td>
-										{servicio.categoria === "Manicure" ? (
-											<span className="badge" style={{ backgroundColor: "var(--color-secondary)" }}>{servicio.categoria}</span>
-										) : servicio.categoria === "Lifting y Cejas" ? (
-											<span className="badge bg-info text-dark">{servicio.categoria}</span>
+										{servicio.categoria.id === 2 ? (
+											<span className="badge" style={{ backgroundColor: "var(--color-secondary)" }}>{servicio.categoria.nombre}</span>
+										) : servicio.categoria.id === 3 ? (
+											<span className="badge bg-info text-dark">{servicio.categoria.nombre}</span>
 										) : (
-											<span className="badge bg-secondary">{servicio.categoria}</span>
+											<span className="badge bg-secondary">{servicio.categoria.nombre}</span>
 										)}
 									</td>
-									<td className="text-muted"><i className="bi bi-clock me-1"></i> {servicio.duracion}</td>
+									<td className="text-muted"><i className="bi bi-clock me-1"></i> {servicio.duracionMinutos}</td>
 									<td className="fw-bold text-dark">${servicio.precio.toLocaleString("es-CL")}</td>
 									<td><span className="badge bg-success-subtle text-success">Activo</span></td>
 									<td className="text-end">

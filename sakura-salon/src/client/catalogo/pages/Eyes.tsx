@@ -1,6 +1,6 @@
 import { Carusel } from "../components/carrusel/Carusel";
 import { ListadoCards } from "../components/listado_servicios/ListadoCards";
-import { useServicios } from "../../../hooks/useServicios";
+import { useCatalogoById } from "../../../hooks/useServicios";
 
 const slides = [
     {
@@ -20,7 +20,7 @@ const slides = [
 const categoria = 3
 
 export function Eyes() {
-    const { servicios, error } = useServicios(categoria);
+    const { servicios, error } = useCatalogoById(categoria);
     return (
         <>
             {/* Titulo de la seccion */}
