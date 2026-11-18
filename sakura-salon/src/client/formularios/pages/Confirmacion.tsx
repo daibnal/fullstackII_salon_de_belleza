@@ -1,122 +1,145 @@
-import { useEffect, useState } from "react";
 
-interface DetalleCita {
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+
+interface DetallesCita {
     nombre: string;
     apellido: string;
     servicio: string;
     profesional: string;
     fecha: string;
     hora: string;
-    tipoPago: string;
+    tipoPago: "abono" | "total";
     montoPagado: number;
     correo: string;
 }
 
 export function CitaConfirmada() {
-    const [cita, setCita] = useState<DetalleCita | null>(null);
+    const navigate = useNavigate();
+
+    const [cita, setCita] = useState<DetallesCita | null>(null);
 
     useEffect(() => {
-        // Recuperamos los datos guardados temporalmente en sessionStorage
         const datosGuardados = sessionStorage.getItem("detallesCita");
+
         if (datosGuardados) {
             try {
                 setCita(JSON.parse(datosGuardados));
-            } catch (error) {
-                console.error("Error al parsear los detalles de la cita:", error);
+            } catch {
+                setCita(null);
             }
         }
     }, []);
 
-    return (
-        <div className="bg-light d-flex flex-column min-vh-100 m-0">
-            {/* Navbar */}
-            <nav className="navbar fixed-top bg-white shadow-sm">
-                <div className="container-fluid">
-                    <a className="navbar-brand d-flex align-items-center" href="../index.html">
-                        <img
-                            src="../assets/Logo_sm.png"
-                            className="rounded-circle"
-                            alt="Logo"
-                            width="40"
-                            height="40"
-                        />
-                        <span className="brand-title ms-2 fw-bold" style={{ color: "var(--color-primary)" }}>
-                            Sakura Salón
-                        </span>
-                    </a>
-                </div>
-            </nav>
+    if (!cita) {
+        return (
+            <main className="container my-5 pt-5">
+                <div className="card sketch-card p-4 text-center">
+                    <h2 className="h4 fw-bold">
+                        No se encontraron los datos de la reserva
+                    </h2>
 
-            {/* Contenido principal de Confirmación */}
-            <main className="container my-auto py-5">
-                <div className="row justify-content-center">
-                    <div className="col-12 col-md-8 col-lg-6">
-                        <div className="card sketch-card p-4 p-md-5 text-center shadow-sm bg-white border-0">
-                            {/* Icono de éxito grande */}
-                            <div className="mb-4">
-                                <i
-                                    className="bi bi-check-circle-fill text-success"
-                                    style={{ fontSize: "4rem" }}
-                                ></i>
-                            </div>
+                    <p className="text-muted">
+                        Vuelve a realizar el proceso de agendamiento.
+                    </p>
 
-                            <h1
-                                className="h3 fw-bold mb-2"
-                                style={{ color: "var(--color-primary)" }}
-                            >
-                                ¡Cita Confirmada!
-                            </h1>
-                            <p className="text-muted mb-4">
-                                Tu pago se ha procesado exitosamente y tu reserva ha sido registrada.
-                            </p>
-
-                            {/* Detalles de la reserva */}
-                            <div className="card bg-light border p-3 text-start mb-4 small">
-                                <p className="mb-2">
-                                    <strong>Cliente:</strong>{" "}
-                                    <span id="confNombre">
-                                        {cita ? `${cita.nombre} ${cita.apellido}` : "---"}
-                                    </span>
-                                </p>
-                                <p className="mb-2">
-                                    <strong>Servicio:</strong>{" "}
-                                    <span id="confServicio">{cita ? cita.servicio : "---"}</span>
-                                </p>
-                                <p className="mb-2">
-                                    <strong>Profesional:</strong>{" "}
-                                    <span id="confProfesional">{cita ? cita.profesional : "---"}</span>
-                                </p>
-                                <p className="mb-2">
-                                    <strong>Fecha y Hora:</strong>{" "}
-                                    <span id="confFechaHora">
-                                        {cita ? `${cita.fecha} a las ${cita.hora}` : "---"}
-                                    </span>
-                                </p>
-                                <p className="mb-2">
-                                    <strong>Modalidad de Pago:</strong>{" "}
-                                    <span id="confPago">
-                                        {cita ? `${cita.tipoPago.toUpperCase()} ($ ${cita.montoPagado.toLocaleString("es-CL")})` : "---"}
-                                    </span>
-                                </p>
-                                <p className="mb-0 text-success fw-bold">
-                                    <strong>Comprobante enviado a:</strong>{" "}
-                                    <span id="confCorreo">{cita ? cita.correo : "---"}</span>
-                                </p>
-                            </div>
-
-                            {/* Botones de acción */}
-                            <div className="d-grid gap-2 btn-action">
-                                <a
-                                    href="../index.html"
-                                    className="btn btn-custom-primary py-2 text-white text-decoration-none"
-                                >
-                                    Volver al Inicio
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <button className="btn btn-custom-primary" onClick={() => navigate("/")}>
+                        Volver al inicio
+                    </button>
                 </div>
             </main>
-        </div>
+        );
+    }
+
+    return (
+        <main className="container my-5 pt-5">
+            <div className="row justify-content-center">
+                <div className="col-12 col-md-8 col-lg-6">
+
+                    <div className="card sketch-card p-4 shadow-sm text-center">
+                        <div className="mb-3">
+                            <i
+                                className="bi bi-check-circle-fill"
+                                style={{
+                                    fontSize: "4rem",
+                                    color: "var(--color-primary)"
+                                }}
+                            ></i>
+                        </div>
+
+                        <h1 className="h3 fw-bold mb-3" style={{ color: "var(--color-primary)" }}> 
+                            ¡Cita Confirmada!
+                        </h1>
+
+                        <p className="text-muted">
+                            Tu reserva ha sido registrada exitosamente.
+                        </p>
+
+                        <hr />
+
+                        <div className="text-start">
+
+                            <h5 className="fw-bold mb-3">
+                                Detalles de tu reserva
+                            </h5>
+
+                            <p>
+                                <strong>Cliente:</strong>{" "}
+                                {cita.nombre} {cita.apellido}
+                            </p>
+
+                            <p>
+                                <strong>Servicio:</strong>{" "}
+                                {cita.servicio}
+                            </p>
+
+                            <p>
+                                <strong>Profesional:</strong>{" "}
+                                {cita.profesional}
+                            </p>
+
+                            <p>
+                                <strong>Fecha:</strong>{" "}
+                                {cita.fecha}
+                            </p>
+
+                            <p>
+                                <strong>Hora:</strong>{" "}
+                                {cita.hora}
+                            </p>
+
+                            <p>
+                                <strong>Correo:</strong>{" "}
+                                {cita.correo}
+                            </p>
+
+                            <p>
+                                <strong>Método de pago:</strong>{" "}
+                                {cita.tipoPago === "abono"
+                                    ? "Abono del 50%"
+                                    : "Pago total"}
+                            </p>
+
+                            <p>
+                                <strong>Monto seleccionado:</strong>{" "}
+                                ${cita.montoPagado.toLocaleString("es-CL")}
+                            </p>
+
+                        </div>
+
+                        <hr />
+
+                        <p className="small text-muted">
+                            Gracias por reservar con Sakura Salón.
+                            ¡Te esperamos!
+                        </p>
+
+                        <button className="btn btn-custom-primary w-100 mt-3" onClick={() => navigate("/")}>
+                            Volver al inicio
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
     );
 }
