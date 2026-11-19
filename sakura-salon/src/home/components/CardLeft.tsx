@@ -15,7 +15,7 @@ export function CardLeft({nombre, descripcion, id}: Catalogo) {
 				</div>
                 <div className="col-12 col-sm-6">
                     <h2
-                        className="h5 fw-bold mb-1"
+                        className="h3 fw-bold mb-1"
                         style={{color: 'var(--color-primary)'}}>
                         {nombre}
                     </h2>
@@ -25,7 +25,7 @@ export function CardLeft({nombre, descripcion, id}: Catalogo) {
                     {
                         id === -1 ?
                         <a
-                            className="btn bg-light disabled"
+                            className="btn btn-on-error"
                             >Sin conexión 
                         </a>
                         :

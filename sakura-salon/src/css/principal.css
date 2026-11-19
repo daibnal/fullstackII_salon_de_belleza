@@ -158,7 +158,7 @@ CONTENIDO PRINCIPAL
 ======================================================= */
 /* --- Titulo de una seccion --- */
 .section-title {
-	font-size: 1.6rem;
+	font-size: 2rem;
 	font-weight: 700;
 	color: var(--color-primary);
 	text-align: center;
@@ -212,11 +212,32 @@ CONTENIDO PRINCIPAL
 	object-fit: cover;
 }
 
+@media (min-width: 576px) {
+    .col-sm-6 {
+        flex: 0 0 auto;
+        width: 50%;
+        max-width: 390px;
+    }
+}
+
 /* --- Botónes importantes --- */
 /* Ver más, Ir, Pagar, etc...*/
 .btn-custom-primary {
 	background-color: var(--color-primary);
 	color: #ffffff;
+	border: none;
+	border-radius: 8px;
+	padding: 0.4rem 1rem;
+	font-size: 0.875rem;
+	font-weight: 500;
+	transition: background-color 0.2s ease;
+	width: 100%;
+	max-width: 277px;
+}
+
+.btn-on-error {
+	background-color: rgb(199, 199, 199);
+	color: rgb(82, 82, 82);
 	border: none;
 	border-radius: 8px;
 	padding: 0.4rem 1rem;

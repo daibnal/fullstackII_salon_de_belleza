@@ -43,7 +43,10 @@ export function Inicio() {
 				<h1 className="section-title">Nuestros servicios</h1>
             
                 {loading && <p className="text-center text-muted">Cargando servicios...</p>}
-                {error && <p className="text-center text-danger">No se pudo conectar con el servidor.</p>}
+                {error && <>
+					<p className="text-center text-danger">No se pudo conectar con el servidor.</p>
+					<HorizontalCards catalogos={[]}/>
+				</>}
                 {!loading && !error && <HorizontalCards catalogos={catalogos}/>}
             </section>
 

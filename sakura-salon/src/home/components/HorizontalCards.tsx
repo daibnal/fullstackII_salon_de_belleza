@@ -8,8 +8,11 @@ export function HorizontalCards({catalogos}: Catalogos) {
     const errorPlaceholder = sinConexion;
     return (
         <div className="d-flex flex-column gap-5">
-                {(catalogos.length === 0 ?
-                    <CardLeft {...errorPlaceholder}/>
+                {(catalogos.length === 0 ? <>
+                        <CardLeft {...errorPlaceholder}/>
+                        <CardRight {...errorPlaceholder}/>
+                        <CardLeft {...errorPlaceholder}/>
+                    </>
                     :
                     catalogos.map((item, index) => (
                         (index % 2 === 0 ? (

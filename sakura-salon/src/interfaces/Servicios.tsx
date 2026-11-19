@@ -17,7 +17,7 @@ export interface Servicios {
 
 export const sinConexion: Servicio = {
     id: -1,
-    nombre: "▆▆▆ ▆ ▆▆▆▆▆▆▆",
+    nombre: "▆▆▆ ▆ ▆▆▆▆▆▆",
     descripcion: "▆▆▆▆▆ ▆▆▆ ▆▆▆▆▆▆▆ ▆ ▆▆▆▆▆▆▆▆▆▆ ▆▆▆▆ ▆▆ ▆▆▆ ▆ ▆▆▆▆▆ ▆▆▆▆▆▆▆ ▆▆▆▆▆▆▆▆▆▆▆ ▆▆ ▆▆▆",
     duracionMinutos: 0,
     precio: 0,
