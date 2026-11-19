@@ -23,11 +23,15 @@ const fotos = [
 ];
 
 export function Inicio() {
-	let { catalogos } = useCatalogo();
+	const { catalogos, loading, error } = useCatalogo();
 	if (catalogos.length > 0) {
 		catalogos[0].descripcion = "Transforma tu cabello con cortes, color y tratamientos personalizados, diseñados para resaltar tu estilo y mantenerlo saludable y radiante.";
-		catalogos[1].descripcion = "Cuida y embellece tus manos con manicures personalizados, desde esmaltados y diseños hasta extensiones, siempre con un acabado prolijo y elegante.";
-		catalogos[2].descripcion = "Realza tu mirada con un lifting de pestañas y diseño de cejas, logrando una apariencia natural, definida y armoniosa.";
+		if (catalogos[1]) {
+			catalogos[1].descripcion = "Cuida y embellece tus manos con manicures personalizados, desde esmaltados y diseños hasta extensiones, siempre con un acabado prolijo y elegante.";
+		}
+		if (catalogos[2]) {
+			catalogos[2].descripcion = "Realza tu mirada con un lifting de pestañas y diseño de cejas, logrando una apariencia natural, definida y armoniosa.";
+		}
 	}
     return (
         <>
@@ -38,7 +42,12 @@ export function Inicio() {
 				className="mb-5 pt-5">
 				<h1 className="section-title">Nuestros servicios</h1>
             
-                <HorizontalCards catalogos={catalogos}/>
+                {loading && <p className="text-center text-muted">Cargando servicios...</p>}
+                {error && <>
+					<p className="text-center text-danger">No se pudo conectar con el servidor.</p>
+					<HorizontalCards catalogos={[]}/>
+				</>}
+                {!loading && !error && <HorizontalCards catalogos={catalogos}/>}
             </section>
 
             {/* ACERCA DE NOSOTROS */}
@@ -56,26 +65,18 @@ export function Inicio() {
 					<div className="col-6">
 						<div className="sketch-card p-1 ratio ratio-1x1">
 							<img
-								src="assets/inicio-acerca-de/fachada_salon.png"
-								alt=""
+								src={assets.inicioAcercaDe.fachadaSalon.src}
+								alt={assets.inicioAcercaDe.fachadaSalon.alt}
 								className="img-fluid rounded w-100"
-                                onError={(event) => {
-                                    event.currentTarget.onerror = null;
-                                    event.currentTarget.src = 'https://placehold.co/300x220/F0A6A8/590D1F?text=%3Cimg%2F%3E';
-                                }}
                             />
 						</div>
 					</div>
 					<div className="col-6">
 						<div className="sketch-card p-1 ratio ratio-1x1">
 							<img
-								src="assets/inicio-acerca-de/interior_salon.png"
-								alt=""
+								src={assets.inicioAcercaDe.interiorSalon.src}
+								alt={assets.inicioAcercaDe.interiorSalon.alt}
 								className="img-fluid rounded w-100"
-                                onError={(event) => {
-                                    event.currentTarget.onerror = null;
-                                    event.currentTarget.src = 'https://placehold.co/300x220/F0A6A8/590D1F?text=%3Cimg%2F%3E';
-                                }}
 						    />
 						</div>
 					</div>
@@ -94,12 +95,8 @@ export function Inicio() {
 					<div className="map-container">
 						<img
 							src={assets.inicioAcercaDe.mapaSalon.src}
-							alt="map picture overview"
+							alt={assets.inicioAcercaDe.mapaSalon.alt}
 							className="w-100 ratio ratio-1x1"
-                            onError={(event) => {
-                                    event.currentTarget.onerror = null;
-                                    event.currentTarget.src = 'https://placehold.co/400x250/A52647/ffffff?text=map+picture+overview';
-                                }}
                         />
 					</div>
 

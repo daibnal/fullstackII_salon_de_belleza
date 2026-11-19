@@ -1,4 +1,11 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { useServicios } from "../../../hooks/useServicios";
+import { useProfesionales } from "../../../hooks/useProfesionales";
+import { useDisponibilidad } from "../../../hooks/useDisponibilidad";
+import { Reservas } from "../../../services/reservas.service";
+import { Profesionales } from "../../../services/profesionales.service";
+import { clienteHttp } from "../../../api/clienteHttp";
 import {
     nombreValido,
     rutValido,
@@ -6,8 +13,6 @@ import {
     correoValido,
     fechaNoAnterior,
     hoyLocal,
-    guardarCitaEnStorage,
-    type Cita
 } from "./validacionesCita";
 
 interface CitaForm {
@@ -16,7 +21,8 @@ interface CitaForm {
     rut: string;
     telefono: string;
     correo: string;
-    profesional: string;
+    servicioId: string;
+    profesionalId: string;
     fechaCita: string;
     hora: string;
     tipoPago: "abono" | "total";
@@ -24,39 +30,102 @@ interface CitaForm {
 
 type FormErrors = Partial<Record<keyof CitaForm, string>>;
 
+function horaCorta(hora: string) {
+    return hora.slice(0, 5);
+}
+
 export function AgendarCita() {
+    const navigate = useNavigate();
+    const { servicios, loading: cargandoServicios, error: errorServicios } = useServicios();
+    const { profesionales, loading: cargandoProfesionales, error: errorProfesionales } = useProfesionales();
     const [formData, setFormData] = useState<CitaForm>({
         nombre: "",
         apellido: "",
         rut: "",
         telefono: "",
         correo: "",
-        profesional: "",
+        servicioId: "",
+        profesionalId: "",
         fechaCita: "",
         hora: "",
-        tipoPago: "abono"
+        tipoPago: "abono",
     });
-
     const [errors, setErrors] = useState<FormErrors>({});
+    const [servicioFijo, setServicioFijo] = useState(false);
+    const [idsAptos, setIdsAptos] = useState<number[] | null>(null);
+    const [enviando, setEnviando] = useState(false);
+    const [errorEnvio, setErrorEnvio] = useState("");
+    const [porcentajeAbono, setPorcentajeAbono] = useState(50);
 
-    // Replicates URL query param pre-fill (?fecha=YYYY-MM-DD) from agenda.ts
+    const servicioId = Number(formData.servicioId);
+    const profesionalId = Number(formData.profesionalId);
+    const { huecos, loading: cargandoHuecos, error: errorHuecos } = useDisponibilidad(
+        profesionalId,
+        servicioId,
+        formData.fechaCita
+    );
+
+    const servicioActual = servicios.find((servicio) => servicio.id === servicioId);
+    const profesionalesDelServicio = idsAptos === null
+        ? []
+        : profesionales.filter((persona) => idsAptos.includes(persona.id));
+
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const fechaUrl = params.get("fecha");
-        if (fechaUrl && fechaNoAnterior(fechaUrl)) {
-            setFormData((prev) => ({ ...prev, fechaCita: fechaUrl }));
+        const servicioUrl = params.get("servicioId");
+        if (servicioUrl) {
+            setServicioFijo(true);
         }
+        setFormData((prev) => ({
+            ...prev,
+            ...(fechaUrl && fechaNoAnterior(fechaUrl) ? { fechaCita: fechaUrl } : {}),
+            ...(servicioUrl ? { servicioId: servicioUrl, profesionalId: "", hora: "" } : {}),
+        }));
     }, []);
 
-    // Simulación de servicio cargado
-    const servicioActual = {
-        nombre: "Lifting y Cejas",
-        precio: 25000
-    };
+    useEffect(() => {
+        void clienteHttp.get<{ porcentajeAbono?: number }>("configuracion/vigente")
+            .then(({ data }) => {
+                if (data.porcentajeAbono && data.porcentajeAbono > 0) {
+                    setPorcentajeAbono(data.porcentajeAbono);
+                }
+            })
+            .catch(() => undefined);
+    }, []);
 
-    const montoAbono = servicioActual.precio * 0.5;
+    useEffect(() => {
+        if (!servicioId || cargandoProfesionales) {
+            setIdsAptos(null);
+            return;
+        }
+        if (profesionales.length === 0) {
+            setIdsAptos([]);
+            return;
+        }
+        let vigente = true;
+        void Promise.all(profesionales.map(async (persona) => {
+            try {
+                const lista = await Profesionales.servicios(persona.id);
+                return lista.some((servicio) => servicio.id === servicioId) ? persona.id : null;
+            } catch {
+                return null;
+            }
+        })).then((ids) => {
+            if (!vigente) return;
+            const validos = ids.filter((id): id is number => id !== null);
+            setIdsAptos(validos);
+            setFormData((prev) => (
+                validos.includes(Number(prev.profesionalId))
+                    ? prev
+                    : { ...prev, profesionalId: "", hora: "" }
+            ));
+        });
+        return () => {
+            vigente = false;
+        };
+    }, [servicioId, profesionales, cargandoProfesionales]);
 
-    // Clears the field's error as soon as the user corrects it
     const clearError = (field: keyof CitaForm) => {
         if (errors[field]) {
             setErrors((prev) => {
@@ -71,7 +140,8 @@ export function AgendarCita() {
         const { id, value } = e.target;
         setFormData((prev) => ({
             ...prev,
-            [id]: value
+            [id]: value,
+            ...(id === "servicioId" || id === "profesionalId" || id === "fechaCita" ? { hora: "" } : {}),
         }));
         clearError(id as keyof CitaForm);
     };
@@ -81,46 +151,36 @@ export function AgendarCita() {
         clearError("hora");
     };
 
-    const handlePagoChange = (tipoPago: "abono" | "total") => {
-        setFormData((prev) => ({ ...prev, tipoPago }));
-    };
-
-    // Translated validation rules from comun.ts & citas.ts
     const validateForm = (): boolean => {
         const newErrors: FormErrors = {};
 
         if (!nombreValido(formData.nombre)) {
             newErrors.nombre = "Ingresa un nombre válido (solo letras, mínimo 2 caracteres).";
         }
-
         if (!nombreValido(formData.apellido)) {
             newErrors.apellido = "Ingresa un apellido válido (solo letras, mínimo 2 caracteres).";
         }
-
         if (!rutValido(formData.rut)) {
             newErrors.rut = "Ingresa un RUT válido (ej: 12345678-9).";
         }
-
         if (!telefonoValido(formData.telefono)) {
             newErrors.telefono = "Ingresa un teléfono móvil válido (ej: +56912345678).";
         }
-
         if (!correoValido(formData.correo)) {
             newErrors.correo = "Ingresa un correo electrónico válido.";
         }
-
-        if (formData.profesional.trim() === "") {
-            newErrors.profesional = "Selecciona un profesional.";
+        if (!formData.servicioId) {
+            newErrors.servicioId = "Selecciona un servicio.";
         }
-
-        // Dynamic date message translated from citas.ts
+        if (!formData.profesionalId) {
+            newErrors.profesionalId = "Selecciona un profesional.";
+        }
         if (!fechaNoAnterior(formData.fechaCita)) {
             newErrors.fechaCita =
                 formData.fechaCita.trim() !== "" && formData.fechaCita < hoyLocal()
                     ? "La fecha no puede ser anterior al día actual."
                     : "Elige una fecha válida.";
         }
-
         if (formData.hora.trim() === "") {
             newErrors.hora = "Selecciona un horario disponible.";
         }
@@ -131,32 +191,53 @@ export function AgendarCita() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
+        setErrorEnvio("");
         if (!validateForm()) {
             return;
         }
 
-        const montoPagado = formData.tipoPago === "abono" ? montoAbono : servicioActual.precio;
-
-        const nuevaCita: Cita = {
+        setEnviando(true);
+        void Reservas.crearInvitado({
             nombre: formData.nombre.trim(),
             apellido: formData.apellido.trim(),
-            rut: formData.rut.trim(),
-            telefono: formData.telefono.trim(),
             correo: formData.correo.trim(),
-            servicio: servicioActual.nombre,
-            profesional: formData.profesional,
+            telefono: formData.telefono.trim(),
+            servicioId,
+            profesionalId,
             fecha: formData.fechaCita,
-            hora: formData.hora,
-            tipoPago: formData.tipoPago,
-            montoPagado
-        };
+            horaInicio: formData.hora,
+        })
+            .then((resultado) => {
+                const reserva = resultado.reserva;
+                sessionStorage.setItem("detallesCita", JSON.stringify({
+                    nombre: reserva.nombreCliente,
+                    apellido: "",
+                    servicio: reserva.nombreServicio,
+                    profesional: reserva.nombreProfesional,
+                    fecha: reserva.fecha,
+                    hora: horaCorta(reserva.horaInicio),
+                    correo: reserva.correoCliente,
+                    montoTotal: reserva.montoTotal,
+                    montoAbono: reserva.montoAbono,
+                    estado: reserva.estado,
+                    tipoPago: formData.tipoPago,
+                    montoSeleccionado: formData.tipoPago === "abono" ? reserva.montoAbono : reserva.montoTotal,
+                }));
+                navigate("/agendar/confirmacion");
+            })
+            .catch(() => {
+                setErrorEnvio("No se pudo agendar la cita. Revisa el horario o intenta de nuevo.");
+            })
+            .finally(() => setEnviando(false));
+    };
 
-        // Saves to "citasSakura" so agenda.ts can read and render it immediately
-        guardarCitaEnStorage(nuevaCita);
+    const profesionalNombre = profesionales.find((persona) => persona.id === profesionalId)?.nombre;
+    const precio = servicioActual?.precio ?? 0;
+    const montoAbono = Math.round(precio * porcentajeAbono / 100);
+    const montoSeleccionado = formData.tipoPago === "abono" ? montoAbono : precio;
 
-        console.log("Datos de la cita guardados:", nuevaCita);
-        alert("¡Cita agendada con éxito! Redirigiendo a pasarela de pago...");
+    const elegirPago = (tipoPago: "abono" | "total") => {
+        setFormData((prev) => ({ ...prev, tipoPago }));
     };
 
     return (
@@ -168,11 +249,14 @@ export function AgendarCita() {
                             <h1 className="h3 fw-bold" style={{ color: "var(--color-primary)" }}>
                                 Reserva tu Cita
                             </h1>
-                            <p className="text-muted small">Por favor, completa los datos requeridos para agendar</p>
+                            <p className="text-muted small">Completa los datos. No necesitas crear una cuenta.</p>
                         </div>
 
+                        {(errorServicios || errorProfesionales) && (
+                            <p className="text-danger small">No se pudo cargar el catálogo o el equipo.</p>
+                        )}
+
                         <form id="formAgendar" onSubmit={handleSubmit} noValidate>
-                            {/* Nombre y Apellido */}
                             <div className="row">
                                 <div className="col-12 col-sm-6 mb-3">
                                     <label htmlFor="nombre" className="form-label fw-bold small">Nombre</label>
@@ -202,7 +286,6 @@ export function AgendarCita() {
                                 </div>
                             </div>
 
-                            {/* RUT y Teléfono */}
                             <div className="row">
                                 <div className="col-12 col-sm-6 mb-3">
                                     <label htmlFor="rut" className="form-label fw-bold small">RUT</label>
@@ -232,7 +315,6 @@ export function AgendarCita() {
                                 </div>
                             </div>
 
-                            {/* Correo Electrónico */}
                             <div className="mb-3">
                                 <label htmlFor="correo" className="form-label fw-bold small">Correo Electrónico</label>
                                 <input
@@ -247,39 +329,60 @@ export function AgendarCita() {
                                 {errors.correo && <div className="invalid-feedback">{errors.correo}</div>}
                             </div>
 
-                            {/* Servicio */}
                             <div className="mb-3">
-                                <label className="form-label fw-bold small">Servicio Seleccionado</label>
-                                <input
-                                    type="text"
-                                    className="form-control bg-white"
-                                    readOnly
-                                    value={servicioActual.nombre}
-                                />
+                                <label htmlFor="servicioId" className="form-label fw-bold small">Servicio</label>
+                                {servicioFijo ? (
+                                    <input
+                                        id="servicioId"
+                                        className="form-control"
+                                        readOnly
+                                        value={servicioActual
+                                            ? `${servicioActual.nombre} ($${servicioActual.precio.toLocaleString("es-CL")})`
+                                            : (cargandoServicios ? "Cargando..." : "Servicio seleccionado")}
+                                    />
+                                ) : (
+                                    <select
+                                        className={`form-select ${errors.servicioId ? "is-invalid" : ""}`}
+                                        id="servicioId"
+                                        value={formData.servicioId}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="">{cargandoServicios ? "Cargando..." : "Selecciona un servicio..."}</option>
+                                        {servicios.filter((servicio) => servicio.activo).map((servicio) => (
+                                            <option key={servicio.id} value={servicio.id}>
+                                                {servicio.nombre} (${servicio.precio.toLocaleString("es-CL")})
+                                            </option>
+                                        ))}
+                                    </select>
+                                )}
+                                {errors.servicioId && <div className="invalid-feedback d-block">{errors.servicioId}</div>}
                             </div>
 
-                            {/* Profesional */}
                             <div className="mb-3">
-                                <label htmlFor="profesional" className="form-label fw-bold small">Profesional</label>
+                                <label htmlFor="profesionalId" className="form-label fw-bold small">Profesional</label>
                                 <select
-                                    className={`form-select ${errors.profesional ? "is-invalid" : ""}`}
-                                    id="profesional"
-                                    required
-                                    value={formData.profesional}
+                                    className={`form-select ${errors.profesionalId ? "is-invalid" : ""}`}
+                                    id="profesionalId"
+                                    value={formData.profesionalId}
                                     onChange={handleChange}
+                                    disabled={!servicioId || idsAptos === null}
                                 >
-                                    <option value="" disabled>Selecciona un profesional...</option>
-                                    <option value="Carlos Pérez">Carlos Pérez</option>
-                                    <option value="María Gómez">María Gómez</option>
-                                    <option value="Valentina Soto">Valentina Soto</option>
-                                    <option value="Alicia Varela">Alicia Varela</option>
-                                    <option value="Sebastián Vasquez">Sebastián Vasquez</option>
-                                    <option value="Lucia Garrido">Lucia Garrido</option>
+                                    <option value="">
+                                        {!servicioId
+                                            ? "Primero elige un servicio"
+                                            : idsAptos === null || cargandoProfesionales
+                                                ? "Cargando..."
+                                                : profesionalesDelServicio.length === 0
+                                                    ? "Nadie realiza este servicio"
+                                                    : "Selecciona un profesional..."}
+                                    </option>
+                                    {profesionalesDelServicio.map((persona) => (
+                                        <option key={persona.id} value={persona.id}>{persona.nombre}</option>
+                                    ))}
                                 </select>
-                                {errors.profesional && <div className="invalid-feedback">{errors.profesional}</div>}
+                                {errors.profesionalId && <div className="invalid-feedback">{errors.profesionalId}</div>}
                             </div>
 
-                            {/* Fecha de la Cita */}
                             <div className="mb-3">
                                 <label htmlFor="fechaCita" className="form-label fw-bold small">Fecha de la Cita</label>
                                 <input
@@ -294,22 +397,26 @@ export function AgendarCita() {
                                 {errors.fechaCita && <div className="invalid-feedback">{errors.fechaCita}</div>}
                             </div>
 
-                            {/* Selección de Horarios */}
                             <div className="mb-4">
                                 <label className="form-label fw-bold small d-block">Horarios Disponibles</label>
+                                {cargandoHuecos && <p className="text-muted small">Buscando horarios...</p>}
+                                {errorHuecos && <p className="text-danger small">No se pudo consultar la disponibilidad.</p>}
+                                {!cargandoHuecos && formData.servicioId && formData.profesionalId && formData.fechaCita && huecos.length === 0 && (
+                                    <p className="text-muted small">No hay horarios libres para esa combinación.</p>
+                                )}
                                 <div className={`row g-2 ${errors.hora ? "is-invalid" : ""}`}>
-                                    {["09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "12:30 PM", "14:00 PM", "15:00 PM", "16:00 PM", "17:00 PM", "18:00 PM", "19:00 PM"].map((hora, idx) => (
-                                        <div className="col-6" key={idx}>
+                                    {huecos.map((hueco) => (
+                                        <div className="col-6" key={hueco.horaInicio}>
                                             <input
                                                 type="radio"
                                                 className="btn-check"
                                                 name="hora"
-                                                id={`h${idx}`}
-                                                checked={formData.hora === hora}
-                                                onChange={() => handleHoraChange(hora)}
+                                                id={`h-${hueco.horaInicio}`}
+                                                checked={formData.hora === hueco.horaInicio}
+                                                onChange={() => handleHoraChange(hueco.horaInicio)}
                                             />
-                                            <label className="btn btn-outline-secondary w-100 btn-sm" htmlFor={`h${idx}`}>
-                                                {hora}
+                                            <label className="btn btn-outline-secondary w-100 btn-sm" htmlFor={`h-${hueco.horaInicio}`}>
+                                                {horaCorta(hueco.horaInicio)}
                                             </label>
                                         </div>
                                     ))}
@@ -319,28 +426,30 @@ export function AgendarCita() {
                                 )}
                             </div>
 
-                            {/* Resumen de la Cita */}
                             <div className="summary-box mb-4 p-3 border rounded bg-light">
                                 <h6 className="fw-bold mb-3" style={{ color: "var(--color-primary)" }}>
                                     <i className="bi bi-stars"></i> Resumen de tu cita
                                 </h6>
                                 <div className="row small text-muted">
                                     <div className="col-sm-6">
-                                        <p className="mb-1"><strong>Servicio:</strong> {servicioActual.nombre}</p>
-                                        <p className="mb-1"><strong>Profesional:</strong> {formData.profesional || "No seleccionado"}</p>
-                                        <p className="mb-1"><strong>Fecha y Hora:</strong> {formData.fechaCita && formData.hora ? `${formData.fechaCita} a las ${formData.hora}` : "Por definir"}</p>
+                                        <p className="mb-1"><strong>Servicio:</strong> {servicioActual?.nombre || "No seleccionado"}</p>
+                                        <p className="mb-1"><strong>Profesional:</strong> {profesionalNombre || "No seleccionado"}</p>
+                                        <p className="mb-1"><strong>Fecha y Hora:</strong> {formData.fechaCita && formData.hora ? `${formData.fechaCita} a las ${horaCorta(formData.hora)}` : "Por definir"}</p>
                                     </div>
                                     <div className="col-sm-6 border-start-sm ps-sm-3 mt-2 mt-sm-0">
-                                        <p className="mb-1 text-uppercase text-secondary" style={{ fontSize: "0.75rem" }}>Valor final</p>
-                                        <h4 className="fw-bold text-dark mb-2">$ {servicioActual.precio.toLocaleString("es-CL")}</h4>
-                                        <div className="p-2 rounded bg-white border">
-                                            Abono (50%): <strong>$ {montoAbono.toLocaleString("es-CL")}</strong>
+                                        <p className="mb-1 text-uppercase text-secondary" style={{ fontSize: "0.75rem" }}>Valor del servicio</p>
+                                        <h4 className="fw-bold text-dark mb-2">$ {precio.toLocaleString("es-CL")}</h4>
+                                        <div className="p-2 rounded bg-white border mb-2">
+                                            Abono ({porcentajeAbono}%): <strong>$ {montoAbono.toLocaleString("es-CL")}</strong>
                                         </div>
+                                        <p className="mb-0">
+                                            <strong>Vas a dejar:</strong> $ {montoSeleccionado.toLocaleString("es-CL")}
+                                            {" "}({formData.tipoPago === "abono" ? `abono del ${porcentajeAbono}%` : "pago total"})
+                                        </p>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Método de pago */}
                             <div className="mb-4">
                                 <label className="form-label fw-bold mb-3">
                                     <i className="bi bi-credit-card"></i> Método de pago
@@ -353,14 +462,16 @@ export function AgendarCita() {
                                             name="tipoPago"
                                             id="abono"
                                             checked={formData.tipoPago === "abono"}
-                                            onChange={() => handlePagoChange("abono")}
+                                            onChange={() => elegirPago("abono")}
                                         />
                                         <label className="payment-card h-100 d-block p-3 border rounded" htmlFor="abono" style={{ cursor: "pointer" }}>
                                             <div className="d-flex align-items-center mb-2">
                                                 <i className="bi bi-cash-stack fs-4 me-2 text-secondary"></i>
-                                                <span className="fw-bold">Abonar (50%)</span>
+                                                <span className="fw-bold">Abonar ({porcentajeAbono}%)</span>
                                             </div>
-                                            <p className="text-muted small mb-0">Paga solo el 50% ahora y el resto el día de tu cita.</p>
+                                            <p className="text-muted small mb-0">
+                                                Dejas el {porcentajeAbono}% ahora y el resto el día de tu cita.
+                                            </p>
                                         </label>
                                     </div>
                                     <div className="col-12 col-md-6">
@@ -370,23 +481,29 @@ export function AgendarCita() {
                                             name="tipoPago"
                                             id="total"
                                             checked={formData.tipoPago === "total"}
-                                            onChange={() => handlePagoChange("total")}
+                                            onChange={() => elegirPago("total")}
                                         />
                                         <label className="payment-card h-100 d-block p-3 border rounded" htmlFor="total" style={{ cursor: "pointer" }}>
                                             <div className="d-flex align-items-center mb-2">
                                                 <i className="bi bi-credit-card-2-front fs-4 me-2 text-secondary"></i>
                                                 <span className="fw-bold">Pagar el total</span>
                                             </div>
-                                            <p className="text-muted small mb-0">Cancela el valor completo de tu cita ahora.</p>
+                                            <p className="text-muted small mb-0">
+                                                Selecciona el pago completo de tu cita.
+                                            </p>
                                         </label>
                                     </div>
                                 </div>
+                                <p className="text-muted small mt-2 mb-0">
+                                    La cita queda pendiente de pago. El salón registra el abono o el total en la agenda.
+                                </p>
                             </div>
 
-                            {/* Botón de envío */}
+                            {errorEnvio && <p className="text-danger small text-center">{errorEnvio}</p>}
+
                             <div className="d-flex justify-content-center">
-                                <button type="submit" className="btn btn-custom-primary w-100 py-2">
-                                    Pagar y Confirmar Cita
+                                <button type="submit" className="btn btn-custom-primary w-100 py-2" disabled={enviando}>
+                                    {enviando ? "Agendando..." : "Confirmar cita"}
                                 </button>
                             </div>
                         </form>

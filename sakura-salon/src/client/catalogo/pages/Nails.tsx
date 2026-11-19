@@ -13,6 +13,10 @@ const sliedes = [
         alt: assets.carruselNails.polygel.alt
     },
     {
+        imagen: assets.carruselNails.retiro.src,
+        alt: assets.carruselNails.retiro.alt
+    },
+    {
         imagen: assets.carruselNails.semipermanente.src,
         alt: assets.carruselNails.semipermanente.alt
     }
@@ -21,17 +25,14 @@ const sliedes = [
 const categoria = 2;
 
 export function Nails() {
-    const { servicios } = useCatalogoById(categoria);
+    const { servicios, loading, error } = useCatalogoById(categoria);
     return (
         <>
-            {/* Titulo de la seccion */}
             <h1 className="section-title">Manicure</h1>
-
-            {/* Carrusel de imagenes */}
             <Carusel imagenes={sliedes} />
-
-            {/* Listado de servicios */}
-            <ListadoCards servicios={servicios}/>
+            {loading && <p className="text-center text-muted pt-4">Cargando servicios...</p>}
+            {error && <p className="text-center text-danger pt-4">No se pudo conectar con el servidor.</p>}
+            {!loading && !error && <ListadoCards servicios={servicios}/>}
         </>
     );
 };

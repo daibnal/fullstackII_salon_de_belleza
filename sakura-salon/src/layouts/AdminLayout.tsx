@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
-import { haySesionAdmin } from "../client/cuenta/pages/LoginRegistro";
+import { haySesionAdmin } from "../services/sesion";
 import { Navbar } from "./components/navigation/Navbar";
 
 const adminEstructura = [

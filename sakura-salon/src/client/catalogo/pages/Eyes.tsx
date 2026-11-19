@@ -21,17 +21,14 @@ const slides = [
 const categoria = 3
 
 export function Eyes() {
-    const { servicios } = useCatalogoById(categoria);
+    const { servicios, loading, error } = useCatalogoById(categoria);
     return (
         <>
-            {/* Titulo de la seccion */}
             <h1 className="section-title">Lifting y Cejas</h1>
-
-            {/* Carrusel de imagenes */}
             <Carusel imagenes={slides}/>
-
-            {/* Listado de servicios */}
-            <ListadoCards servicios={servicios} />
+            {loading && <p className="text-center text-muted pt-4">Cargando servicios...</p>}
+            {error && <p className="text-center text-danger pt-4">No se pudo conectar con el servidor.</p>}
+            {!loading && !error && <ListadoCards servicios={servicios} />}
         </>
     );
 };

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
+import { Auth } from "../../../services/auth.service";
+import { borrarSesion, guardarSesion, haySesionAdmin } from "../../../services/sesion";
 import {
 	apellidoEsValido,
 	confirmacionPasswordEsValida,
@@ -10,38 +12,16 @@ import {
 	telefonoEsValido,
 } from "../validaciones";
 
-export const CORREO_ADMIN = "admin@sakura.cl";
-export const CLAVE_ADMIN = "Sakura1&";
-export const CLAVE_SESION = "sesionSakura";
-
-export function haySesionAdmin(): boolean {
-	const crudo =
-		sessionStorage.getItem(CLAVE_SESION) || localStorage.getItem(CLAVE_SESION);
-	if (!crudo) {
-		return false;
-	}
-	try {
-		return JSON.parse(crudo).rol === "ADMIN";
-	} catch {
-		return false;
-	}
-}
-
-function guardarSesion(mantener: boolean) {
-	const datos = JSON.stringify({ correo: CORREO_ADMIN, rol: "ADMIN" });
-	sessionStorage.removeItem(CLAVE_SESION);
-	localStorage.removeItem(CLAVE_SESION);
-	const destino = mantener ? localStorage : sessionStorage;
-	destino.setItem(CLAVE_SESION, datos);
-}
-
 export function CerrarSesion() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		sessionStorage.removeItem(CLAVE_SESION);
-		localStorage.removeItem(CLAVE_SESION);
-		navigate("/");
+		void Auth.logout()
+			.catch(() => undefined)
+			.finally(() => {
+				borrarSesion();
+				navigate("/");
+			});
 	}, [navigate]);
 
 	return null;
@@ -62,6 +42,7 @@ export function LoginRegistro() {
 		password: false,
 	});
 	const [loginErrorGeneral, setLoginErrorGeneral] = useState(false);
+	const [registroError, setRegistroError] = useState("");
 
 	const [registro, setRegistro] = useState({
 		nombre: "",
@@ -112,17 +93,24 @@ export function LoginRegistro() {
 			return;
 		}
 
-		const esAdmin =
-			login.correo.trim().toLowerCase() === CORREO_ADMIN &&
-			login.password === CLAVE_ADMIN;
-
-		if (!esAdmin) {
-			setLoginErrorGeneral(true);
-			return;
-		}
-
-		guardarSesion(login.mantenerSesion);
-		navigate("/admin");
+		void Auth.login(login.correo.trim(), login.password)
+			.then((usuario) => {
+				guardarSesion(
+					{
+						id: usuario.id,
+						token: usuario.token,
+						rol: usuario.rol,
+						correo: usuario.correo,
+						nombre: usuario.nombre,
+						apellido: usuario.apellido,
+					},
+					login.mantenerSesion
+				);
+				navigate(usuario.rol === "ADMIN" ? "/admin" : "/");
+			})
+			.catch(() => {
+				setLoginErrorGeneral(true);
+			});
 	};
 
 	const handleRegistroChange = (
@@ -162,12 +150,26 @@ export function LoginRegistro() {
 		};
 
 		setRegistroErrores(errores);
+		setRegistroError("");
 
 		if (Object.values(errores).some(Boolean)) {
 			return;
 		}
 
-		setRegistroExito(true);
+		void Auth.registro({
+			nombre: registro.nombre.trim(),
+			apellido: registro.apellido.trim(),
+			telefono: registro.telefono.trim(),
+			correo: registro.correo.trim(),
+			clave: registro.password,
+		})
+			.then(() => {
+				setRegistroExito(true);
+			})
+			.catch(() => {
+				setRegistroExito(false);
+				setRegistroError("No se pudo crear la cuenta. Revisa los datos o intenta con otro correo.");
+			});
 	};
 
 	return (
@@ -379,9 +381,11 @@ export function LoginRegistro() {
 
 						{registroExito && (
 							<p className="text-success small text-center mb-3">
-								Cuenta creada correctamente. Ya puedes iniciar sesión cuando el
-								sistema de usuarios esté conectado.
+								Cuenta creada. Ya puedes iniciar sesión.
 							</p>
+						)}
+						{registroError && (
+							<p className="text-danger small text-center mb-3">{registroError}</p>
 						)}
 
 						<div className="d-flex justify-content-center">
