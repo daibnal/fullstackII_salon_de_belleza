@@ -11,7 +11,9 @@ interface DetalleCita {
     correo: string;
     montoTotal?: number;
     montoAbono?: number;
+    montoSeleccionado?: number;
     estado?: string;
+    tipoPago?: "abono" | "total";
 }
 
 export function CitaConfirmada() {
@@ -95,10 +97,12 @@ export function CitaConfirmada() {
                                     </span>
                                 </p>
                                 <p className="mb-2">
-                                    <strong>Pendiente de pago:</strong>{" "}
+                                    <strong>Forma de pago:</strong>{" "}
                                     <span id="confPago">
                                         {cita
-                                            ? `Total $${(cita.montoTotal ?? 0).toLocaleString("es-CL")} · Abono $${(cita.montoAbono ?? 0).toLocaleString("es-CL")}`
+                                            ? cita.tipoPago === "total"
+                                                ? `Pago total ($${(cita.montoSeleccionado ?? cita.montoTotal ?? 0).toLocaleString("es-CL")})`
+                                                : `Abono ($${(cita.montoSeleccionado ?? cita.montoAbono ?? 0).toLocaleString("es-CL")} de $${(cita.montoTotal ?? 0).toLocaleString("es-CL")})`
                                             : "---"}
                                     </span>
                                 </p>

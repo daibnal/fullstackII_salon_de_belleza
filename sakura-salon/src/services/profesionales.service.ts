@@ -50,6 +50,11 @@ export const Profesionales = {
 		await clienteHttp.delete(`profesionales/${id}`);
 	},
 
+	async servicios(id: number): Promise<{ id: number; nombre: string }[]> {
+		const { data } = await clienteHttp.get<{ id: number; nombre: string }[]>(`profesionales/${id}/servicios`);
+		return Array.isArray(data) ? data : [];
+	},
+
 	async turnos(id: number): Promise<Turno[]> {
 		const { data } = await clienteHttp.get<Turno[]>(`profesionales/${id}/turnos`);
 		return Array.isArray(data) ? data : [];

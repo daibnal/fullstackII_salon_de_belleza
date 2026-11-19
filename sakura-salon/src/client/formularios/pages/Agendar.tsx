@@ -4,6 +4,8 @@ import { useServicios } from "../../../hooks/useServicios";
 import { useProfesionales } from "../../../hooks/useProfesionales";
 import { useDisponibilidad } from "../../../hooks/useDisponibilidad";
 import { Reservas } from "../../../services/reservas.service";
+import { Profesionales } from "../../../services/profesionales.service";
+import { clienteHttp } from "../../../api/clienteHttp";
 import {
     nombreValido,
     rutValido,
@@ -23,6 +25,7 @@ interface CitaForm {
     profesionalId: string;
     fechaCita: string;
     hora: string;
+    tipoPago: "abono" | "total";
 }
 
 type FormErrors = Partial<Record<keyof CitaForm, string>>;
@@ -45,10 +48,14 @@ export function AgendarCita() {
         profesionalId: "",
         fechaCita: "",
         hora: "",
+        tipoPago: "abono",
     });
     const [errors, setErrors] = useState<FormErrors>({});
+    const [servicioFijo, setServicioFijo] = useState(false);
+    const [idsAptos, setIdsAptos] = useState<number[] | null>(null);
     const [enviando, setEnviando] = useState(false);
     const [errorEnvio, setErrorEnvio] = useState("");
+    const [porcentajeAbono, setPorcentajeAbono] = useState(50);
 
     const servicioId = Number(formData.servicioId);
     const profesionalId = Number(formData.profesionalId);
@@ -59,14 +66,65 @@ export function AgendarCita() {
     );
 
     const servicioActual = servicios.find((servicio) => servicio.id === servicioId);
+    const profesionalesDelServicio = idsAptos === null
+        ? []
+        : profesionales.filter((persona) => idsAptos.includes(persona.id));
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const fechaUrl = params.get("fecha");
-        if (fechaUrl && fechaNoAnterior(fechaUrl)) {
-            setFormData((prev) => ({ ...prev, fechaCita: fechaUrl }));
+        const servicioUrl = params.get("servicioId");
+        if (servicioUrl) {
+            setServicioFijo(true);
         }
+        setFormData((prev) => ({
+            ...prev,
+            ...(fechaUrl && fechaNoAnterior(fechaUrl) ? { fechaCita: fechaUrl } : {}),
+            ...(servicioUrl ? { servicioId: servicioUrl, profesionalId: "", hora: "" } : {}),
+        }));
     }, []);
+
+    useEffect(() => {
+        void clienteHttp.get<{ porcentajeAbono?: number }>("configuracion/vigente")
+            .then(({ data }) => {
+                if (data.porcentajeAbono && data.porcentajeAbono > 0) {
+                    setPorcentajeAbono(data.porcentajeAbono);
+                }
+            })
+            .catch(() => undefined);
+    }, []);
+
+    useEffect(() => {
+        if (!servicioId || cargandoProfesionales) {
+            setIdsAptos(null);
+            return;
+        }
+        if (profesionales.length === 0) {
+            setIdsAptos([]);
+            return;
+        }
+        let vigente = true;
+        void Promise.all(profesionales.map(async (persona) => {
+            try {
+                const lista = await Profesionales.servicios(persona.id);
+                return lista.some((servicio) => servicio.id === servicioId) ? persona.id : null;
+            } catch {
+                return null;
+            }
+        })).then((ids) => {
+            if (!vigente) return;
+            const validos = ids.filter((id): id is number => id !== null);
+            setIdsAptos(validos);
+            setFormData((prev) => (
+                validos.includes(Number(prev.profesionalId))
+                    ? prev
+                    : { ...prev, profesionalId: "", hora: "" }
+            ));
+        });
+        return () => {
+            vigente = false;
+        };
+    }, [servicioId, profesionales, cargandoProfesionales]);
 
     const clearError = (field: keyof CitaForm) => {
         if (errors[field]) {
@@ -162,6 +220,8 @@ export function AgendarCita() {
                     montoTotal: reserva.montoTotal,
                     montoAbono: reserva.montoAbono,
                     estado: reserva.estado,
+                    tipoPago: formData.tipoPago,
+                    montoSeleccionado: formData.tipoPago === "abono" ? reserva.montoAbono : reserva.montoTotal,
                 }));
                 navigate("/agendar/confirmacion");
             })
@@ -173,6 +233,12 @@ export function AgendarCita() {
 
     const profesionalNombre = profesionales.find((persona) => persona.id === profesionalId)?.nombre;
     const precio = servicioActual?.precio ?? 0;
+    const montoAbono = Math.round(precio * porcentajeAbono / 100);
+    const montoSeleccionado = formData.tipoPago === "abono" ? montoAbono : precio;
+
+    const elegirPago = (tipoPago: "abono" | "total") => {
+        setFormData((prev) => ({ ...prev, tipoPago }));
+    };
 
     return (
         <main className="container my-5 pt-5">
@@ -265,20 +331,31 @@ export function AgendarCita() {
 
                             <div className="mb-3">
                                 <label htmlFor="servicioId" className="form-label fw-bold small">Servicio</label>
-                                <select
-                                    className={`form-select ${errors.servicioId ? "is-invalid" : ""}`}
-                                    id="servicioId"
-                                    value={formData.servicioId}
-                                    onChange={handleChange}
-                                >
-                                    <option value="">{cargandoServicios ? "Cargando..." : "Selecciona un servicio..."}</option>
-                                    {servicios.filter((servicio) => servicio.activo).map((servicio) => (
-                                        <option key={servicio.id} value={servicio.id}>
-                                            {servicio.nombre} (${servicio.precio.toLocaleString("es-CL")})
-                                        </option>
-                                    ))}
-                                </select>
-                                {errors.servicioId && <div className="invalid-feedback">{errors.servicioId}</div>}
+                                {servicioFijo ? (
+                                    <input
+                                        id="servicioId"
+                                        className="form-control"
+                                        readOnly
+                                        value={servicioActual
+                                            ? `${servicioActual.nombre} ($${servicioActual.precio.toLocaleString("es-CL")})`
+                                            : (cargandoServicios ? "Cargando..." : "Servicio seleccionado")}
+                                    />
+                                ) : (
+                                    <select
+                                        className={`form-select ${errors.servicioId ? "is-invalid" : ""}`}
+                                        id="servicioId"
+                                        value={formData.servicioId}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="">{cargandoServicios ? "Cargando..." : "Selecciona un servicio..."}</option>
+                                        {servicios.filter((servicio) => servicio.activo).map((servicio) => (
+                                            <option key={servicio.id} value={servicio.id}>
+                                                {servicio.nombre} (${servicio.precio.toLocaleString("es-CL")})
+                                            </option>
+                                        ))}
+                                    </select>
+                                )}
+                                {errors.servicioId && <div className="invalid-feedback d-block">{errors.servicioId}</div>}
                             </div>
 
                             <div className="mb-3">
@@ -288,9 +365,18 @@ export function AgendarCita() {
                                     id="profesionalId"
                                     value={formData.profesionalId}
                                     onChange={handleChange}
+                                    disabled={!servicioId || idsAptos === null}
                                 >
-                                    <option value="">{cargandoProfesionales ? "Cargando..." : "Selecciona un profesional..."}</option>
-                                    {profesionales.map((persona) => (
+                                    <option value="">
+                                        {!servicioId
+                                            ? "Primero elige un servicio"
+                                            : idsAptos === null || cargandoProfesionales
+                                                ? "Cargando..."
+                                                : profesionalesDelServicio.length === 0
+                                                    ? "Nadie realiza este servicio"
+                                                    : "Selecciona un profesional..."}
+                                    </option>
+                                    {profesionalesDelServicio.map((persona) => (
                                         <option key={persona.id} value={persona.id}>{persona.nombre}</option>
                                     ))}
                                 </select>
@@ -353,11 +439,64 @@ export function AgendarCita() {
                                     <div className="col-sm-6 border-start-sm ps-sm-3 mt-2 mt-sm-0">
                                         <p className="mb-1 text-uppercase text-secondary" style={{ fontSize: "0.75rem" }}>Valor del servicio</p>
                                         <h4 className="fw-bold text-dark mb-2">$ {precio.toLocaleString("es-CL")}</h4>
-                                        <div className="p-2 rounded bg-white border">
-                                            El abono se calcula al confirmar. El salón registra el pago después.
+                                        <div className="p-2 rounded bg-white border mb-2">
+                                            Abono ({porcentajeAbono}%): <strong>$ {montoAbono.toLocaleString("es-CL")}</strong>
                                         </div>
+                                        <p className="mb-0">
+                                            <strong>Vas a dejar:</strong> $ {montoSeleccionado.toLocaleString("es-CL")}
+                                            {" "}({formData.tipoPago === "abono" ? `abono del ${porcentajeAbono}%` : "pago total"})
+                                        </p>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="form-label fw-bold mb-3">
+                                    <i className="bi bi-credit-card"></i> Método de pago
+                                </label>
+                                <div className="row g-3">
+                                    <div className="col-12 col-md-6">
+                                        <input
+                                            type="radio"
+                                            className="btn-check"
+                                            name="tipoPago"
+                                            id="abono"
+                                            checked={formData.tipoPago === "abono"}
+                                            onChange={() => elegirPago("abono")}
+                                        />
+                                        <label className="payment-card h-100 d-block p-3 border rounded" htmlFor="abono" style={{ cursor: "pointer" }}>
+                                            <div className="d-flex align-items-center mb-2">
+                                                <i className="bi bi-cash-stack fs-4 me-2 text-secondary"></i>
+                                                <span className="fw-bold">Abonar ({porcentajeAbono}%)</span>
+                                            </div>
+                                            <p className="text-muted small mb-0">
+                                                Dejas el {porcentajeAbono}% ahora y el resto el día de tu cita.
+                                            </p>
+                                        </label>
+                                    </div>
+                                    <div className="col-12 col-md-6">
+                                        <input
+                                            type="radio"
+                                            className="btn-check"
+                                            name="tipoPago"
+                                            id="total"
+                                            checked={formData.tipoPago === "total"}
+                                            onChange={() => elegirPago("total")}
+                                        />
+                                        <label className="payment-card h-100 d-block p-3 border rounded" htmlFor="total" style={{ cursor: "pointer" }}>
+                                            <div className="d-flex align-items-center mb-2">
+                                                <i className="bi bi-credit-card-2-front fs-4 me-2 text-secondary"></i>
+                                                <span className="fw-bold">Pagar el total</span>
+                                            </div>
+                                            <p className="text-muted small mb-0">
+                                                Selecciona el pago completo de tu cita.
+                                            </p>
+                                        </label>
+                                    </div>
+                                </div>
+                                <p className="text-muted small mt-2 mb-0">
+                                    La cita queda pendiente de pago. El salón registra el abono o el total en la agenda.
+                                </p>
                             </div>
 
                             {errorEnvio && <p className="text-danger small text-center">{errorEnvio}</p>}

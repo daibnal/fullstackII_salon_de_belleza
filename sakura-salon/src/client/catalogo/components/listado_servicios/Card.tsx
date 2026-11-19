@@ -32,7 +32,7 @@ export function Card({ id, nombre, descripcion, duracionMinutos, precio }: Servi
                                 </a>
                                 :
                                 <Link
-                                    to="/agendar"
+                                    to={`/agendar?servicioId=${id}`}
                                     className="btn btn-custom-primary btn-sm w-auto px-3"
                                     >Ir</Link>
                             )}
