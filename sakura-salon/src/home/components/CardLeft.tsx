@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import type { Catalogo } from "../../interfaces/Catalogo";
+import { imagenDeCategoria } from "../../assets/AssetsInterface";
 
 export function CardLeft({nombre, descripcion, id}: Catalogo) {
     return (
@@ -7,13 +8,9 @@ export function CardLeft({nombre, descripcion, id}: Catalogo) {
             <div className="row g-2 align-items-center flex-column-reverse flex-sm-row">
                 <div className="col-12 col-sm-6 text-center">
                     <img
-                        src={undefined}
-                        alt={undefined}
+                        src={imagenDeCategoria(nombre)}
+                        alt={nombre}
                         className="img-thumbnail service-img-thumb"
-                        onError={(event) => {
-                            event.currentTarget.onerror = null;
-                            event.currentTarget.src = 'https://placehold.co/300x180/F4F2F0/590D1F?text=.img-thumbnail';
-                        }}
                     />
 				</div>
                 <div className="col-12 col-sm-6">

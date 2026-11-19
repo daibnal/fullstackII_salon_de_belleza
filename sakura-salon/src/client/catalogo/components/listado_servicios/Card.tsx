@@ -1,14 +1,16 @@
 import { Link } from "react-router";
 import type { Servicio } from "../../../../interfaces/Servicios";
+import { imagenDeServicio } from "../../../../assets/AssetsInterface";
 
 export function Card({ id, nombre, descripcion, duracionMinutos, precio }: Servicio) {
+    const imagen = imagenDeServicio(nombre);
     return (
         <>
             <div className="d-flex flex-wrap justify-content-center gap-5 pt-5">
                 <div className="card service-card" key={id}>
                     <img
-                        src="src/assets/Logo_sm.png"
-                        alt=""
+                        src={imagen}
+                        alt={nombre}
                         className="img-thumbnail service-img-thumb" />
                     <div className="card-body d-flex flex-column text-center">
                         <h3 className="card-title-underlined h5 mb-2">

@@ -116,3 +116,34 @@ export function useCatalogo() {
         recargar: cargarCatalogos
     };
 }
+
+export function useServiciosGestion() {
+    const [servicios, setServicios] = useState<Servicio[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
+
+    const cargarServicios = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const data = await Catalogo.getGestion();
+            setServicios(data);
+        } catch (err) {
+            const parsedError = err instanceof Error ? err : new Error('No se pudo conectar con el servidor');
+            setError(parsedError);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        void cargarServicios();
+    }, [cargarServicios]);
+
+    return {
+        servicios,
+        loading,
+        error,
+        recargar: cargarServicios
+    };
+}

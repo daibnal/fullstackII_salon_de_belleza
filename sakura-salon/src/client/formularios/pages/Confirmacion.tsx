@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { assets } from "../../../assets/AssetsInterface";
 
 interface DetalleCita {
     nombre: string;
@@ -7,9 +8,10 @@ interface DetalleCita {
     profesional: string;
     fecha: string;
     hora: string;
-    tipoPago: string;
-    montoPagado: number;
     correo: string;
+    montoTotal?: number;
+    montoAbono?: number;
+    estado?: string;
 }
 
 export function CitaConfirmada() {
@@ -34,7 +36,7 @@ export function CitaConfirmada() {
                 <div className="container-fluid">
                     <a className="navbar-brand d-flex align-items-center" href="../index.html">
                         <img
-                            src="../assets/Logo_sm.png"
+                            src={assets.logo.src}
                             className="rounded-circle"
                             alt="Logo"
                             width="40"
@@ -67,7 +69,7 @@ export function CitaConfirmada() {
                                 ¡Cita Confirmada!
                             </h1>
                             <p className="text-muted mb-4">
-                                Tu pago se ha procesado exitosamente y tu reserva ha sido registrada.
+                                Tu cita quedó registrada y está pendiente de pago. El salón cobra el abono o el total cuando corresponda.
                             </p>
 
                             {/* Detalles de la reserva */}
@@ -93,9 +95,11 @@ export function CitaConfirmada() {
                                     </span>
                                 </p>
                                 <p className="mb-2">
-                                    <strong>Modalidad de Pago:</strong>{" "}
+                                    <strong>Pendiente de pago:</strong>{" "}
                                     <span id="confPago">
-                                        {cita ? `${cita.tipoPago.toUpperCase()} ($ ${cita.montoPagado.toLocaleString("es-CL")})` : "---"}
+                                        {cita
+                                            ? `Total $${(cita.montoTotal ?? 0).toLocaleString("es-CL")} · Abono $${(cita.montoAbono ?? 0).toLocaleString("es-CL")}`
+                                            : "---"}
                                     </span>
                                 </p>
                                 <p className="mb-0 text-success fw-bold">
@@ -107,7 +111,7 @@ export function CitaConfirmada() {
                             {/* Botones de acción */}
                             <div className="d-grid gap-2 btn-action">
                                 <a
-                                    href="../index.html"
+                                    href="/"
                                     className="btn btn-custom-primary py-2 text-white text-decoration-none"
                                 >
                                     Volver al Inicio

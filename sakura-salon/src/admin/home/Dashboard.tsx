@@ -1,38 +1,70 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import Chart from "chart.js/auto";
 import { TarjetaDashboard } from "../components/TarjetaDashboard";
+import { useAgenda } from "../../hooks/useAgenda";
+import { Insumos } from "../../services/insumos.service";
+import { Profesionales } from "../../services/profesionales.service";
+import { Reportes } from "../../services/reportes.service";
 
-const resumen = [
-	{ icono: "bi-calendar-check", titulo: "Citas Hoy", valor: "12", detalle: "2 más que ayer", claseDetalle: "text-success", iconoDetalle: "bi-arrow-up-short" },
-	{ icono: "bi-currency-dollar", titulo: "Ingresos (Día)", valor: "$245k", detalle: "Actualizado hace 10 min", claseDetalle: "text-muted" },
-	{ icono: "bi-box-seam", titulo: "Alertas Stock", valor: "3", detalle: "Insumos por agotarse", claseDetalle: "text-danger", claseValor: "text-danger" },
-	{ icono: "bi-people", titulo: "Staff Activo", valor: "5/6", detalle: "Turno mañana", claseDetalle: "text-muted" },
-];
+function isoLocal(fecha: Date) {
+	const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+	const dia = String(fecha.getDate()).padStart(2, "0");
+	return `${fecha.getFullYear()}-${mes}-${dia}`;
+}
 
-const citas = [
-	{ hora: "10:00 AM", cliente: "Ana García", servicio: "Corte y Brushing", profesional: "María", estado: "Pendiente", clase: "badge bg-warning text-dark" },
-	{ hora: "11:30 AM", cliente: "Valentina Soto", servicio: "Manicura Permanente", profesional: "Camila", estado: "Confirmada", clase: "badge bg-success" },
-	{ hora: "12:15 PM", cliente: "Laura Martínez", servicio: "Balayage", profesional: "Javiera", estado: "Confirmada", clase: "badge bg-success" },
-];
+function pesos(valor: number) {
+	return "$" + valor.toLocaleString("es-CL");
+}
 
 export function Dashboard() {
+	const hoy = isoLocal(new Date());
+	const { citas, error: errorAgenda } = useAgenda(hoy);
 	const ingresosRef = useRef<HTMLCanvasElement>(null);
+	const [agendadas, setAgendadas] = useState(0);
+	const [ingresosHoy, setIngresosHoy] = useState(0);
+	const [criticos, setCriticos] = useState(0);
+	const [activos, setActivos] = useState(0);
+	const [totalStaff, setTotalStaff] = useState(0);
+	const [serie, setSerie] = useState<number[]>([]);
+	const [error, setError] = useState("");
 
 	useEffect(() => {
-		if (!ingresosRef.current) return;
+		const dias = Array.from({ length: 7 }, (_, indice) => {
+			const fecha = new Date();
+			fecha.setDate(fecha.getDate() - (6 - indice));
+			return isoLocal(fecha);
+		});
+		void Promise.all([
+			Reportes.dia(hoy),
+			Reportes.ingresos(hoy),
+			Insumos.criticos(),
+			Profesionales.gestion(),
+			Promise.all(dias.map((fecha) => Reportes.ingresos(fecha))),
+		])
+			.then(([dia, ingresos, alertas, equipo, semana]) => {
+				setAgendadas(dia.agendadas);
+				setIngresosHoy(ingresos.total);
+				setCriticos(alertas.length);
+				setActivos(equipo.filter((persona) => persona.activo).length);
+				setTotalStaff(equipo.length);
+				setSerie(semana.map((item) => item.total));
+			})
+			.catch(() => setError("No se pudieron cargar los indicadores."));
+	}, [hoy]);
+
+	useEffect(() => {
+		if (!ingresosRef.current || serie.length === 0) return;
 		const grafico = new Chart(ingresosRef.current, {
 			type: "bar",
 			data: {
-				labels: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
-				datasets: [
-					{
-						label: "Ingresos ($)",
-						data: [120000, 145000, 90000, 180000, 250000, 310000, 0],
-						backgroundColor: "rgba(165, 38, 71, 0.75)",
-						borderRadius: 6,
-					},
-				],
+				labels: ["-6", "-5", "-4", "-3", "-2", "Ayer", "Hoy"],
+				datasets: [{
+					label: "Ingresos ($)",
+					data: serie,
+					backgroundColor: "rgba(165, 38, 71, 0.75)",
+					borderRadius: 6,
+				}],
 			},
 			options: {
 				responsive: true,
@@ -47,18 +79,25 @@ export function Dashboard() {
 			},
 		});
 		return () => grafico.destroy();
-	}, []);
+	}, [serie]);
+
+	const resumen = [
+		{ icono: "bi-calendar-check", titulo: "Citas Hoy", valor: String(agendadas), detalle: "Según el reporte del día", claseDetalle: "text-muted" },
+		{ icono: "bi-currency-dollar", titulo: "Ingresos (Día)", valor: pesos(ingresosHoy), detalle: "Abonos y saldos", claseDetalle: "text-muted" },
+		{ icono: "bi-box-seam", titulo: "Alertas Stock", valor: String(criticos), detalle: "Insumos en nivel crítico", claseDetalle: "text-danger", claseValor: criticos > 0 ? "text-danger" : undefined },
+		{ icono: "bi-people", titulo: "Staff Activo", valor: `${activos}/${totalStaff}`, detalle: "Profesionales activos", claseDetalle: "text-muted" },
+	];
 
 	return (
 		<>
 			<div className="d-flex justify-content-between align-items-center mb-4 gap-3">
-				<h2 className="fw-bold m-0" style={{ color: "var(--color-primary)" }}>
-					Dashboard
-				</h2>
+				<h2 className="fw-bold m-0" style={{ color: "var(--color-primary)" }}>Dashboard</h2>
 				<Link to="/admin/agenda?modal=cita" className="btn btn-custom-primary w-auto">
 					<i className="bi bi-plus-lg me-2"></i>Nueva Cita
 				</Link>
 			</div>
+
+			{(error || errorAgenda) && <p className="text-danger">No se pudo cargar parte del panel.</p>}
 
 			<div className="row g-4 mb-5">
 				{resumen.map((item) => (
@@ -72,7 +111,7 @@ export function Dashboard() {
 				<div className="col-12 col-lg-8">
 					<div className="sketch-card">
 						<div className="d-flex justify-content-between align-items-center mb-3">
-							<h4 className="card-title-custom m-0">Próximas Citas</h4>
+							<h4 className="card-title-custom m-0">Citas de hoy</h4>
 							<Link to="/admin/agenda" className="text-decoration-none" style={{ color: "var(--color-secondary)" }}>
 								Ver calendario
 							</Link>
@@ -90,14 +129,17 @@ export function Dashboard() {
 								</thead>
 								<tbody>
 									{citas.map((cita) => (
-										<tr key={cita.hora + cita.cliente}>
-											<td>{cita.hora}</td>
-											<td>{cita.cliente}</td>
-											<td>{cita.servicio}</td>
-											<td>{cita.profesional}</td>
-											<td><span className={cita.clase}>{cita.estado}</span></td>
+										<tr key={`${cita.id}-${cita.horaInicio}`}>
+											<td>{cita.horaInicio.slice(0, 5)}</td>
+											<td>{cita.nombreCliente}</td>
+											<td>{cita.nombreServicio}</td>
+											<td>{cita.nombreProfesional}</td>
+											<td><span className="badge bg-light text-dark border">{cita.estado}</span></td>
 										</tr>
 									))}
+									{citas.length === 0 && (
+										<tr><td colSpan={5} className="text-muted">No hay citas para hoy.</td></tr>
+									)}
 								</tbody>
 							</table>
 						</div>
@@ -119,7 +161,7 @@ export function Dashboard() {
 							</Link>
 						</div>
 						<hr className="my-4" style={{ borderColor: "var(--color-accent)" }} />
-						<h4 className="card-title-custom mb-3">Rendimiento Semanal</h4>
+						<h4 className="card-title-custom mb-3">Ingresos de la semana</h4>
 						<div className="chart-container" style={{ height: 180 }}>
 							<canvas ref={ingresosRef}></canvas>
 						</div>
