@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { assets } from "../../../assets/AssetsInterface";
 
+interface CitaAgendada {
+    servicio: string;
+    profesional: string;
+    fecha: string;
+    hora: string;
+}
+
 interface DetalleCita {
     nombre: string;
     apellido: string;
@@ -14,10 +21,13 @@ interface DetalleCita {
     montoSeleccionado?: number;
     estado?: string;
     tipoPago?: "abono" | "total";
+    citas?: CitaAgendada[];
 }
 
 export function CitaConfirmada() {
     const [cita, setCita] = useState<DetalleCita | null>(null);
+    const citas = cita?.citas ?? [];
+    const varias = citas.length > 1;
 
     useEffect(() => {
         // Recuperamos los datos guardados temporalmente en sessionStorage
@@ -68,10 +78,12 @@ export function CitaConfirmada() {
                                 className="h3 fw-bold mb-2"
                                 style={{ color: "var(--color-primary)" }}
                             >
-                                ¡Cita Confirmada!
+                                {varias ? "¡Citas confirmadas!" : "¡Cita Confirmada!"}
                             </h1>
                             <p className="text-muted mb-4">
-                                Tu cita quedó registrada y está pendiente de pago. El salón cobra el abono o el total cuando corresponda.
+                                {varias
+                                    ? "Tus citas quedaron registradas y están pendientes de pago. El salón cobra el abono o el total cuando corresponda."
+                                    : "Tu cita quedó registrada y está pendiente de pago. El salón cobra el abono o el total cuando corresponda."}
                             </p>
 
                             {/* Detalles de la reserva */}
@@ -82,20 +94,35 @@ export function CitaConfirmada() {
                                         {cita ? `${cita.nombre} ${cita.apellido}` : "---"}
                                     </span>
                                 </p>
-                                <p className="mb-2">
-                                    <strong>Servicio:</strong>{" "}
-                                    <span id="confServicio">{cita ? cita.servicio : "---"}</span>
-                                </p>
-                                <p className="mb-2">
-                                    <strong>Profesional:</strong>{" "}
-                                    <span id="confProfesional">{cita ? cita.profesional : "---"}</span>
-                                </p>
-                                <p className="mb-2">
-                                    <strong>Fecha y Hora:</strong>{" "}
-                                    <span id="confFechaHora">
-                                        {cita ? `${cita.fecha} a las ${cita.hora}` : "---"}
-                                    </span>
-                                </p>
+                                {varias ? (
+                                    <div className="mb-2">
+                                        <strong>Citas:</strong>
+                                        <ul className="mb-0 mt-1 ps-3">
+                                            {citas.map((item, index) => (
+                                                <li key={`${item.servicio}-${item.fecha}-${item.hora}-${index}`} className="mb-1">
+                                                    {item.servicio} con {item.profesional} — {item.fecha} a las {item.hora}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <p className="mb-2">
+                                            <strong>Servicio:</strong>{" "}
+                                            <span id="confServicio">{cita ? cita.servicio : "---"}</span>
+                                        </p>
+                                        <p className="mb-2">
+                                            <strong>Profesional:</strong>{" "}
+                                            <span id="confProfesional">{cita ? cita.profesional : "---"}</span>
+                                        </p>
+                                        <p className="mb-2">
+                                            <strong>Fecha y Hora:</strong>{" "}
+                                            <span id="confFechaHora">
+                                                {cita ? `${cita.fecha} a las ${cita.hora}` : "---"}
+                                            </span>
+                                        </p>
+                                    </>
+                                )}
                                 <p className="mb-2">
                                     <strong>Forma de pago:</strong>{" "}
                                     <span id="confPago">

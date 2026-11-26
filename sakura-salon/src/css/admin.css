@@ -10,7 +10,8 @@
 }
 
 /* Anula el centrado de body en principal.css (display:flex; align-items:center). */
-body.admin {
+body.admin,
+body.personal {
     display: block;
     align-items: stretch;
     justify-content: flex-start;
@@ -19,7 +20,8 @@ body.admin {
     overflow-x: hidden;
 }
 
-body.admin #root {
+body.admin #root,
+body.personal #root {
     width: 100%;
     max-width: none;
     padding: 0;
@@ -29,7 +31,8 @@ body.admin #root {
    ESTRUCTURA DEL PANEL (navbar fija + contenido)
    La barra y el offcanvas reutilizan css/principal.css.
    ======================================================= */
-body.admin .wrapper {
+body.admin .wrapper,
+body.personal .wrapper {
     display: block;
     width: 100%;
     height: auto;
@@ -37,11 +40,22 @@ body.admin .wrapper {
     padding-top: 72px; /* altura de .navbar en principal.css */
 }
 
-body.admin #content {
+body.admin #content,
+body.personal #content {
     width: 100%;
     min-height: calc(100vh - 72px);
     display: flex;
     flex-direction: column;
+}
+
+/* El sidebar fijo solo existe desde 992px. width:100% aquí no debe
+   sumarse al margin-left de principal.css. */
+@media (min-width: 992px) {
+    body.admin.menu-fijo #content {
+        margin-left: var(--sidebar-width);
+        width: calc(100% - var(--sidebar-width));
+        max-width: calc(100% - var(--sidebar-width));
+    }
 }
 
 /* Saludo y campana dentro de la navbar burdeos */
@@ -56,6 +70,20 @@ body.admin #content {
     font-size: 1.2rem;
     text-decoration: none;
     flex-shrink: 0;
+}
+
+.notif-panel {
+    position: absolute;
+    top: 52px;
+    right: 0;
+    width: min(360px, 80vw);
+    max-height: 420px;
+    overflow-y: auto;
+    background: #fff;
+    color: var(--color-text-dark);
+    border-radius: 12px;
+    padding: 12px 14px;
+    z-index: 1080;
 }
 
 /* El offcanvas está dentro de .navbar; iguala la especificidad de Bootstrap

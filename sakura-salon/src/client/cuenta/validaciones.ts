@@ -1,7 +1,8 @@
 const regexTexto = /^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]{2,}$/;
 const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const regexTelefono = /^(\+?56)?9\d{8}$|^\d{9}$/;
-const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d._-]{8,}$/;
+const regexTelefono = /^(\+?56)?\s?9\d{8}$|^\d{9}$/;
+const PASSWORD_MIN = 6;
+const PASSWORD_MAX = 100;
 
 export function nombreEsValido(valor: string): boolean {
 	return regexTexto.test(valor.trim());
@@ -43,7 +44,14 @@ export function correoEsValido(valor: string): boolean {
 }
 
 export function passwordRegistroEsValido(valor: string): boolean {
-	return regexPassword.test(valor);
+	return valor.length >= PASSWORD_MIN && valor.length <= PASSWORD_MAX;
+}
+
+export function mensajePasswordRegistro(valor: string): string {
+	if (valor.length > PASSWORD_MAX) {
+		return "La contraseña no puede superar 100 caracteres.";
+	}
+	return "La contraseña debe tener al menos 6 caracteres.";
 }
 
 export function confirmacionPasswordEsValida(

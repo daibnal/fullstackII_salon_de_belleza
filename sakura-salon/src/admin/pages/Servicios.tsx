@@ -4,16 +4,22 @@ import { Modal } from "../components/Modal";
 import { useCatalogo, useServiciosGestion } from "../../hooks/useServicios";
 import { imagenDeServicio } from "../../assets/AssetsInterface";
 import { Catalogo } from "../../services/catalogo.service";
+import { Insumos, type Insumo } from "../../services/insumos.service";
+import { useProfesionales } from "../../hooks/useProfesionales";
+import { coincideEspecialidad } from "../../horario/especialidades";
+import { tieneLetra } from "../../validaciones/texto";
+import { mensajeError } from "../../api/mensajeError";
 
 export function Servicios() {
 	const { catalogos } = useCatalogo();
 	const { servicios, loading, error, recargar } = useServiciosGestion();
+	const { profesionales } = useProfesionales(true);
 	const [pestana, setPestana] = useState(0);
 	const [params] = useSearchParams();
 	const navigate = useNavigate();
 	const [modal, setModal] = useState<"" | "crear" | "editar">("");
 	const [idActivo, setIdActivo] = useState(0);
-	const [invalidos, setInvalidos] = useState<Record<string, boolean>>({});
+	const [invalidos, setInvalidos] = useState<Record<string, string>>({});
 	const [aviso, setAviso] = useState("");
 
 	const [formNombre, setFormNombre] = useState("");
@@ -21,6 +27,11 @@ export function Servicios() {
 	const [formCategoria, setFormCategoria] = useState(0);
 	const [formDuracion, setFormDuracion] = useState("");
 	const [formPrecio, setFormPrecio] = useState("");
+	const [recetaAbierta, setRecetaAbierta] = useState(false);
+	const [recetaServicioId, setRecetaServicioId] = useState(0);
+	const [recetaNombre, setRecetaNombre] = useState("");
+	const [catalogoInsumos, setCatalogoInsumos] = useState<Insumo[]>([]);
+	const [filasReceta, setFilasReceta] = useState<{ insumoId: string; usos: string }[]>([]);
 
 	const listaActiva = pestana === 0
 		? servicios
@@ -48,6 +59,39 @@ export function Servicios() {
 		navigate("/admin/servicios", { replace: true });
 	}, [params, navigate]);
 
+	function abrirReceta(id: number, nombre: string) {
+		setRecetaServicioId(id);
+		setRecetaNombre(nombre);
+		setRecetaAbierta(true);
+		setAviso("");
+		void Promise.all([Insumos.listar(), Insumos.receta(id)])
+			.then(([lista, receta]) => {
+				setCatalogoInsumos(lista);
+				setFilasReceta(receta.map((fila) => ({
+					insumoId: String(fila.insumo?.id ?? ""),
+					usos: String(fila.cantidad),
+				})));
+			})
+			.catch(() => setAviso("No se pudo cargar la receta de usos."));
+	}
+
+	function guardarReceta(event: FormEvent) {
+		event.preventDefault();
+		const lineas = filasReceta
+			.filter((fila) => fila.insumoId)
+			.map((fila) => ({ insumoId: Number(fila.insumoId), cantidad: Number(fila.usos) }));
+		if (lineas.some((fila) => !Number.isFinite(fila.cantidad) || fila.cantidad <= 0)) {
+			setAviso("Cada insumo de la receta debe tener usos mayores a cero.");
+			return;
+		}
+		void Insumos.guardarReceta(recetaServicioId, lineas)
+			.then(() => {
+				setAviso("");
+				setRecetaAbierta(false);
+			})
+			.catch(() => setAviso("No se pudo guardar la receta."));
+	}
+
 	function abrirEditar(id: number) {
 		const servicio = servicios.find((item) => item.id === id);
 		if (!servicio) return;
@@ -66,11 +110,12 @@ export function Servicios() {
 		const precio = Number(formPrecio);
 		const minutos = Number(formDuracion);
 		const categoria = catalogos.find((item) => item.id === formCategoria);
-		const errores: Record<string, boolean> = {};
-		if (!formNombre.trim()) errores.nombre = true;
-		if (!categoria) errores.categoria = true;
-		if (!Number.isFinite(minutos) || minutos <= 0) errores.duracion = true;
-		if (!Number.isFinite(precio) || precio <= 0) errores.precio = true;
+		const errores: Record<string, string> = {};
+		if (!tieneLetra(formNombre)) errores.nombre = "El nombre debe incluir al menos una letra.";
+		if (!tieneLetra(formDescripcion)) errores.descripcion = "La descripción debe incluir al menos una letra.";
+		if (!categoria) errores.categoria = "Selecciona una categoría.";
+		if (!Number.isFinite(minutos) || minutos <= 0) errores.duracion = "Indica una duración mayor a cero.";
+		if (!Number.isFinite(precio) || precio <= 0) errores.precio = "Indica un precio mayor a cero.";
 		setInvalidos(errores);
 		if (Object.keys(errores).length > 0 || !categoria) return;
 
@@ -92,7 +137,7 @@ export function Servicios() {
 				cerrarModal();
 				void recargar();
 			})
-			.catch(() => setAviso("No se pudo guardar el servicio."));
+			.catch((error: unknown) => setAviso(mensajeError(error, "No se pudo guardar el servicio.")));
 	}
 
 	function borrar(id: number) {
@@ -159,6 +204,7 @@ export function Servicios() {
 								<th>Imagen</th>
 								<th>Nombre del Servicio</th>
 								<th>Categoría</th>
+								<th>Profesionales</th>
 								<th>Duración Estimada</th>
 								<th>Precio Base</th>
 								<th>Estado</th>
@@ -173,6 +219,13 @@ export function Servicios() {
 									</td>
 									<td className="fw-bold">{servicio.nombre}</td>
 									<td><span className="badge bg-secondary">{servicio.categoria?.nombre}</span></td>
+									<td className="text-wrap" style={{ minWidth: 160, whiteSpace: "normal" }}>
+										{(() => {
+											const aptos = profesionales.filter((persona) => persona.activo && coincideEspecialidad(persona.especialidad, servicio.categoria?.nombre));
+											if (aptos.length === 0) return <span className="text-muted">Ningún profesional realiza este servicio.</span>;
+											return aptos.map((persona) => persona.nombre).join(", ");
+										})()}
+									</td>
 									<td className="text-muted"><i className="bi bi-clock me-1"></i> {servicio.duracionMinutos} min</td>
 									<td className="fw-bold text-dark">${servicio.precio.toLocaleString("es-CL")}</td>
 									<td>
@@ -181,6 +234,9 @@ export function Servicios() {
 											: <span className="badge bg-secondary">Inactivo</span>}
 									</td>
 									<td className="text-end">
+										<button className="btn btn-sm btn-outline-secondary me-1" type="button" title="Usos del servicio" onClick={() => abrirReceta(servicio.id, servicio.nombre)}>
+											<i className="bi bi-droplet"></i>
+										</button>
 										<button className="btn btn-sm btn-outline-secondary me-1" type="button" onClick={() => abrirEditar(servicio.id)}>
 											<i className="bi bi-pencil"></i>
 										</button>
@@ -205,10 +261,12 @@ export function Servicios() {
 					<div>
 						<label className="form-label small fw-semibold">Nombre</label>
 						<input type="text" className={"form-control" + (invalidos.nombre ? " is-invalid" : "")} value={formNombre} onChange={(e) => setFormNombre(e.target.value)} />
+						{invalidos.nombre && <div className="invalid-feedback d-block">{invalidos.nombre}</div>}
 					</div>
 					<div>
 						<label className="form-label small fw-semibold">Descripción</label>
-						<textarea className="form-control" value={formDescripcion} onChange={(e) => setFormDescripcion(e.target.value)} />
+						<textarea className={"form-control" + (invalidos.descripcion ? " is-invalid" : "")} value={formDescripcion} onChange={(e) => setFormDescripcion(e.target.value)} />
+						{invalidos.descripcion && <div className="invalid-feedback d-block">{invalidos.descripcion}</div>}
 					</div>
 					<div>
 						<label className="form-label small fw-semibold">Categoría</label>
@@ -217,18 +275,66 @@ export function Servicios() {
 								<option key={cat.id} value={cat.id}>{cat.nombre}</option>
 							))}
 						</select>
+						{invalidos.categoria && <div className="invalid-feedback d-block">{invalidos.categoria}</div>}
 					</div>
 					<div>
 						<label className="form-label small fw-semibold">Duración (minutos)</label>
 						<input type="number" min={1} className={"form-control" + (invalidos.duracion ? " is-invalid" : "")} value={formDuracion} onChange={(e) => setFormDuracion(e.target.value)} />
+						{invalidos.duracion && <div className="invalid-feedback d-block">{invalidos.duracion}</div>}
 					</div>
 					<div>
 						<label className="form-label small fw-semibold">Precio base</label>
 						<input type="number" min={1} className={"form-control" + (invalidos.precio ? " is-invalid" : "")} value={formPrecio} onChange={(e) => setFormPrecio(e.target.value)} />
+						{invalidos.precio && <div className="invalid-feedback d-block">{invalidos.precio}</div>}
 					</div>
 					<div className="d-flex justify-content-end gap-2">
 						<button type="button" className="btn btn-outline-secondary" onClick={cerrarModal}>Cancelar</button>
 						<button type="submit" className="btn btn-custom-primary">Guardar</button>
+					</div>
+				</form>
+			</Modal>
+
+			<Modal abierto={recetaAbierta} titulo={`Usos de ${recetaNombre}`} onCerrar={() => setRecetaAbierta(false)}>
+				<form onSubmit={guardarReceta} className="d-flex flex-column gap-3">
+					<p className="small text-muted mb-0">
+						Estos insumos se sugieren al comenzar la cita. Cada uno que el profesional confirme consume un uso. Puede dejar la lista vacía.
+					</p>
+					{filasReceta.map((fila, indice) => (
+						<div className="row g-2" key={indice}>
+							<div className="col-7">
+								<select
+									className="form-select"
+									value={fila.insumoId}
+									onChange={(event) => setFilasReceta((prev) => prev.map((item, i) => i === indice ? { ...item, insumoId: event.target.value } : item))}>
+									<option value="">Insumo</option>
+									{catalogoInsumos.map((insumo) => (
+										<option key={insumo.id} value={insumo.id}>{insumo.nombre}</option>
+									))}
+								</select>
+							</div>
+							<div className="col-3">
+								<input
+									type="number"
+									min={1}
+									className="form-control"
+									value={fila.usos}
+									placeholder="Usos"
+									onChange={(event) => setFilasReceta((prev) => prev.map((item, i) => i === indice ? { ...item, usos: event.target.value } : item))}
+								/>
+							</div>
+							<div className="col-2">
+								<button type="button" className="btn btn-outline-danger w-100" onClick={() => setFilasReceta((prev) => prev.filter((_, i) => i !== indice))}>
+									<i className="bi bi-x"></i>
+								</button>
+							</div>
+						</div>
+					))}
+					<button type="button" className="btn btn-outline-secondary" onClick={() => setFilasReceta((prev) => [...prev, { insumoId: "", usos: "1" }])}>
+						Agregar insumo
+					</button>
+					<div className="d-flex justify-content-end gap-2">
+						<button type="button" className="btn btn-outline-secondary" onClick={() => setRecetaAbierta(false)}>Cancelar</button>
+						<button type="submit" className="btn btn-custom-primary">Guardar receta</button>
 					</div>
 				</form>
 			</Modal>

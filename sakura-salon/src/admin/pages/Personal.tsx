@@ -4,6 +4,11 @@ import { Modal } from "../components/Modal";
 import { TarjetaMetrica } from "../components/TarjetaMetrica";
 import { useProfesionales } from "../../hooks/useProfesionales";
 import { Profesionales, type Profesional, type Turno } from "../../services/profesionales.service";
+import { Auth } from "../../services/auth.service";
+import { mensajeError } from "../../api/mensajeError";
+import { telefonoEsValido } from "../../client/cuenta/validaciones";
+import { useCatalogo } from "../../hooks/useServicios";
+import { tieneLetra } from "../../validaciones/texto";
 
 const DIAS = ["", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
@@ -15,13 +20,14 @@ function inicialesDe(nombre: string) {
 
 export function Personal() {
 	const { profesionales, loading, error, recargar } = useProfesionales(true);
+	const { catalogos } = useCatalogo();
 	const [params] = useSearchParams();
 	const navigate = useNavigate();
 	const [busqueda, setBusqueda] = useState("");
-	const [modal, setModal] = useState<"" | "crear" | "editar" | "turno">("");
+	const [modal, setModal] = useState<"" | "crear" | "editar" | "turno" | "acceso">("");
 	const [activo, setActivo] = useState<Profesional | null>(null);
 	const [turnos, setTurnos] = useState<Turno[]>([]);
-	const [invalidos, setInvalidos] = useState<Record<string, boolean>>({});
+	const [invalidos, setInvalidos] = useState<Record<string, string>>({});
 	const [aviso, setAviso] = useState("");
 
 	const [formNombre, setFormNombre] = useState("");
@@ -35,6 +41,7 @@ export function Personal() {
 	const [formAusenciaInicio, setFormAusenciaInicio] = useState("");
 	const [formAusenciaFin, setFormAusenciaFin] = useState("");
 	const [formMotivo, setFormMotivo] = useState("");
+	const [formClave, setFormClave] = useState("");
 
 	const texto = busqueda.trim().toLowerCase();
 	const visibles = profesionales.filter((persona) =>
@@ -95,11 +102,11 @@ export function Personal() {
 
 	function guardar(event: FormEvent) {
 		event.preventDefault();
-		const errores: Record<string, boolean> = {};
-		if (!formNombre.trim()) errores.nombre = true;
-		if (!formCorreo.includes("@")) errores.correo = true;
-		if (!formTelefono.trim()) errores.telefono = true;
-		if (!formEspecialidad.trim()) errores.especialidad = true;
+		const errores: Record<string, string> = {};
+		if (!tieneLetra(formNombre)) errores.nombre = "El nombre debe incluir al menos una letra.";
+		if (!formCorreo.includes("@")) errores.correo = "Ingresa un correo electrónico válido.";
+		if (!telefonoEsValido(formTelefono)) errores.telefono = "Ingresa un teléfono válido (ej: +56912345678).";
+		if (!formEspecialidad.trim()) errores.especialidad = "Selecciona una especialidad.";
 		setInvalidos(errores);
 		if (Object.keys(errores).length > 0) return;
 
@@ -119,7 +126,7 @@ export function Personal() {
 				cerrarModal();
 				void recargar();
 			})
-			.catch(() => setAviso("No se pudo guardar el profesional."));
+			.catch((error: unknown) => setAviso(mensajeError(error, "No se pudo guardar el profesional.")));
 	}
 
 	function eliminar(persona: Profesional) {
@@ -225,6 +232,9 @@ export function Personal() {
 										<button className="btn btn-sm btn-outline-primary me-1" type="button" onClick={() => abrirTurno(persona)}>
 											<i className="bi bi-calendar2-week"></i>
 										</button>
+										<button className="btn btn-sm btn-outline-primary me-1" type="button" title="Crear acceso" onClick={() => { setActivo(persona); setFormClave(""); setModal("acceso"); }}>
+											<i className="bi bi-key"></i>
+										</button>
 										<button className="btn btn-sm btn-outline-danger" type="button" onClick={() => eliminar(persona)}>
 											<i className="bi bi-trash"></i>
 										</button>
@@ -246,18 +256,30 @@ export function Personal() {
 					<div>
 						<label className="form-label small fw-semibold">Nombre</label>
 						<input type="text" className={"form-control" + (invalidos.nombre ? " is-invalid" : "")} value={formNombre} onChange={(e) => setFormNombre(e.target.value)} />
+						{invalidos.nombre && <div className="invalid-feedback d-block">{invalidos.nombre}</div>}
 					</div>
 					<div>
 						<label className="form-label small fw-semibold">Correo</label>
 						<input type="email" className={"form-control" + (invalidos.correo ? " is-invalid" : "")} value={formCorreo} onChange={(e) => setFormCorreo(e.target.value)} />
+						{invalidos.correo && <div className="invalid-feedback d-block">{invalidos.correo}</div>}
 					</div>
 					<div>
 						<label className="form-label small fw-semibold">Teléfono</label>
 						<input type="tel" className={"form-control" + (invalidos.telefono ? " is-invalid" : "")} value={formTelefono} onChange={(e) => setFormTelefono(e.target.value)} />
+						{invalidos.telefono && <div className="invalid-feedback d-block">{invalidos.telefono}</div>}
 					</div>
 					<div>
 						<label className="form-label small fw-semibold">Especialidad</label>
-						<input type="text" className={"form-control" + (invalidos.especialidad ? " is-invalid" : "")} value={formEspecialidad} onChange={(e) => setFormEspecialidad(e.target.value)} />
+						<select className={"form-select" + (invalidos.especialidad ? " is-invalid" : "")} value={formEspecialidad} onChange={(e) => setFormEspecialidad(e.target.value)}>
+							<option value="">Selecciona una especialidad...</option>
+							{catalogos.map((cat) => (
+								<option key={cat.id} value={cat.nombre}>{cat.nombre}</option>
+							))}
+							{formEspecialidad && !catalogos.some((cat) => cat.nombre === formEspecialidad) && (
+								<option value={formEspecialidad}>{formEspecialidad}</option>
+							)}
+						</select>
+						{invalidos.especialidad && <div className="invalid-feedback d-block">{invalidos.especialidad}</div>}
 					</div>
 					<div className="form-check">
 						<input id="activoProfesional" className="form-check-input" type="checkbox" checked={formActivo} onChange={(e) => setFormActivo(e.target.checked)} />
@@ -268,6 +290,42 @@ export function Personal() {
 						<button type="submit" className="btn btn-custom-primary">Guardar</button>
 					</div>
 				</form>
+			</Modal>
+
+			<Modal abierto={modal === "acceso"} titulo={activo ? `Acceso de ${activo.nombre}` : "Acceso"} onCerrar={cerrarModal}>
+				{activo?.usuarioId ? (
+					<p className="mb-0">Esta persona ya tiene una cuenta de personal.</p>
+				) : (
+					<form
+						className="d-flex flex-column gap-3"
+						onSubmit={(event) => {
+							event.preventDefault();
+							if (!activo || formClave.trim().length < 6) {
+								setInvalidos({ clave: "La clave debe tener al menos 6 caracteres." });
+								return;
+							}
+							void Auth.crearProfesional({
+								nombre: activo.nombre,
+								correo: activo.correo,
+								telefono: activo.telefono,
+								clave: formClave,
+							})
+								.then((usuario) => Profesionales.vincularAcceso(activo.id, usuario.id))
+								.then(() => {
+									setAviso("");
+									cerrarModal();
+									void recargar();
+								})
+								.catch((error: unknown) => setAviso(mensajeError(error, "No se pudo crear el acceso.")));
+						}}>
+						<p className="small text-muted mb-0">La persona entra con su correo y esta clave en el panel de personal.</p>
+						<input type="password" className={"form-control" + (invalidos.clave ? " is-invalid" : "")} placeholder="Clave inicial" value={formClave} onChange={(event) => setFormClave(event.target.value)} />
+						<div className="d-flex justify-content-end gap-2">
+							<button type="button" className="btn btn-outline-secondary" onClick={cerrarModal}>Cancelar</button>
+							<button type="submit" className="btn btn-custom-primary">Crear acceso</button>
+						</div>
+					</form>
+				)}
 			</Modal>
 
 			<Modal abierto={modal === "turno"} titulo={activo ? `Turnos de ${activo.nombre}` : "Turnos"} onCerrar={cerrarModal} dialogClass="modal-lg">

@@ -3,6 +3,7 @@ import Chart from "chart.js/auto";
 import { TarjetaMetrica } from "../components/TarjetaMetrica";
 import {
 	Reportes as ReportesApi,
+	type ClienteAusente,
 	type FranjaDemanda,
 	type Gasto,
 	type ParticipacionCategoria,
@@ -19,6 +20,17 @@ function pesos(valor: number) {
 	return "$" + valor.toLocaleString("es-CL");
 }
 
+function diasEntre(desde: string, hasta: string) {
+	const fechas: string[] = [];
+	const cursor = new Date(`${desde}T12:00:00`);
+	const fin = new Date(`${hasta}T12:00:00`);
+	while (cursor <= fin) {
+		fechas.push(isoLocal(cursor));
+		cursor.setDate(cursor.getDate() + 1);
+	}
+	return fechas;
+}
+
 export function Reportes() {
 	const ingresosRef = useRef<HTMLCanvasElement>(null);
 	const categoriasRef = useRef<HTMLCanvasElement>(null);
@@ -33,7 +45,10 @@ export function Reportes() {
 	const [serieIngresos, setSerieIngresos] = useState<number[]>([]);
 	const [serieCitas, setSerieCitas] = useState<number[]>([]);
 	const [demanda, setDemanda] = useState<FranjaDemanda[]>([]);
-	const [error, setError] = useState("");
+	const [ausentes, setAusentes] = useState<ClienteAusente[]>([]);
+	const [inasistencias, setInasistencias] = useState(0);
+	const [avisos, setAvisos] = useState<string[]>([]);
+	const [cargando, setCargando] = useState(true);
 
 	useEffect(() => {
 		const dias = Array.from({ length: 7 }, (_, indice) => {
@@ -41,25 +56,40 @@ export function Reportes() {
 			fecha.setDate(fecha.getDate() - (6 - indice));
 			return isoLocal(fecha);
 		});
+		const mes = diasEntre(desde, hasta);
+		const fallos: string[] = [];
+		const tomar = async <T,>(etiqueta: string, promesa: Promise<T>, vacio: T): Promise<T> => {
+			try {
+				return await promesa;
+			} catch {
+				fallos.push(etiqueta);
+				return vacio;
+			}
+		};
+		setCargando(true);
 		void Promise.all([
-			ReportesApi.servicios(desde, hasta),
-			ReportesApi.gastos(hasta),
-			ReportesApi.profesionales(desde, hasta),
-			ReportesApi.demanda(desde),
-			Promise.all(dias.map((fecha) => ReportesApi.ingresos(fecha))),
-			Promise.all(dias.map((fecha) => ReportesApi.dia(fecha))),
-		])
-			.then(([servicios, gastosSemana, rendimiento, franjas, ingresos, diasReporte]) => {
-				setServiciosHechos(servicios.servicios.reduce((suma, fila) => suma + fila.cantidad, 0));
-				setCategorias(servicios.categorias);
-				setGastos(gastosSemana);
-				setEquipo(rendimiento);
-				setIngresosMes(rendimiento.reduce((suma, fila) => suma + fila.ingresos, 0));
-				setDemanda(franjas.filter((fila) => fila.ocupacion > 0).slice(0, 8));
-				setSerieIngresos(ingresos.map((item) => item.total));
-				setSerieCitas(diasReporte.map((item) => item.atendidas));
-			})
-			.catch(() => setError("No se pudieron cargar los reportes."));
+			tomar("servicios", ReportesApi.servicios(desde, hasta), { servicios: [], categorias: [] }),
+			tomar("gastos", ReportesApi.gastos(hasta), [] as Gasto[]),
+			tomar("profesionales", ReportesApi.profesionales(desde, hasta), [] as RendimientoProfesional[]),
+			tomar("demanda", ReportesApi.demanda(desde), [] as FranjaDemanda[]),
+			tomar("ingresos del mes", Promise.all(mes.map((fecha) => ReportesApi.ingresos(fecha))), []),
+			tomar("ingresos de la semana", Promise.all(dias.map((fecha) => ReportesApi.ingresos(fecha))), []),
+			tomar("citas de la semana", Promise.all(dias.map((fecha) => ReportesApi.dia(fecha))), []),
+			tomar("inasistencias", ReportesApi.inasistencias(desde, hasta), { noConcretadas: 0, porcentaje: 0, clientes: [] }),
+		]).then(([servicios, gastosSemana, rendimiento, franjas, ingresosMesDias, ingresosSemana, diasReporte, ausencias]) => {
+			setServiciosHechos(servicios.servicios.reduce((suma, fila) => suma + fila.cantidad, 0));
+			setCategorias(servicios.categorias);
+			setGastos(gastosSemana);
+			setEquipo(rendimiento);
+			setIngresosMes(ingresosMesDias.reduce((suma, item) => suma + item.total, 0));
+			setDemanda(franjas.filter((fila) => fila.ocupacion > 0).slice(0, 8));
+			setSerieIngresos(ingresosSemana.map((item) => item.total));
+			setSerieCitas(diasReporte.map((item) => item.atendidas));
+			setInasistencias(ausencias.noConcretadas);
+			setAusentes(ausencias.clientes ?? []);
+			setAvisos(fallos);
+			setCargando(false);
+		});
 	}, [desde, hasta]);
 
 	useEffect(() => {
@@ -126,7 +156,7 @@ export function Reportes() {
 	const ticket = serviciosHechos > 0 ? Math.round(ingresosMes / serviciosHechos) : 0;
 	const nombreMes = hoy.toLocaleDateString("es-CL", { month: "long" });
 	const resumen = [
-		{ icono: "bi-cash-coin", claseIcono: "bg-success-subtle text-success", etiqueta: "Ingresos del mes", valor: pesos(ingresosMes), detalle: "Suma por profesional", claseDetalle: "text-muted" },
+		{ icono: "bi-cash-coin", claseIcono: "bg-success-subtle text-success", etiqueta: "Ingresos del mes", valor: pesos(ingresosMes), detalle: `${desde} a ${hasta}`, claseDetalle: "text-muted" },
 		{ icono: "bi-receipt", claseIcono: "bg-primary-subtle text-primary", etiqueta: "Servicios realizados", valor: String(serviciosHechos), detalle: "En el mes en curso", claseDetalle: "text-muted" },
 		{ icono: "bi-tags", claseIcono: "bg-info-subtle text-info", etiqueta: "Ticket promedio", valor: pesos(ticket), detalle: "Ingreso / servicio", claseDetalle: "text-muted" },
 		{ icono: "bi-cart-x", claseIcono: "bg-danger-subtle text-danger", etiqueta: "Gastos de la semana", valor: pesos(costo), detalle: `${gastos.length} movimientos`, claseDetalle: "text-danger" },
@@ -135,9 +165,15 @@ export function Reportes() {
 	return (
 		<>
 			<div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-4 gap-3">
-				<h2 className="fw-bold m-0 text-capitalize" style={{ color: "var(--color-primary)" }}>Mes actual: {nombreMes}</h2>
+				<div>
+					<h2 className="fw-bold m-0 text-capitalize" style={{ color: "var(--color-primary)" }}>Mes actual: {nombreMes}</h2>
+					<p className="text-muted small mb-0">Datos de ms-reporte del {desde} al {hasta}</p>
+				</div>
 			</div>
-			{error && <p className="text-danger">{error}</p>}
+			{cargando && <p className="text-muted">Cargando reportes...</p>}
+			{avisos.length > 0 && (
+				<p className="text-danger">No se pudo cargar: {avisos.join(", ")}.</p>
+			)}
 
 			<h4 className="fw-bold mb-3 mt-4" style={{ color: "var(--color-primary)", borderBottom: "2px solid var(--color-accent)", paddingBottom: 10 }}>
 				Rendimiento financiero
@@ -221,6 +257,20 @@ export function Reportes() {
 						</ul>
 					</div>
 				</div>
+			</div>
+
+			<div className="sketch-card">
+				<h5 className="fw-bold mb-3 text-dark">Inasistencias del período</h5>
+				<p className="mb-3">{inasistencias} citas no concretadas.</p>
+				<ul className="list-unstyled mb-0">
+					{ausentes.map((fila) => (
+						<li key={fila.cliente} className="d-flex justify-content-between border-bottom py-2">
+							<span>{fila.cliente}</span>
+							<span>{fila.cantidad}</span>
+						</li>
+					))}
+					{ausentes.length === 0 && <li className="text-muted">Sin inasistencias registradas.</li>}
+				</ul>
 			</div>
 		</>
 	);

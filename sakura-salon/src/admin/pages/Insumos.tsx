@@ -3,17 +3,24 @@ import { useNavigate, useSearchParams } from "react-router";
 import { Modal } from "../components/Modal";
 import { TarjetaMetrica } from "../components/TarjetaMetrica";
 import { useInsumos } from "../../hooks/useInsumos";
-import { Insumos as Inventario, type Insumo } from "../../services/insumos.service";
+import { Catalogo } from "../../services/catalogo.service";
+import { Insumos as Inventario, esCritico, usosRestantesDe, type Insumo } from "../../services/insumos.service";
+
+const CATEGORIAS_BASE = ["Cabello", "Uñas", "Ojos", "General"];
+
+function enteroPositivo(valor: string) {
+	return /^\d+$/.test(valor.trim()) && Number(valor) >= 1;
+}
 
 function vistaStock(item: Insumo) {
-	const stock = `${item.stock} ${item.unidadMedida}`;
+	const restantes = usosRestantesDe(item);
 	const ancho = item.stockMinimo > 0
-		? `${Math.min(100, Math.round((item.stock / item.stockMinimo) * 100))}%`
-		: "0%";
-	if (item.stock <= 0 || item.estado === "CRITICO" || item.stock <= item.stockMinimo) {
-		return { stock, minimo: `Mín: ${item.stockMinimo}`, ancho, barra: "bg-danger", colorStock: "text-danger", estado: "Crítico", claseEstado: "badge bg-danger", estadoValor: "critico" as const };
+		? `${Math.min(100, Math.round((item.stock / Math.max(item.stock, item.stockMinimo)) * 100))}%`
+		: item.stock > 0 ? "100%" : "0%";
+	if (esCritico(item)) {
+		return { restantes, ancho, barra: "bg-danger", colorStock: "text-danger", estado: "Crítico", claseEstado: "badge bg-danger", estadoValor: "critico" as const };
 	}
-	return { stock, minimo: `Mín: ${item.stockMinimo}`, ancho, barra: "bg-success", colorStock: "text-success", estado: "Óptimo", claseEstado: "badge bg-success", estadoValor: "ok" as const };
+	return { restantes, ancho, barra: "bg-success", colorStock: "text-success", estado: "Óptimo", claseEstado: "badge bg-success", estadoValor: "ok" as const };
 }
 
 export function Insumos() {
@@ -25,16 +32,27 @@ export function Insumos() {
 	const [estado, setEstado] = useState("");
 	const [modal, setModal] = useState<"" | "crear" | "editar" | "stock">("");
 	const [activo, setActivo] = useState<Insumo | null>(null);
-	const [invalidos, setInvalidos] = useState<Record<string, boolean>>({});
+	const [invalidos, setInvalidos] = useState<Record<string, string>>({});
 	const [aviso, setAviso] = useState("");
 
 	const [formNombre, setFormNombre] = useState("");
 	const [formCategoria, setFormCategoria] = useState("");
-	const [formUnidad, setFormUnidad] = useState("unidad");
-	const [formStock, setFormStock] = useState("0");
+	const [formStock, setFormStock] = useState("1");
+	const [formUsos, setFormUsos] = useState("1");
 	const [formMinimo, setFormMinimo] = useState("1");
 	const [formActivo, setFormActivo] = useState(true);
 	const [formSumar, setFormSumar] = useState("");
+	const [opcionesCategoria, setOpcionesCategoria] = useState<string[]>(CATEGORIAS_BASE);
+
+	useEffect(() => {
+		void Catalogo.getCatalogos()
+			.then((lista) => {
+				const nombres = lista.map((item) => item.nombre).filter((nombre) => nombre && nombre !== "General");
+				const unicas = Array.from(new Set([...nombres, "General"]));
+				setOpcionesCategoria(unicas.length > 0 ? unicas : CATEGORIAS_BASE);
+			})
+			.catch(() => setOpcionesCategoria(CATEGORIAS_BASE));
+	}, []);
 
 	const categorias = useMemo(
 		() => Array.from(new Set(insumos.map((item) => item.categoria))).sort(),
@@ -51,7 +69,7 @@ export function Insumos() {
 	const criticos = insumos.filter((item) => vistaStock(item).estadoValor === "critico").length;
 	const resumen = useMemo(() => [
 		{ icono: "bi-boxes", claseIcono: "bg-primary-subtle text-primary", etiqueta: "Total Insumos", valor: String(insumos.length) },
-		{ icono: "bi-exclamation-triangle", claseIcono: "bg-danger text-white", etiqueta: "Stock Crítico", valor: String(criticos), claseTarjeta: "border-danger shadow-sm", claseEtiqueta: "text-danger mb-0 small fw-bold" },
+		{ icono: "bi-exclamation-triangle", claseIcono: "bg-danger text-white", etiqueta: "Insumos críticos", valor: String(criticos), claseTarjeta: "border-danger shadow-sm", claseEtiqueta: "text-danger mb-0 small fw-bold" },
 		{ icono: "bi-check-circle", claseIcono: "bg-success-subtle text-success", etiqueta: "En nivel óptimo", valor: String(insumos.length - criticos) },
 	], [insumos.length, criticos]);
 
@@ -65,8 +83,8 @@ export function Insumos() {
 		setActivo(null);
 		setFormNombre("");
 		setFormCategoria("");
-		setFormUnidad("unidad");
-		setFormStock("0");
+		setFormStock("1");
+		setFormUsos("1");
 		setFormMinimo("1");
 		setFormActivo(true);
 		setInvalidos({});
@@ -83,8 +101,8 @@ export function Insumos() {
 		setActivo(item);
 		setFormNombre(item.nombre);
 		setFormCategoria(item.categoria);
-		setFormUnidad(item.unidadMedida);
 		setFormStock(String(item.stock));
+		setFormUsos(String(item.usosPorUnidad > 0 ? item.usosPorUnidad : 1));
 		setFormMinimo(String(item.stockMinimo));
 		setFormActivo(item.activo);
 		setInvalidos({});
@@ -100,23 +118,22 @@ export function Insumos() {
 
 	function guardarProducto(event: FormEvent) {
 		event.preventDefault();
-		const stock = Number(formStock);
-		const minimo = Number(formMinimo);
-		const errores: Record<string, boolean> = {};
-		if (!formNombre.trim()) errores.nombre = true;
-		if (!formCategoria.trim()) errores.categoria = true;
-		if (!formUnidad.trim()) errores.unidad = true;
-		if (!Number.isFinite(stock) || stock < 0) errores.stock = true;
-		if (!Number.isFinite(minimo) || minimo < 0) errores.minimo = true;
+		const errores: Record<string, string> = {};
+		if (!formNombre.trim()) errores.nombre = "Ingresa un nombre.";
+		if (!formCategoria.trim()) errores.categoria = "Selecciona una categoría.";
+		if (!enteroPositivo(formStock)) errores.stock = "El stock debe ser un entero positivo.";
+		if (!enteroPositivo(formUsos)) errores.usos = "Los usos por unidad deben ser un entero positivo.";
+		if (!enteroPositivo(formMinimo)) errores.minimo = "El stock mínimo debe ser un entero positivo.";
 		setInvalidos(errores);
 		if (Object.keys(errores).length > 0) return;
 
 		const datos = {
 			nombre: formNombre.trim(),
 			categoria: formCategoria.trim(),
-			unidadMedida: formUnidad.trim(),
-			stock,
-			stockMinimo: minimo,
+			unidadMedida: "usos",
+			stock: Number(formStock),
+			usosPorUnidad: Number(formUsos),
+			stockMinimo: Number(formMinimo),
 			activo: formActivo,
 		};
 		const peticion = modal === "crear" || !activo
@@ -133,12 +150,11 @@ export function Insumos() {
 
 	function guardarStock(event: FormEvent) {
 		event.preventDefault();
-		const suma = Number(formSumar);
-		if (!activo || !Number.isFinite(suma) || suma <= 0) {
-			setInvalidos({ sumar: true });
+		if (!activo || !enteroPositivo(formSumar)) {
+			setInvalidos({ sumar: "Ingresa un entero positivo." });
 			return;
 		}
-		void Inventario.movimiento(activo.id, "ENTRADA", suma)
+		void Inventario.movimiento(activo.id, "ENTRADA", Number(formSumar))
 			.then(() => {
 				setAviso("");
 				cerrarModal();
@@ -157,7 +173,7 @@ export function Insumos() {
 	return (
 		<>
 			<div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
-				<h2 className="fw-bold m-0" style={{ color: "var(--color-primary)" }}>Control de Stock</h2>
+				<h2 className="fw-bold m-0" style={{ color: "var(--color-primary)" }}>Control de insumos</h2>
 				<button className="btn btn-custom-primary" type="button" onClick={abrirCrear}>
 					<i className="bi bi-plus-lg me-2"></i>Nuevo insumo
 				</button>
@@ -203,7 +219,10 @@ export function Insumos() {
 							<tr>
 								<th className="ps-4">Insumo</th>
 								<th>Categoría</th>
-								<th style={{ width: 200 }}>Nivel de Stock</th>
+								<th>Stock</th>
+								<th>Usos por unidad</th>
+								<th>Usos restantes</th>
+								<th>Stock mínimo</th>
 								<th>Estado</th>
 								<th className="text-end pe-4">Acciones</th>
 							</tr>
@@ -215,16 +234,22 @@ export function Insumos() {
 									<tr key={item.id}>
 										<td className="ps-4"><div className="fw-bold text-dark">{item.nombre}</div></td>
 										<td><span className="badge bg-light text-dark border">{item.categoria}</span></td>
+										<td className={vista.colorStock + " fw-bold"}>{item.stock}</td>
+										<td>{item.usosPorUnidad > 0 ? item.usosPorUnidad : 1}</td>
 										<td>
 											<div className="d-flex justify-content-between small mb-1">
-												<span className={"fw-bold " + vista.colorStock}>{vista.stock}</span>
-												<span className="text-muted">{vista.minimo}</span>
+												<span className={"fw-bold " + vista.colorStock}>{vista.restantes}</span>
 											</div>
 											<div className="stock-progress">
 												<div className={"stock-bar " + vista.barra} style={{ width: vista.ancho }}></div>
 											</div>
 										</td>
-										<td><span className={vista.claseEstado}>{vista.estado}</span></td>
+										<td>{item.stockMinimo}</td>
+										<td>
+											<span className={vista.claseEstado} title={vista.estadoValor === "critico" ? "Hay que comprar: el stock está en el mínimo o por debajo" : undefined}>
+												{vista.estado}
+											</span>
+										</td>
 										<td className="text-end pe-4">
 											<button className="btn btn-sm btn-outline-success me-1" type="button" onClick={() => abrirStock(item)}>
 												<i className="bi bi-plus-circle"></i>
@@ -240,7 +265,7 @@ export function Insumos() {
 								);
 							})}
 							{visibles.length === 0 && (
-								<tr><td colSpan={5} className="text-center text-muted py-3">No hay insumos con ese filtro.</td></tr>
+								<tr><td colSpan={8} className="text-center text-muted py-3">No hay insumos con ese filtro.</td></tr>
 							)}
 						</tbody>
 					</table>
@@ -252,23 +277,33 @@ export function Insumos() {
 					<div>
 						<label className="form-label small fw-semibold">Nombre</label>
 						<input type="text" className={"form-control" + (invalidos.nombre ? " is-invalid" : "")} value={formNombre} onChange={(e) => setFormNombre(e.target.value)} />
+						{invalidos.nombre && <div className="invalid-feedback d-block">{invalidos.nombre}</div>}
 					</div>
 					<div>
 						<label className="form-label small fw-semibold">Categoría</label>
-						<input type="text" className={"form-control" + (invalidos.categoria ? " is-invalid" : "")} value={formCategoria} onChange={(e) => setFormCategoria(e.target.value)} />
-					</div>
-					<div>
-						<label className="form-label small fw-semibold">Unidad de medida</label>
-						<input type="text" className={"form-control" + (invalidos.unidad ? " is-invalid" : "")} value={formUnidad} onChange={(e) => setFormUnidad(e.target.value)} />
+						<select className={"form-select" + (invalidos.categoria ? " is-invalid" : "")} value={formCategoria} onChange={(e) => setFormCategoria(e.target.value)}>
+							<option value="">Selecciona...</option>
+							{(formCategoria && !opcionesCategoria.includes(formCategoria) ? [...opcionesCategoria, formCategoria] : opcionesCategoria).map((item) => (
+								<option key={item} value={item}>{item}</option>
+							))}
+						</select>
+						{invalidos.categoria && <div className="invalid-feedback d-block">{invalidos.categoria}</div>}
 					</div>
 					<div className="row g-2">
-						<div className="col-6">
+						<div className="col-4">
 							<label className="form-label small fw-semibold">Stock</label>
-							<input type="number" min={0} className={"form-control" + (invalidos.stock ? " is-invalid" : "")} value={formStock} onChange={(e) => setFormStock(e.target.value)} />
+							<input type="number" min={1} step={1} className={"form-control" + (invalidos.stock ? " is-invalid" : "")} value={formStock} onChange={(e) => setFormStock(e.target.value)} />
+							{invalidos.stock && <div className="invalid-feedback d-block">{invalidos.stock}</div>}
 						</div>
-						<div className="col-6">
+						<div className="col-4">
+							<label className="form-label small fw-semibold">Usos por unidad</label>
+							<input type="number" min={1} step={1} className={"form-control" + (invalidos.usos ? " is-invalid" : "")} value={formUsos} onChange={(e) => setFormUsos(e.target.value)} />
+							{invalidos.usos && <div className="invalid-feedback d-block">{invalidos.usos}</div>}
+						</div>
+						<div className="col-4">
 							<label className="form-label small fw-semibold">Stock mínimo</label>
-							<input type="number" min={0} className={"form-control" + (invalidos.minimo ? " is-invalid" : "")} value={formMinimo} onChange={(e) => setFormMinimo(e.target.value)} />
+							<input type="number" min={1} step={1} className={"form-control" + (invalidos.minimo ? " is-invalid" : "")} value={formMinimo} onChange={(e) => setFormMinimo(e.target.value)} />
+							{invalidos.minimo && <div className="invalid-feedback d-block">{invalidos.minimo}</div>}
 						</div>
 					</div>
 					<div className="form-check">
@@ -282,10 +317,11 @@ export function Insumos() {
 				</form>
 			</Modal>
 
-			<Modal abierto={modal === "stock"} titulo="Entrada de stock" onCerrar={cerrarModal}>
+			<Modal abierto={modal === "stock"} titulo="Reponer stock" onCerrar={cerrarModal}>
 				<form onSubmit={guardarStock} className="d-flex flex-column gap-3">
-					<p className="mb-0">{activo?.nombre}</p>
-					<input type="number" min={1} className={"form-control" + (invalidos.sumar ? " is-invalid" : "")} value={formSumar} onChange={(e) => setFormSumar(e.target.value)} placeholder="Cantidad a sumar" />
+					<p className="mb-0">{activo?.nombre}. Suma unidades físicas. Cada unidad aporta {activo?.usosPorUnidad ?? 1} usos.</p>
+					<input type="number" min={1} step={1} className={"form-control" + (invalidos.sumar ? " is-invalid" : "")} value={formSumar} onChange={(e) => setFormSumar(e.target.value)} placeholder="Unidades a sumar" />
+					{invalidos.sumar && <div className="invalid-feedback d-block">{invalidos.sumar}</div>}
 					<div className="d-flex justify-content-end gap-2">
 						<button type="button" className="btn btn-outline-secondary" onClick={cerrarModal}>Cancelar</button>
 						<button type="submit" className="btn btn-custom-primary">Registrar entrada</button>
