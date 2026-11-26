@@ -29,7 +29,7 @@ export function Navbar({
             <nav className="navbar fixed-top">
 				<div className="container-fluid">
 					<button
-						className="header-icon-btn me-3"
+						className="header-icon-btn menu-toggle me-3"
 						type="button"
 						data-bs-toggle="offcanvas"
 						data-bs-target={`#${offcanvasId}`}
@@ -51,7 +51,7 @@ export function Navbar({
 					{slotsDerecha}
 
 					<div
-						className="offcanvas offcanvas-start"
+						className="offcanvas offcanvas-start app-sidebar"
 						tabIndex={-1}
 						id={offcanvasId}
 						aria-labelledby={`${offcanvasId}Label`}>
@@ -81,7 +81,7 @@ export function Navbar({
 											}
 											{
 												item.enlaces?.map((link, j) => (
-													<NavItem key={i.toString() + j.toString()} url={link.url} titulo={link.titulo} icono={link.icono}/>
+													<NavItem key={i.toString() + j.toString()} url={link.url} titulo={link.titulo} icono={link.icono} offcanvasId={offcanvasId}/>
 												))
 											}
 										</Fragment>

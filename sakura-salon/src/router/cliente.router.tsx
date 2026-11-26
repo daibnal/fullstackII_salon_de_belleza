@@ -7,6 +7,9 @@ import { Inicio } from "../home/page/Inicio";
 import { AgendarCita } from "../client/formularios/pages/Agendar";
 import { CitaConfirmada } from "../client/formularios/pages/Confirmacion";
 import { CerrarSesion, LoginRegistro } from "../client/cuenta/pages/LoginRegistro";
+import { Perfil } from "../client/cuenta/pages/Perfil";
+import { PersonalLayout } from "../layouts/PersonalLayout";
+import { MisCitas } from "../personal/MisCitas";
 import { adminRouteBranch } from "./admin.router";
 
 export const rootRouter = createBrowserRouter([
@@ -49,8 +52,22 @@ export const rootRouter = createBrowserRouter([
             {
                 path: '/cuenta/logout',
                 element: <CerrarSesion/>
+            },
+            {
+                path: '/cuenta/perfil',
+                element: <Perfil/>
             }
         ]
     },
     adminRouteBranch,
+    {
+        path: "/personal",
+        element: <PersonalLayout />,
+        children: [
+            {
+                index: true,
+                element: <MisCitas />,
+            },
+        ],
+    },
 ]);

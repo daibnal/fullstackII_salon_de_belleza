@@ -7,6 +7,8 @@ export type Sesion = {
 	correo: string;
 	nombre: string;
 	apellido?: string;
+	telefono?: string;
+	rut?: string;
 };
 
 export function leerSesion(): Sesion | null {
@@ -39,6 +41,17 @@ export function borrarSesion() {
 
 export function haySesionAdmin(): boolean {
 	return leerSesion()?.rol === "ADMIN";
+}
+
+export function haySesionProfesional(): boolean {
+	return leerSesion()?.rol === "PROFESIONAL";
+}
+
+export function actualizarSesion(parcial: Partial<Sesion>) {
+	const actual = leerSesion();
+	if (!actual) return;
+	const enLocal = localStorage.getItem(CLAVE_SESION) !== null;
+	guardarSesion({ ...actual, ...parcial }, enLocal);
 }
 
 export function tokenSesion(): string | null {

@@ -7,6 +7,7 @@ PALETA DE COLORES Y VARIABLES GLOBALES
 	--color-accent: #f0a6a8; /* Acento: Soft Pink       [Adobe color] */
 	--color-bg: #f4f2f0; /* Background: Off-White       [Adobe color] */
 	--color-text-dark: #2a181c; /* Texto ocuro: tone    [Sugerido por Gemini] */
+	--sidebar-width: 280px;
 }
 
 .color-primary {
@@ -153,6 +154,35 @@ CARRUSEL
 	max-height: 100vh;
 }
 
+/* Home: carrusel, servicios, acerca y ubicación comparten el mismo ancho.
+   El mapa queda dentro de esa columna (16:9), sin crecer más que el resto. */
+.home-secciones {
+	width: 100%;
+	max-width: 760px;
+	min-width: 0;
+}
+
+.home-secciones > .carousel,
+.home-secciones > section {
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+}
+
+.home-secciones .carousel {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.home-secciones .map-container {
+	width: 100%;
+	max-width: 100%;
+}
+
+.home-secciones img {
+	max-width: 100%;
+}
+
 /* =======================================================
 CONTENIDO PRINCIPAL
 ======================================================= */
@@ -254,12 +284,95 @@ CONTENIDO PRINCIPAL
 	color: #ffffff;
 }
 
+/* Horario que se cruza con una cita del cliente: se ve, pero no se puede elegir. */
+.btn.hora-no-disponible,
+.btn.hora-no-disponible:hover,
+.btn.hora-no-disponible:focus,
+.btn-check:disabled + .btn.hora-no-disponible {
+	background-color: #e5e3e0;
+	color: #8d8488;
+	border-color: #d4d0cd;
+	box-shadow: none;
+	cursor: not-allowed;
+	opacity: 1;
+	pointer-events: none;
+}
+
 /* --- Contenedor del mapa --- */
 .map-container {
 	border: 2px solid var(--color-accent);
 	border-radius: 12px;
 	overflow: hidden;
 	background-color: #e5e3e0;
+	width: 100%;
+	max-width: 760px;
+	margin-inline: auto;
+}
+
+.map-container img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+@media (min-width: 992px) {
+	body.menu-fijo .menu-toggle {
+		display: none !important;
+	}
+
+	body.menu-fijo .offcanvas.app-sidebar {
+		position: fixed !important;
+		top: 72px;
+		left: 0;
+		bottom: 0;
+		width: var(--sidebar-width) !important;
+		height: calc(100vh - 72px);
+		transform: none !important;
+		visibility: visible !important;
+		border-right: 1px solid var(--color-accent);
+		z-index: 1030;
+	}
+
+	body.menu-fijo .offcanvas.app-sidebar .offcanvas-body {
+		overflow-y: auto;
+	}
+
+	body.menu-fijo .offcanvas.app-sidebar .btn-close {
+		display: none;
+	}
+
+	/* Más específico que body.admin #content { width: 100% } en admin.css.
+	   Si no, el 100% gana por orden y el margin-left desborda el viewport. */
+	body.admin.menu-fijo #content {
+		margin-left: var(--sidebar-width);
+		width: calc(100% - var(--sidebar-width));
+		max-width: calc(100% - var(--sidebar-width));
+	}
+}
+
+/* Menú del sitio público (inicio y páginas de cliente): cubre todo el viewport
+   en móvil y escritorio. El panel admin y el de personal no usan body.cliente. */
+body.cliente:not(.admin):not(.personal) .offcanvas.app-sidebar {
+	--bs-offcanvas-width: 100vw;
+	position: fixed !important;
+	inset: 0 !important;
+	width: 100vw !important;
+	max-width: 100vw !important;
+	height: 100vh !important;
+	height: 100dvh !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	z-index: 2000 !important;
+	background-color: var(--color-bg);
+}
+
+body.cliente:not(.admin):not(.personal) .navbar {
+	overflow: visible;
+}
+
+body.cliente:not(.admin):not(.personal) .offcanvas.app-sidebar .offcanvas-body {
+	flex: 1 1 auto;
+	overflow-y: auto;
 }
 
 /* =======================================================

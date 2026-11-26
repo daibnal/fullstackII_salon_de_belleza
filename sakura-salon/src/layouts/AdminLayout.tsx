@@ -1,7 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import { haySesionAdmin } from "../services/sesion";
+import { Notificaciones, type Notificacion } from "../services/notificaciones.service";
 import { Navbar } from "./components/navigation/Navbar";
+import { ScrollAlInicio } from "./ScrollAlInicio";
 
 const adminEstructura = [
 	{
@@ -51,13 +53,60 @@ const adminEstructura = [
 	},
 ];
 
+function Campana() {
+	const [abierto, setAbierto] = useState(false);
+	const [items, setItems] = useState<Notificacion[]>([]);
+	const [error, setError] = useState("");
+
+	useEffect(() => {
+		void Notificaciones.listar()
+			.then(setItems)
+			.catch(() => setError("No se pudieron cargar las notificaciones."));
+	}, []);
+
+	return (
+		<div className="position-relative">
+			<button
+				type="button"
+				className="header-icon-btn admin-bell position-relative"
+				title="Notificaciones"
+				aria-label="Notificaciones"
+				aria-expanded={abierto}
+				onClick={() => setAbierto((valor) => !valor)}>
+				<i className="bi bi-bell"></i>
+				{items.length > 0 && (
+					<span className="position-absolute top-0 end-0 p-1 bg-danger border border-light rounded-circle">
+						<span className="visually-hidden">{items.length} notificaciones</span>
+					</span>
+				)}
+			</button>
+			{abierto && (
+				<div className="notif-panel shadow">
+					<p className="fw-bold mb-2">Notificaciones</p>
+					{error && <p className="text-danger small mb-0">{error}</p>}
+					{!error && items.length === 0 && <p className="text-muted small mb-0">No hay avisos recientes.</p>}
+					<ul className="list-unstyled mb-0">
+						{items.map((item) => (
+							<li key={item.id} className="border-top py-2">
+								<div className="small fw-semibold">{item.tipo}</div>
+								<div className="small">{item.mensaje}</div>
+								<div className="text-muted extra-small">{item.creadaEn?.replace("T", " ").slice(0, 16)}</div>
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
+		</div>
+	);
+}
+
 export function AdminLayout() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		document.body.classList.add("admin");
+		document.body.classList.add("admin", "menu-fijo");
 		return () => {
-			document.body.classList.remove("admin");
+			document.body.classList.remove("admin", "menu-fijo");
 		};
 	}, []);
 
@@ -69,6 +118,7 @@ export function AdminLayout() {
 
 	return (
 		<div className="wrapper">
+			<ScrollAlInicio />
 			<header>
 				<Navbar
 					estructura={adminEstructura}
@@ -80,17 +130,7 @@ export function AdminLayout() {
 							<span className="admin-greeting d-none d-md-inline">
 								Bienvenida, Administradora
 							</span>
-							<a
-								href="#"
-								className="header-icon-btn admin-bell position-relative"
-								title="Notificaciones"
-								aria-label="Notificaciones"
-								onClick={(event) => event.preventDefault()}>
-								<i className="bi bi-bell"></i>
-								<span className="position-absolute top-0 end-0 p-1 bg-danger border border-light rounded-circle">
-									<span className="visually-hidden">Nuevas alertas</span>
-								</span>
-							</a>
+							<Campana />
 						</div>
 					}
 				/>

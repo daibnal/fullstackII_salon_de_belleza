@@ -1,10 +1,16 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { Modal } from "../components/Modal";
 import { useAgenda } from "../../hooks/useAgenda";
+import { useDisponibilidad } from "../../hooks/useDisponibilidad";
 import { useProfesionales } from "../../hooks/useProfesionales";
 import { useServicios } from "../../hooks/useServicios";
 import { Reservas, type Reserva } from "../../services/reservas.service";
+import { mensajeError } from "../../api/mensajeError";
+import { correoEsValido, nombreEsValido, telefonoEsValido } from "../../client/cuenta/validaciones";
+import { fechaNoAnterior, hoyLocal } from "../../client/formularios/pages/validacionesCita";
+import { coincideEspecialidad } from "../../horario/especialidades";
+import { esDomingo, mensajeFueraDeHorario, minutosDelReloj, slotDentroDeHorario } from "../../horario/horarioSalon";
 
 function fechaHoyISO() {
 	const hoy = new Date();
@@ -31,6 +37,34 @@ function pesos(valor: number) {
 
 const HORAS = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00"];
 
+function BotonHora({
+	id,
+	hora,
+	seleccionada,
+	onElegir,
+}: {
+	id: string;
+	hora: string;
+	seleccionada: boolean;
+	onElegir: () => void;
+}) {
+	return (
+		<div className="col-6 col-md-4">
+			<input
+				type="radio"
+				className="btn-check"
+				name="hora-admin"
+				id={id}
+				checked={seleccionada}
+				onChange={onElegir}
+			/>
+			<label className="btn w-100 btn-sm btn-outline-secondary" htmlFor={id}>
+				{horaCorta(hora)}
+			</label>
+		</div>
+	);
+}
+
 export function Agenda() {
 	const [params] = useSearchParams();
 	const navigate = useNavigate();
@@ -40,7 +74,7 @@ export function Agenda() {
 	const { profesionales } = useProfesionales();
 	const { servicios } = useServicios();
 	const [modalCita, setModalCita] = useState(false);
-	const [invalidos, setInvalidos] = useState<Record<string, boolean>>({});
+	const [invalidos, setInvalidos] = useState<Record<string, string>>({});
 	const [aviso, setAviso] = useState("");
 
 	const [formNombre, setFormNombre] = useState("");
@@ -52,11 +86,34 @@ export function Agenda() {
 	const [formFecha, setFormFecha] = useState("");
 	const [formHora, setFormHora] = useState("");
 
+	const servicioElegido = servicios.find((servicio) => String(servicio.id) === formServicio);
+	const profesionalesAptos = servicioElegido
+		? profesionales.filter((persona) => persona.activo && coincideEspecialidad(persona.especialidad, servicioElegido.categoria?.nombre))
+		: [];
+	const domingo = esDomingo(formFecha);
+	const duracion = servicioElegido?.duracionMinutos ?? 0;
+	const { huecos, loading: cargandoHuecos, error: errorHuecos } = useDisponibilidad(
+		modalCita ? Number(formProfesional) : 0,
+		modalCita ? Number(formServicio) : 0,
+		modalCita ? formFecha : "",
+	);
+	const huecosVisibles = useMemo(
+		() => (modalCita && !domingo ? huecos.filter((hueco) => slotDentroDeHorario(formFecha, hueco.horaInicio, duracion)) : []),
+		[modalCita, domingo, huecos, formFecha, duracion],
+	);
+	const consultaLista = Boolean(formServicio && formProfesional && formFecha);
+
 	useEffect(() => {
 		if (params.get("modal") !== "cita") return;
 		abrirModalCita();
 		navigate("/admin/agenda", { replace: true });
 	}, [params, navigate]);
+
+	useEffect(() => {
+		if (!modalCita || !formHora || cargandoHuecos) return;
+		const sigue = huecosVisibles.some((hueco) => horaCorta(hueco.horaInicio) === formHora);
+		if (!sigue) setFormHora("");
+	}, [modalCita, formHora, cargandoHuecos, huecosVisibles]);
 
 	function cerrarModalCita() {
 		setModalCita(false);
@@ -78,15 +135,28 @@ export function Agenda() {
 
 	function guardarNuevaCita(event: FormEvent) {
 		event.preventDefault();
-		const errores: Record<string, boolean> = {};
-		if (!formNombre.trim()) errores.nombre = true;
-		if (!formApellido.trim()) errores.apellido = true;
-		if (!formCorreo.trim()) errores.correo = true;
-		if (!formTelefono.trim()) errores.telefono = true;
-		if (!formServicio) errores.servicio = true;
-		if (!formProfesional) errores.profesional = true;
-		if (!formFecha || formFecha < hoy) errores.fecha = true;
-		if (!/^\d{2}:\d{2}$/.test(formHora.trim())) errores.hora = true;
+		const errores: Record<string, string> = {};
+		if (!nombreEsValido(formNombre)) errores.nombre = "Ingresa un nombre válido (solo letras, mínimo 2 caracteres).";
+		if (!nombreEsValido(formApellido)) errores.apellido = "Ingresa un apellido válido (solo letras, mínimo 2 caracteres).";
+		if (!correoEsValido(formCorreo)) errores.correo = "Ingresa un correo electrónico válido.";
+		if (!telefonoEsValido(formTelefono)) errores.telefono = "Ingresa un teléfono móvil válido (ej: +56912345678).";
+		if (!formServicio) errores.servicio = "Selecciona un servicio.";
+		if (!formProfesional) errores.profesional = "Selecciona un profesional.";
+		if (!fechaNoAnterior(formFecha)) {
+			errores.fecha = formFecha.trim() !== "" && formFecha < hoyLocal()
+				? "La fecha no puede ser anterior al día actual."
+				: "Elige una fecha válida.";
+		}
+		const horaDisponible = huecosVisibles.some((hueco) => horaCorta(hueco.horaInicio) === formHora.trim());
+		if (formFecha && esDomingo(formFecha)) {
+			errores.hora = "El domingo el salón está cerrado.";
+		} else if (!horaDisponible) {
+			errores.hora = "Selecciona un horario disponible.";
+		} else if (formFecha === hoy && minutosDelReloj(formHora) <= new Date().getHours() * 60 + new Date().getMinutes()) {
+			errores.hora = "Ese horario ya pasó.";
+		} else if (!slotDentroDeHorario(formFecha, formHora, duracion)) {
+			errores.hora = mensajeFueraDeHorario(formFecha);
+		}
 		setInvalidos(errores);
 		if (Object.keys(errores).length > 0) return;
 
@@ -109,7 +179,7 @@ export function Agenda() {
 					setDiaAgenda(formFecha);
 				}
 			})
-			.catch(() => setAviso("No se pudo crear la cita."));
+			.catch((error: unknown) => setAviso(mensajeError(error, "No se pudo crear la cita.")));
 	}
 
 	function operar(accion: (id: number) => Promise<Reserva>, id: number) {
@@ -127,7 +197,7 @@ export function Agenda() {
 	const activas = citas.filter((cita) => cita.estado !== "CANCELADA" && cita.estado !== "LIBERADA");
 	const ingreso = activas.reduce((suma, cita) => suma + cita.montoTotal, 0);
 	const canceladas = citas.filter((cita) => cita.estado === "CANCELADA").length;
-	const columnas = profesionales.slice(0, 4);
+	const columnas = profesionales.filter((persona) => persona.activo);
 
 	return (
 		<>
@@ -229,7 +299,7 @@ export function Agenda() {
 										{cita.estado === "PENDIENTE_PAGO" && (
 											<button className="btn btn-sm btn-outline-success me-1" type="button" onClick={() => operar(Reservas.pagoManual, cita.id)}>Abono</button>
 										)}
-										{cita.estado === "CONFIRMADA" && (
+										{(cita.estado === "CONFIRMADA" || (cita.estado === "EN_PROCESO" && cita.montoPagado < cita.montoTotal)) && (
 											<button className="btn btn-sm btn-outline-primary me-1" type="button" onClick={() => operar(Reservas.saldo, cita.id)}>Saldo</button>
 										)}
 										{(cita.estado === "CONFIRMADA" || cita.estado === "PAGADA_COMPLETA") && (
@@ -295,50 +365,76 @@ export function Agenda() {
 						<div className="col-md-6">
 							<label className="form-label small fw-semibold">Nombre</label>
 							<input type="text" className={"form-control" + (invalidos.nombre ? " is-invalid" : "")} value={formNombre} onChange={(e) => setFormNombre(e.target.value)} />
+							{invalidos.nombre && <div className="invalid-feedback d-block">{invalidos.nombre}</div>}
 						</div>
 						<div className="col-md-6">
 							<label className="form-label small fw-semibold">Apellido</label>
 							<input type="text" className={"form-control" + (invalidos.apellido ? " is-invalid" : "")} value={formApellido} onChange={(e) => setFormApellido(e.target.value)} />
+							{invalidos.apellido && <div className="invalid-feedback d-block">{invalidos.apellido}</div>}
 						</div>
 					</div>
 					<div className="row g-2">
 						<div className="col-md-6">
 							<label className="form-label small fw-semibold">Correo</label>
 							<input type="email" className={"form-control" + (invalidos.correo ? " is-invalid" : "")} value={formCorreo} onChange={(e) => setFormCorreo(e.target.value)} />
+							{invalidos.correo && <div className="invalid-feedback d-block">{invalidos.correo}</div>}
 						</div>
 						<div className="col-md-6">
 							<label className="form-label small fw-semibold">Teléfono</label>
 							<input type="tel" className={"form-control" + (invalidos.telefono ? " is-invalid" : "")} value={formTelefono} onChange={(e) => setFormTelefono(e.target.value)} />
+							{invalidos.telefono && <div className="invalid-feedback d-block">{invalidos.telefono}</div>}
 						</div>
 					</div>
 					<div className="row g-2">
 						<div className="col-md-6">
 							<label className="form-label small fw-semibold">Servicio</label>
-							<select className={"form-select" + (invalidos.servicio ? " is-invalid" : "")} value={formServicio} onChange={(e) => setFormServicio(e.target.value)}>
+							<select className={"form-select" + (invalidos.servicio ? " is-invalid" : "")} value={formServicio} onChange={(e) => { setFormServicio(e.target.value); setFormProfesional(""); setFormHora(""); }}>
 								<option value="">Selecciona...</option>
 								{servicios.filter((servicio) => servicio.activo).map((servicio) => (
 									<option key={servicio.id} value={servicio.id}>{servicio.nombre}</option>
 								))}
 							</select>
+							{invalidos.servicio && <div className="invalid-feedback d-block">{invalidos.servicio}</div>}
 						</div>
 						<div className="col-md-6">
 							<label className="form-label small fw-semibold">Profesional</label>
-							<select className={"form-select" + (invalidos.profesional ? " is-invalid" : "")} value={formProfesional} onChange={(e) => setFormProfesional(e.target.value)}>
-								<option value="">Selecciona...</option>
-								{profesionales.map((persona) => (
+							<select className={"form-select" + (invalidos.profesional ? " is-invalid" : "")} value={formProfesional} onChange={(e) => { setFormProfesional(e.target.value); setFormHora(""); }} disabled={!formServicio}>
+								<option value="">{!formServicio ? "Primero elige un servicio" : profesionalesAptos.length === 0 ? "Nadie realiza este servicio" : "Selecciona..."}</option>
+								{profesionalesAptos.map((persona) => (
 									<option key={persona.id} value={persona.id}>{persona.nombre}</option>
 								))}
 							</select>
+							{invalidos.profesional && <div className="invalid-feedback d-block">{invalidos.profesional}</div>}
 						</div>
 					</div>
 					<div className="row g-2">
 						<div className="col-md-6">
 							<label className="form-label small fw-semibold">Fecha</label>
-							<input type="date" min={hoy} className={"form-control" + (invalidos.fecha ? " is-invalid" : "")} value={formFecha} onChange={(e) => setFormFecha(e.target.value)} />
+							<input type="date" min={hoy} className={"form-control" + (invalidos.fecha ? " is-invalid" : "")} value={formFecha} onChange={(e) => { setFormFecha(e.target.value); setFormHora(""); }} />
+							{invalidos.fecha && <div className="invalid-feedback d-block">{invalidos.fecha}</div>}
 						</div>
-						<div className="col-md-6">
-							<label className="form-label small fw-semibold">Hora</label>
-							<input type="time" className={"form-control" + (invalidos.hora ? " is-invalid" : "")} value={formHora} onChange={(e) => setFormHora(e.target.value)} />
+						<div className="col-12">
+							<label className="form-label small fw-semibold d-block">Horarios disponibles</label>
+							{!consultaLista && <p className="text-muted small mb-1">Elige servicio, profesional y fecha para ver los horarios.</p>}
+							{consultaLista && domingo && <p className="text-muted small mb-1">El domingo el salón está cerrado.</p>}
+							{consultaLista && !domingo && cargandoHuecos && <p className="text-muted small mb-1">Buscando horarios...</p>}
+							{consultaLista && !domingo && errorHuecos && <p className="text-danger small mb-1">No se pudo consultar la disponibilidad.</p>}
+							{consultaLista && !domingo && !cargandoHuecos && !errorHuecos && huecosVisibles.length === 0 && (
+								<p className="text-muted small mb-1">No hay horarios libres para esa combinación.</p>
+							)}
+							<div className="row g-2">
+								{huecosVisibles.map((hueco) => (
+									<BotonHora
+										key={hueco.horaInicio}
+										id={`admin-h-${hueco.horaInicio}`}
+										hora={hueco.horaInicio}
+										seleccionada={formHora === horaCorta(hueco.horaInicio)}
+										onElegir={() => setFormHora(horaCorta(hueco.horaInicio))}
+									/>
+								))}
+							</div>
+							{invalidos.hora && <div className="invalid-feedback d-block">{invalidos.hora}</div>}
+							<p className="text-muted small mb-0 mt-2">Lunes a viernes de 9:00 a 19:00, sábado de 10:00 a 19:00. Domingo cerrado. El servicio debe terminar a las 19:00 o antes.</p>
 						</div>
 					</div>
 					<div className="d-flex justify-content-end gap-2">

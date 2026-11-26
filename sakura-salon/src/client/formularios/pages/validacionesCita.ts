@@ -13,49 +13,18 @@ export interface Cita {
     montoPagado: number;
 }
 
-const regexNombre = /^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]{2,}$/;
-const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// Optional Chilean phone format validation (+569XXXXXXXX or 9XXXXXXXX)
-const regexTelefono = /^(\+?56)?\s?9\d{8}$/;
+export {
+	nombreEsValido as nombreValido,
+	rutEsValido as rutValido,
+	telefonoEsValido as telefonoValido,
+	correoEsValido as correoValido,
+} from "../../cuenta/validaciones";
 
 export function hoyLocal(): string {
     const ahora = new Date();
     const mes = String(ahora.getMonth() + 1).padStart(2, "0");
     const dia = String(ahora.getDate()).padStart(2, "0");
     return `${ahora.getFullYear()}-${mes}-${dia}`;
-}
-
-export function nombreValido(valor: string): boolean {
-    return regexNombre.test(valor.trim());
-}
-
-export function rutValido(valor: string): boolean {
-    const limpio = valor.trim().replace(/\./g, "").replace(/-/g, "").toUpperCase();
-    if (!/^\d{7,8}[\dK]$/.test(limpio)) {
-        return false;
-    }
-
-    const cuerpo = limpio.slice(0, -1);
-    const digito = limpio.slice(-1);
-    let suma = 0;
-    let multiplicador = 2;
-
-    for (let i = cuerpo.length - 1; i >= 0; i--) {
-        suma += Number(cuerpo[i]) * multiplicador;
-        multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
-    }
-
-    const resto = 11 - (suma % 11);
-    const esperado = resto === 11 ? "0" : resto === 10 ? "K" : String(resto);
-    return digito === esperado;
-}
-
-export function telefonoValido(valor: string): boolean {
-    return regexTelefono.test(valor.trim());
-}
-
-export function correoValido(valor: string): boolean {
-    return regexCorreo.test(valor.trim());
 }
 
 export function fechaNoAnterior(valor: string): boolean {
@@ -91,4 +60,66 @@ export function guardarCitaEnStorage(cita: Cita): void {
     localStorage.setItem(CLAVE, JSON.stringify(lista));
     localStorage.removeItem("detallesCita");
     sessionStorage.removeItem("detallesCita");
+}
+
+export const MENSAJE_CITA_SOLAPADA =
+    "Ya tienes una cita en ese horario. Elige un horario que no se cruce con tus reservas.";
+
+const ESTADOS_QUE_OCUPAN = new Set([
+    "CONFIRMADA",
+    "PAGADA_COMPLETA",
+    "EN_PROCESO",
+    "PENDIENTE_PAGO",
+]);
+
+export interface RangoCita {
+    fecha: string;
+    horaInicio: string;
+    horaFin?: string;
+    duracionMinutos?: number;
+    estado?: string;
+    expiraEn?: string | null;
+}
+
+export function minutosDelDia(hora: string): number {
+    const partes = hora.trim().split(":");
+    const horas = Number(partes[0]);
+    const minutos = Number(partes[1] ?? 0);
+    if (!Number.isFinite(horas) || !Number.isFinite(minutos)) return 0;
+    return horas * 60 + minutos;
+}
+
+function reservaSigueOcupando(reserva: RangoCita): boolean {
+    if (reserva.estado && !ESTADOS_QUE_OCUPAN.has(reserva.estado)) return false;
+    if (reserva.estado === "PENDIENTE_PAGO" && reserva.expiraEn) {
+        const expira = new Date(reserva.expiraEn);
+        if (!Number.isNaN(expira.getTime()) && expira.getTime() <= Date.now()) return false;
+    }
+    return true;
+}
+
+function finMinutos(reserva: RangoCita): number {
+    const inicio = minutosDelDia(reserva.horaInicio);
+    const porDuracion = inicio + Math.max(reserva.duracionMinutos ?? 0, 0);
+    if (!reserva.horaFin) return porDuracion;
+    const porHora = minutosDelDia(reserva.horaFin);
+    if (porHora <= inicio) return porDuracion;
+    return Math.max(porHora, porDuracion);
+}
+
+export function slotSolapaReservas(
+    fecha: string,
+    horaInicio: string,
+    duracionMinutos: number,
+    reservas: RangoCita[],
+): boolean {
+    const inicio = minutosDelDia(horaInicio);
+    const fin = inicio + Math.max(duracionMinutos, 0);
+    if (fin <= inicio) return false;
+    return reservas.some((reserva) => {
+        if (reserva.fecha !== fecha || !reservaSigueOcupando(reserva)) return false;
+        const otroInicio = minutosDelDia(reserva.horaInicio);
+        const otroFin = finMinutos(reserva);
+        return inicio < otroFin && otroInicio < fin;
+    });
 }

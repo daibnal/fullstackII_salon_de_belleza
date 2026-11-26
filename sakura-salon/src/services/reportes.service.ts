@@ -49,6 +49,17 @@ export type FranjaDemanda = {
 	baja: boolean;
 };
 
+export type ClienteAusente = {
+	cliente: string;
+	cantidad: number;
+};
+
+export type ReporteInasistencias = {
+	noConcretadas: number;
+	porcentaje: number;
+	clientes: ClienteAusente[];
+};
+
 export const Reportes = {
 	async dia(fecha: string): Promise<ResumenDia> {
 		const { data } = await clienteHttp.get<ResumenDia>("reportes/dia", { params: { fecha } });
@@ -80,5 +91,12 @@ export const Reportes = {
 	async demanda(mes: string): Promise<FranjaDemanda[]> {
 		const { data } = await clienteHttp.get<FranjaDemanda[]>("reportes/demanda", { params: { mes } });
 		return Array.isArray(data) ? data : [];
+	},
+
+	async inasistencias(desde: string, hasta: string): Promise<ReporteInasistencias> {
+		const { data } = await clienteHttp.get<ReporteInasistencias>("reportes/inasistencias", {
+			params: { desde, hasta },
+		});
+		return data;
 	},
 };

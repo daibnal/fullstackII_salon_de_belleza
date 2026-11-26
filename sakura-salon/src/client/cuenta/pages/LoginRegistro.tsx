@@ -1,16 +1,38 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { Auth } from "../../../services/auth.service";
-import { borrarSesion, guardarSesion, haySesionAdmin } from "../../../services/sesion";
+import { borrarSesion, guardarSesion, haySesionAdmin, haySesionProfesional } from "../../../services/sesion";
 import {
 	apellidoEsValido,
 	confirmacionPasswordEsValida,
 	correoEsValido,
+	mensajePasswordRegistro,
 	nombreEsValido,
 	passwordRegistroEsValido,
 	rutEsValido,
 	telefonoEsValido,
 } from "../validaciones";
+
+const REGISTRO_ERROR_RESPALDO =
+	"No se pudo crear la cuenta. Revisa los datos o intenta con otro correo.";
+
+function mensajeApiDeRegistro(error: unknown): string | null {
+	if (typeof error !== "object" || error === null || !("response" in error)) {
+		return null;
+	}
+	const data = (error as { response?: { data?: unknown } }).response?.data;
+	if (typeof data === "object" && data !== null && "mensaje" in data) {
+		const mensaje = (data as { mensaje?: unknown }).mensaje;
+		if (typeof mensaje === "string" && mensaje.trim()) {
+			return mensaje;
+		}
+	}
+	return null;
+}
+
+function mensajeHablaDeCorreo(mensaje: string): boolean {
+	return mensaje.toLowerCase().includes("correo");
+}
 
 export function CerrarSesion() {
 	const navigate = useNavigate();
@@ -43,6 +65,7 @@ export function LoginRegistro() {
 	});
 	const [loginErrorGeneral, setLoginErrorGeneral] = useState(false);
 	const [registroError, setRegistroError] = useState("");
+	const [registroErrorCorreo, setRegistroErrorCorreo] = useState("");
 
 	const [registro, setRegistro] = useState({
 		nombre: "",
@@ -67,6 +90,8 @@ export function LoginRegistro() {
 	useEffect(() => {
 		if (haySesionAdmin()) {
 			navigate("/admin");
+		} else if (haySesionProfesional()) {
+			navigate("/personal");
 		}
 	}, [navigate]);
 
@@ -95,7 +120,7 @@ export function LoginRegistro() {
 
 		void Auth.login(login.correo.trim(), login.password)
 			.then((usuario) => {
-				guardarSesion(
+					guardarSesion(
 					{
 						id: usuario.id,
 						token: usuario.token,
@@ -103,10 +128,12 @@ export function LoginRegistro() {
 						correo: usuario.correo,
 						nombre: usuario.nombre,
 						apellido: usuario.apellido,
+						telefono: usuario.telefono,
+						rut: usuario.rut,
 					},
 					login.mantenerSesion
 				);
-				navigate(usuario.rol === "ADMIN" ? "/admin" : "/");
+				navigate(usuario.rol === "ADMIN" ? "/admin" : usuario.rol === "PROFESIONAL" ? "/personal" : "/");
 			})
 			.catch(() => {
 				setLoginErrorGeneral(true);
@@ -129,6 +156,16 @@ export function LoginRegistro() {
 		const key = map[id];
 		if (key) {
 			setRegistro((prev) => ({ ...prev, [key]: value }));
+			if (key === "correo") {
+				setRegistroErrores((prev) => ({ ...prev, correo: false }));
+				setRegistroErrorCorreo("");
+			}
+			if (key === "password") {
+				setRegistroErrores((prev) => ({ ...prev, password: false }));
+			}
+			if (key === "passwordConfirm") {
+				setRegistroErrores((prev) => ({ ...prev, passwordConfirm: false }));
+			}
 		}
 	};
 
@@ -149,7 +186,10 @@ export function LoginRegistro() {
 			),
 		};
 
-		setRegistroErrores(errores);
+		setRegistroErrores({
+			...errores,
+			correo: errores.correo || registroErrorCorreo !== "",
+		});
 		setRegistroError("");
 
 		if (Object.values(errores).some(Boolean)) {
@@ -159,16 +199,35 @@ export function LoginRegistro() {
 		void Auth.registro({
 			nombre: registro.nombre.trim(),
 			apellido: registro.apellido.trim(),
+			rut: registro.rut.trim(),
 			telefono: registro.telefono.trim(),
 			correo: registro.correo.trim(),
 			clave: registro.password,
 		})
 			.then(() => {
 				setRegistroExito(true);
+				setRegistroError("");
+				setRegistroErrorCorreo("");
+				setRegistroErrores({
+					nombre: false,
+					apellido: false,
+					rut: false,
+					telefono: false,
+					correo: false,
+					password: false,
+					passwordConfirm: false,
+				});
 			})
-			.catch(() => {
+			.catch((error: unknown) => {
 				setRegistroExito(false);
-				setRegistroError("No se pudo crear la cuenta. Revisa los datos o intenta con otro correo.");
+				const mensajeApi = mensajeApiDeRegistro(error);
+				if (mensajeApi && mensajeHablaDeCorreo(mensajeApi)) {
+					setRegistroError("");
+					setRegistroErrorCorreo(mensajeApi);
+					setRegistroErrores((prev) => ({ ...prev, correo: true }));
+					return;
+				}
+				setRegistroError(mensajeApi ?? REGISTRO_ERROR_RESPALDO);
 			});
 	};
 
@@ -350,7 +409,7 @@ export function LoginRegistro() {
 								onChange={handleRegistroChange}
 							/>
 							<div className="invalid-feedback">
-								Ingresa un correo electrónico válido.
+								{registroErrorCorreo || "Ingresa un correo electrónico válido."}
 							</div>
 						</div>
 
@@ -366,6 +425,12 @@ export function LoginRegistro() {
 								value={registro.password}
 								onChange={handleRegistroChange}
 							/>
+							<div className="invalid-feedback">
+								{mensajePasswordRegistro(registro.password)}
+							</div>
+						</div>
+
+						<div className="my-3">
 							<label htmlFor="passwordComfirm" className="form-label fw-bold small">
 								Confirmación contraseña
 							</label>
@@ -377,6 +442,7 @@ export function LoginRegistro() {
 								value={registro.passwordConfirm}
 								onChange={handleRegistroChange}
 							/>
+							<div className="invalid-feedback">Las contraseñas no coinciden.</div>
 						</div>
 
 						{registroExito && (

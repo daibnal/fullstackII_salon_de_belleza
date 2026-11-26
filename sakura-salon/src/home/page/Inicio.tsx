@@ -2,6 +2,7 @@ import { Carusel } from "../../client/catalogo/components/carrusel/Carusel";
 import { assets } from '../../assets/AssetsInterface';
 import { HorizontalCards } from "../components/HorizontalCards";
 import { useCatalogo } from "../../hooks/useServicios";
+import { TEXTO_HORARIO } from "../../horario/horarioSalon";
 
 const fotos = [
     {
@@ -34,7 +35,7 @@ export function Inicio() {
 		}
 	}
     return (
-        <>
+        <div className="home-secciones">
             <Carusel imagenes={fotos}/>
 
             <section
@@ -93,11 +94,13 @@ export function Inicio() {
 				<div className="d-flex flex-column gap-3">
 					{/* Top: Map Picture Overview */}
 					<div className="map-container">
-						<img
-							src={assets.inicioAcercaDe.mapaSalon.src}
-							alt={assets.inicioAcercaDe.mapaSalon.alt}
-							className="w-100 ratio ratio-1x1"
-                        />
+						<div className="ratio ratio-16x9">
+							<img
+								src={assets.inicioAcercaDe.mapaSalon.src}
+								alt={assets.inicioAcercaDe.mapaSalon.alt}
+								className="img-fluid"
+							/>
+						</div>
 					</div>
 
 					{/* Schedule and aperture times */}
@@ -112,9 +115,9 @@ export function Inicio() {
 									style={{color: 'var(--color-primary)'}}>
 									Horario de Atención
 								</p>
-								<p className="mb-0 text-muted small">Lunes - Viernes: 9:00 AM - 19:00 PM</p>
-								<p className="mb-0 text-muted small">Sabado: 10:00 AM - 19:00 PM</p>
-								<p className="mb-0 text-muted small">Domingo: Cerrado</p>
+								{TEXTO_HORARIO.map((linea) => (
+									<p key={linea} className="mb-0 text-muted small">{linea}</p>
+								))}
 							</div>
 						</div>
 					</div>
@@ -154,6 +157,6 @@ export function Inicio() {
 					</div>
 				</div>
 			</section>
-        </>
+        </div>
     );
 };

@@ -7,6 +7,7 @@ export type Profesional = {
 	telefono: string;
 	especialidad: string;
 	activo: boolean;
+	usuarioId?: number | null;
 };
 
 export type Turno = {
@@ -48,6 +49,11 @@ export const Profesionales = {
 
 	async eliminar(id: number): Promise<void> {
 		await clienteHttp.delete(`profesionales/${id}`);
+	},
+
+	async vincularAcceso(id: number, usuarioId: number): Promise<Profesional> {
+		const { data } = await clienteHttp.put<Profesional>(`profesionales/${id}/acceso`, { usuarioId });
+		return data;
 	},
 
 	async servicios(id: number): Promise<{ id: number; nombre: string }[]> {
